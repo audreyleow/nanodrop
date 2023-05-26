@@ -6,9 +6,9 @@
   "scripts": {
     "lint:fix": "prettier */*.js \"*/**/*{.js,.ts}\" -w",
     "lint": "prettier */*.js \"*/**/*{.js,.ts}\" --check",
-    "build:js": "rollup --config",
+    "build": "rollup --config",
     "dev": "rollup --config --watch",
-    "build": "anchor build",
+    "build:contract": "anchor build",
     "deploy": "solana program deploy --url https://solana-mainnet-api.rpc-node.com --program-id target/deploy/nanodrop-keypair.json --keypair target/deploy/authority-keypair.json --max-len 1000000 target/deploy/nanodrop.so",
     "test": "anchor test --skip-build  --skip-deploy --skip-local-validator",
     "build:test": "anchor build -- --features \"test\"",
