@@ -13,13 +13,16 @@ export const Home = () => {
     <>
       <LandingPageBackground />
       <Box
-        sx={{
+        sx={(theme) => ({
           display: "flex",
           flexDirection: "column",
           alignItems: "center",
           px: 4,
           paddingTop: "20vh",
-        }}
+          [theme.breakpoints.down("sm")]: {
+            paddingTop: "10vh",
+          },
+        })}
       >
         <Box
           sx={(theme) => ({
@@ -31,7 +34,7 @@ export const Home = () => {
             },
           })}
         >
-          <NanodropLogo width="50" />
+          <NanodropLogo width="50" height="50" />
         </Box>
         <Typography
           component="div"
