@@ -4657,6 +4657,11 @@ its-fine@^1.0.6:
   dependencies:
     "@types/react-reconciler" "^0.28.0"
 
+itty-cors@^0.3.6:
+  version "0.3.6"
+  resolved "https://registry.yarnpkg.com/itty-cors/-/itty-cors-0.3.6.tgz#25fae83ee23203c6d35188b9352a1d17b21a5271"
+  integrity sha512-VlDDB9CLneCyjqtg8kShl6oBZrJxxwKd8sXWrYC77H6BcW9sDMRDwx7JgCB2T+18pQv/Tau3OIlchEKrEHKKKQ==
+
 itty-router@^2.6.1:
   version "2.6.6"
   resolved "https://registry.yarnpkg.com/itty-router/-/itty-router-2.6.6.tgz#78a08c3b7dc1bd90ce832cae8eff7e4cbfbf67ef"
