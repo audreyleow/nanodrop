@@ -13,11 +13,11 @@ import {
 import { program } from "./program";
 
 const NANO_MACHINE = new PublicKey(
-  "3Gr8hBEWUQP4W2fJF6SZuxWYvryKm6VJUnGsQBCBANRf" // 10 items
+  "metaMWNWwC39BVDkuhpLKCtt4nVfJfBkJucDpERFBid" // 10 items
 );
 
 const MERKLE_TREE = new PublicKey(
-  "GH2qhcUco5E4CG5S9a3LC2tawwbyyESSqXQeobewnc3"
+  "BiFKKFoTLh1wmr4UP8H3JgUPWbFaGtzuZxwoM7wZ956N"
 );
 const [TREE_AUTHORITY] = PublicKey.findProgramAddressSync(
   [MERKLE_TREE.toBuffer()],

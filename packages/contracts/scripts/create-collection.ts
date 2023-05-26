@@ -16,7 +16,7 @@ export async function createCollection(connection: Connection, payer: Keypair) {
       isMutable: true,
       name: "Metacamp Builders League NFT",
       symbol: "METACAMP",
-      uri: "https://bafkreiewaodemgytlubvaizxr3r4ajkanbgyen54m4vbxj3ygw5azoged4.ipfs.nftstorage.link/",
+      uri: "https://files.nanodrop.it/metaMWNWwC39BVDkuhpLKCtt4nVfJfBkJucDpERFBid/collection.json",
       sellerFeeBasisPoints: 0,
       creators: [
         {

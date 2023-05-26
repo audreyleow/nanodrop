@@ -16,7 +16,7 @@ import {
 import { program } from "./program";
 
 const COLLECTION_MINT = new PublicKey(
-  "ApcFeFFpcXr8M7jkHr5zWf1FD8v29iJGty4GpRr8xrYV"
+  "7ytf7MNwsqd7AEmQA4AwJcDkmT1ikASRcRxnhh9DGeML"
 );
 const [COLLECTION_METADATA] = PublicKey.findProgramAddressSync(
   [
@@ -36,10 +36,10 @@ const [COLLECTION_MASTER_EDITION] = PublicKey.findProgramAddressSync(
   TOKEN_METADATA_PROGRAM_ID
 );
 const NANO_MACHINE = new PublicKey(
-  "3Gr8hBEWUQP4W2fJF6SZuxWYvryKm6VJUnGsQBCBANRf" // 10 items
+  "metaMWNWwC39BVDkuhpLKCtt4nVfJfBkJucDpERFBid" // 10 items
 );
 const MERKLE_TREE = new PublicKey(
-  "GH2qhcUco5E4CG5S9a3LC2tawwbyyESSqXQeobewnc3"
+  "BiFKKFoTLh1wmr4UP8H3JgUPWbFaGtzuZxwoM7wZ956N"
 );
 const [TREE_AUTHORITY] = PublicKey.findProgramAddressSync(
   [MERKLE_TREE.toBuffer()],

@@ -24,9 +24,12 @@ import fs from "fs";
 
 import { IDL, Nanodrop } from "../target/types/nanodrop";
 
-const CONNECTION = new Connection("https://solana-mainnet-api.rpc-node.com", {
-  commitment: "confirmed",
-});
+const CONNECTION = new Connection(
+  "https://warmhearted-solemn-shard.solana-mainnet.discover.quiknode.pro/ba1621153f9558a7ef443c254761d8667036320f",
+  {
+    commitment: "confirmed",
+  }
+);
 
 const COLLECTION_MINT = new PublicKey(
   "CSVsBhMPFi8kswkdHGpU9EW8sM8NdGW6dZT8BtxJPtrY"
