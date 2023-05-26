@@ -1,5 +1,5 @@
 import { AnchorProvider, Program } from "@coral-xyz/anchor";
-import { IDL, NANODROP_PROGRAM_ID, getMintIx } from "@nanodrop/contracts";
+import { getMintIx, IDL, NANODROP_PROGRAM_ID } from "@nanodrop/contracts";
 import {
 	Connection,
 	Keypair,
@@ -11,7 +11,7 @@ import {
 
 export const getMetadata = () => ({
 	label: "NanoDrop",
-	icon: "https://solana.com/src/img/branding/solanaLogoMark.svg", // TODO: replace with actual logo
+	icon: "https://files.nanodrop.it/assets/icon.png",
 });
 
 export const generateTransaction = async ({
