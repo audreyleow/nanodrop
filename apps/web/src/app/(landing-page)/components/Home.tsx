@@ -69,11 +69,17 @@ export const Home = () => {
           <br />
           Say hi to ultra-low gas fees.
         </Typography>
-        <CtaButton>
+        <CtaButton
+          as="a"
+          href="https://twitter.com/NanoDropIt"
+          rel="noopener noreferrer"
+          target="_blank"
+        >
           <Typography
             variant="button"
             sx={{
               fontWeight: 700,
+              color: "#000000",
             }}
           >
             gm, you are early
@@ -85,7 +91,11 @@ export const Home = () => {
   );
 };
 
-const CtaButton = styled("button")((theme) => ({
+const CtaButton = styled("button")<{
+  href?: string;
+  target?: string;
+  ref?: string;
+}>({
   outline: "none",
   backgroundColor: "#fff",
   marginTop: 24,
@@ -101,4 +111,5 @@ const CtaButton = styled("button")((theme) => ({
     clipPath:
       "polygon(0 45%, 80% 45%, 80% 30%, 100% 50%, 80% 70%, 80% 55%, 0 55%)",
   },
-}));
+  textDecoration: "none",
+});
