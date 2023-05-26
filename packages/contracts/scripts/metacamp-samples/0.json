@@ -1,0 +1,17 @@
+{
+  "name": "Metacamp Builders League #1",
+  "symbol": "METACAMP",
+  "image": "https://bafybeidiqvftl6fpvg3vizm67x3i33vyq2c55mpsgcskassc4kotrsejpi.ipfs.nftstorage.link/0.png",
+  "description": "A unique NFT representing your attendance at MetaCamp Builders League, held on May 27th, 2023.",
+  "external_url": "https://www.metacamp.so/",
+  "attributes": [
+    {
+      "trait_type": "Event Name",
+      "value": "MetaCamp Builders League"
+    },
+    {
+      "trait_type": "Event Date",
+      "value": "May 27th, 2023"
+    }
+  ]
+}

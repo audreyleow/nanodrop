@@ -1,0 +1,4 @@
+name = "nanodrop"
+main = "index.js"
+compatibility_date = "2022-11-18"
+node_compat=true

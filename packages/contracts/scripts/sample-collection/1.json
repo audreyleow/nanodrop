@@ -1,0 +1,20 @@
+{
+  "name": "Number #0002",
+  "symbol": "NB",
+  "description": "Collection of 10 numbers on the blockchain. This is the number 2/10.",
+  "image": "https://bafybeia63ab4qcou2ohll5r5uvuquru653fs7ckg4jwrourlohdjedh3ra.ipfs.nftstorage.link/1.png",
+  "attributes": [
+    {
+      "trait_type": "Number",
+      "value": "2"
+    }
+  ],
+  "properties": {
+    "files": [
+      {
+        "uri": "1.png",
+        "type": "image/png"
+      }
+    ]
+  }
+}

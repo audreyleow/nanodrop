@@ -1,0 +1,10 @@
+/* Text Styling */
+.heading {
+  font-size: 40px;
+  font-weight: bold;
+}
+
+.section-heading {
+  font-size: 24px;
+  font-weight: bold;
+}

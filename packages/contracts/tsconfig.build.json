@@ -1,0 +1,9 @@
+{
+  "extends": "tsconfig/base.json",
+  "compilerOptions": {
+    "declaration": true,
+    "declarationDir": "types",
+    "sourceMap": true
+  },
+  "exclude": ["node_modules", "tests/**/*", "scripts/**/*", "migrations/**/*"]
+}

@@ -1,0 +1,30 @@
+[package]
+name = "nanodrop"
+version = "0.1.0"
+description = "Created with Anchor"
+edition = "2021"
+
+[lib]
+crate-type = ["cdylib", "lib"]
+name = "nanodrop"
+
+[features]
+no-entrypoint = []
+no-idl = []
+no-log-ix-name = []
+cpi = ["no-entrypoint"]
+default = []
+test = []
+
+[dependencies]
+anchor-lang = "0.26.0"
+anchor-spl = "0.26.0"
+arrayref = "0.3.7"
+mpl-bubblegum = { version = "0.7.0", features = ["no-entrypoint", "cpi"] }
+mpl-token-metadata = { version = "1.9.0", features = ["no-entrypoint"] }
+spl-account-compression = "0.1.10"
+
+# TODO: Remove after updating to latest version of platform-tools.
+# Latest solana version(1.14.17) as of 2023-05-01 comes with rustc 1.62.0-dev but MSRV for latest
+# version of this crate is 1.64.0. See https://github.com/solana-labs/solana/pull/31418
+winnow = "=0.4.1"
