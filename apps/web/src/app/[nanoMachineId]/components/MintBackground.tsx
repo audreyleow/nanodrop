@@ -36,6 +36,10 @@ export default function MintBackground({ nanoMachine }: MintBackgroundProps) {
     ? nanoMachine.collectionImageUri
     : nanoMachine.backgroundImageUri;
 
+  if (typeof window === "undefined") {
+    return null;
+  }
+
   return (
     <>
       <Backdrop

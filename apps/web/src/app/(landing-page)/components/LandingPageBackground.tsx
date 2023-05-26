@@ -6,13 +6,11 @@ import {
   Physics,
   PlaneProps,
   Triplet,
-  useBox,
   useConvexPolyhedron,
   usePlane,
-  useSphere,
 } from "@react-three/cannon";
 import { Canvas, useFrame, useThree } from "@react-three/fiber";
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useRef } from "react";
 import { BufferGeometry, CylinderGeometry, Mesh } from "three";
 import { Geometry } from "three-stdlib/deprecated/Geometry";
 

@@ -21,7 +21,9 @@ export default function useNanoMachine(nanoMachineId: string) {
 
   const { data: collectionMetadata, error: fetchCollectionMetadataError } =
     useSWR(
-      nanoMachineData?.collectionMint.toBase58() ?? null,
+      typeof window === "undefined" || nanoMachineData === undefined
+        ? null
+        : nanoMachineData.collectionMint.toBase58(),
       async (collectionMint) => {
         const [collectionMetadataId] = PublicKey.findProgramAddressSync(
           [
@@ -43,7 +45,9 @@ export default function useNanoMachine(nanoMachineId: string) {
     data: collectionUriMetadata,
     error: fetchCollectionUriMetadataError,
   } = useSWR(
-    collectionMetadata?.data.uri.replaceAll("\u0000", "") ?? null,
+    typeof window === "undefined" || collectionMetadata === undefined
+      ? null
+      : collectionMetadata.data.uri.replaceAll("\u0000", ""),
     async (collectionMetadataUri) =>
       axios
         .get<{
@@ -115,8 +119,9 @@ const useNanoMachineData = (nanoMachineId: string) => {
     data: fetchedNanoMachine,
     error: fetchNanoMachineError,
     mutate,
-  } = useSWR(nanoMachineId, (nanoMachineId) =>
-    program.account.nanoMachine.fetch(nanoMachineId)
+  } = useSWR(
+    typeof window === "undefined" ? null : nanoMachineId,
+    (nanoMachineId) => program.account.nanoMachine.fetch(nanoMachineId)
   );
 
   const { data: subscribedNanoMachine } = useSWRSubscription(

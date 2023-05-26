@@ -45,7 +45,7 @@ export const useSolanaPayQr = () => {
             `0 0 ${size} ${size}`
           );
           (qrRef.children[0] as SVGElement).setAttribute("width", `100%`);
-          (qrRef.children[0] as SVGElement).setAttribute("height", `auto`);
+          (qrRef.children[0] as SVGElement).setAttribute("height", `100%`);
         }
       }
     },
