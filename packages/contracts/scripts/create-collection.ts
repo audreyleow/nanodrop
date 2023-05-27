@@ -2,6 +2,7 @@ import {
   bundlrStorage,
   keypairIdentity,
   Metaplex,
+  PublicKey,
 } from "@metaplex-foundation/js";
 import { Connection, Keypair } from "@solana/web3.js";
 
@@ -14,13 +15,13 @@ export async function createCollection(connection: Connection, payer: Keypair) {
     {
       isCollection: true,
       isMutable: true,
-      name: "Metacamp Builders League NFT",
-      symbol: "METACAMP",
+      name: "Metacamp POAP",
+      symbol: "CAMP",
       uri: "https://files.nanodrop.it/metaMWNWwC39BVDkuhpLKCtt4nVfJfBkJucDpERFBid/collection.json",
       sellerFeeBasisPoints: 0,
       creators: [
         {
-          address: payer.publicKey,
+          address: new PublicKey("JonasQ6kwFknJKQpVXbAs2d3fdVLy2DnXd13ynwhgV4"),
           share: 100,
         },
       ],

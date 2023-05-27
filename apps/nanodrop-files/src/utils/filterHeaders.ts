@@ -1,5 +1,10 @@
 // These headers appear in the request, but are not passed upstream
-const UNSIGNABLE_HEADERS = ["x-forwarded-proto", "x-real-ip"];
+const UNSIGNABLE_HEADERS = [
+  "x-forwarded-proto",
+  "x-real-ip",
+  "if-modified-since",
+  "if-none-match",
+];
 
 // Filter out cf-* and any other headers we don't want to include in the signature
 // Certain headers, such as x-real-ip, appear in the incoming request but
@@ -8,6 +13,7 @@ const UNSIGNABLE_HEADERS = ["x-forwarded-proto", "x-real-ip"];
 export function filterHeaders(headers: Headers) {
   return Array.from(headers.entries()).filter(
     (pair) =>
-      !UNSIGNABLE_HEADERS.includes(pair[0]) && !pair[0].startsWith("cf-")
+      !UNSIGNABLE_HEADERS.includes(pair[0].toLowerCase()) &&
+      !pair[0].startsWith("cf-")
   );
 }

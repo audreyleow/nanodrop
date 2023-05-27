@@ -1,8 +1,16 @@
 {
-  "name": "Metacamp Builders League NFT",
-  "symbol": "METACAMP",
+  "name": "Metacamp POAP",
+  "symbol": "CAMP",
   "image": "https://files.nanodrop.it/metaMWNWwC39BVDkuhpLKCtt4nVfJfBkJucDpERFBid/collection.png",
-  "description": "An NFT collection representing attendance at Metacamp Builders League, held on May 27th, 2023.",
+  "description": "An NFT collection representing attendance at Solana Builders League, Summer 23 Edition",
   "external_url": "https://www.metacamp.so/",
-  "attributes": []
+  "attributes": [],
+  "properties": {
+    "files": [
+      {
+        "uri": "https://files.nanodrop.it/metaMWNWwC39BVDkuhpLKCtt4nVfJfBkJucDpERFBid/collection.png",
+        "type": "image/png"
+      }
+    ]
+  }
 }

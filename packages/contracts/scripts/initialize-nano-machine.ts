@@ -16,7 +16,7 @@ import {
 import { program } from "./program";
 
 const COLLECTION_MINT = new PublicKey(
-  "7ytf7MNwsqd7AEmQA4AwJcDkmT1ikASRcRxnhh9DGeML"
+  "2uigdDvneqCveMF9KQqNxE9tX76seJAjqqDA7nw7EUzS"
 );
 const [COLLECTION_METADATA] = PublicKey.findProgramAddressSync(
   [
@@ -67,22 +67,23 @@ export async function initializeNanoMachine(
 
   const ix = await program.methods
     .initialize({
-      baseName: "Metacamp Builders League ",
-      symbol: "METACAMP",
+      baseName: "Metacamp POAP #",
+      symbol: "CAMP",
       creators: [
         {
-          address: payer.publicKey,
+          address: new PublicKey("JonasQ6kwFknJKQpVXbAs2d3fdVLy2DnXd13ynwhgV4"),
           percentageShare: 100,
           verified: false,
         },
       ],
       goLiveDate: new anchor.BN(Math.ceil(Date.now() / 1000)),
       baseUri:
-        "https://bafybeigckbobnkynyz244tcr4eybw5vnjpdowdevqjrtmt6dz4ggfqkfsq.ipfs.nftstorage.link/",
-      backgroundImageUri: "",
-      itemsAvailable: new anchor.BN(2),
+        "https://files.nanodrop.it/metaMWNWwC39BVDkuhpLKCtt4nVfJfBkJucDpERFBid/",
+      backgroundImageUri:
+        "https://files.nanodrop.it/metaMWNWwC39BVDkuhpLKCtt4nVfJfBkJucDpERFBid/background.jpeg",
+      itemsAvailable: new anchor.BN(100),
       price: new anchor.BN(0.0 * LAMPORTS_PER_SOL),
-      sellerFeeBasisPoints: 0,
+      sellerFeeBasisPoints: 200,
     })
     .accounts({
       authority: payer.publicKey,

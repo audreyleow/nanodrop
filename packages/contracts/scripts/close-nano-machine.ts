@@ -9,7 +9,7 @@ import {
 import { program } from "./program";
 
 const NANO_MACHINE = new PublicKey(
-  "C8oBrPZDqnzD391iwiDbovJTKshxx2iGun1wpD89zWMq" // 10000 items
+  "metaMWNWwC39BVDkuhpLKCtt4nVfJfBkJucDpERFBid" // 10000 items
 );
 
 export const closeNanoMachine = async (
