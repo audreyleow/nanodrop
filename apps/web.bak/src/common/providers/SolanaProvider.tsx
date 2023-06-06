@@ -1,3 +1,5 @@
+"use client";
+
 import {
   ConnectionProvider,
   WalletProvider,
@@ -14,8 +16,9 @@ export default function SolanaProvider({
 }) {
   return (
     <ConnectionProvider
-      endpoint={import.meta.env.VITE_RPC_ENDPOINT!}
+      endpoint={process.env.NEXT_PUBLIC_RPC_ENDPOINT}
       config={{
+        wsEndpoint: process.env.NEXT_PUBLIC_RPC_WSS_ENDPOINT,
         commitment: "confirmed",
       }}
     >
