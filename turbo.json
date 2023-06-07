@@ -1,6 +1,6 @@
 {
   "$schema": "https://turbo.build/schema.json",
-  "globalEnv": ["GATSBY_RPC_ENDPOINT", "GATSBY_API_ORIGIN", "NODE_ENV"],
+  "globalEnv": ["NEXT_PUBLIC_RPC_ENDPOINT", "NEXT_PUBLIC_API_ORIGIN"],
   "globalDependencies": ["**/.env.*local"],
   "pipeline": {
     "build": {
