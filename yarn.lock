@@ -7067,7 +7067,7 @@ workerpool@6.2.0:
   resolved "https://registry.yarnpkg.com/workerpool/-/workerpool-6.2.0.tgz#827d93c9ba23ee2019c3ffaff5c27fccea289e8b"
   integrity sha512-Rsk5qQHJ9eowMH28Jwhe8HEbmdYDX4lwoMWshiCXugjtHqMD9ZbiqSDLxcsfdqsETPzVUtX5s1Z5kStiIM6l4A==
 
-wrangler@^3.0.1:
+wrangler@^3.0.1, wrangler@^3.1.0:
   version "3.1.0"
   resolved "https://registry.yarnpkg.com/wrangler/-/wrangler-3.1.0.tgz#7de104a975d604573d584ee9da6fc1b2ccab6466"
   integrity sha512-oqVBJZoOQqSKxhgaPt4LcmtBf0FssIz/4F1VgjWOomeGQ3kN9pg3swPO0Zkf0aAphDodG9rekjrtccvKW7bSsA==

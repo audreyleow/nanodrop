@@ -1,6 +1,6 @@
 import { Box, Container, Typography } from "@mui/material";
 import dynamic from "next/dynamic";
-import Link from "next/link";
+import { Link } from "react-router-dom";
 
 import NanodropLogo from "@/common/components/NanodropLogo";
 import ErrorPage from "@/features/nano-machine/components/ErrorPage";
@@ -51,7 +51,7 @@ export default function NanoMachine() {
       >
         <Typography
           component={Link}
-          href="/"
+          to="/"
           variant="h4"
           sx={(theme) => ({
             fontWeight: "700",
