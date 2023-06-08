@@ -6,8 +6,8 @@ import { useConnection } from "@solana/wallet-adapter-react";
 import { PublicKey } from "@solana/web3.js";
 import axios from "axios";
 import Decimal from "decimal.js";
-import { useRouter } from "next/router";
 import { useEffect, useMemo, useState } from "react";
+import { useParams } from "react-router-dom";
 import useSWR from "swr";
 import useSWRSubscription from "swr/subscription";
 
@@ -16,8 +16,7 @@ import useNanodrop from "@/common/hooks/useNanodrop";
 import type { NanoMachine } from "../types/nanoMachine";
 
 export default function useNanoMachine() {
-  const router = useRouter();
-  const { nanoMachineId } = router.query;
+  const { nanoMachineId } = useParams();
 
   const { connection } = useConnection();
   const { nanoMachineData, fetchNanoMachineError, mutate } = useNanoMachineData(

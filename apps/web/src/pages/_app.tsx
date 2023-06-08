@@ -9,6 +9,7 @@ import { ThemeProvider } from "@mui/material/styles";
 import { AppProps } from "next/app";
 import Head from "next/head";
 import * as React from "react";
+import { useEffect } from "react";
 import { Toaster } from "sonner";
 
 import SolanaProvider from "@/common/providers/SolanaProvider";
@@ -25,6 +26,16 @@ export interface MyAppProps extends AppProps {
 }
 
 export default function MyApp(props: MyAppProps) {
+  const [shouldRender, setShouldRender] = React.useState(false);
+
+  useEffect(function enableRendering() {
+    setShouldRender(true);
+  }, []);
+
+  if (!shouldRender) {
+    return null;
+  }
+
   const { Component, emotionCache = clientSideEmotionCache, pageProps } = props;
   return (
     <CacheProvider value={emotionCache}>
