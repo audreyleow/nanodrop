@@ -5,8 +5,11 @@ pub enum NanoError {
     #[msg("Value longer than expected maximum value")]
     ExceededLengthError,
 
-    #[msg("Can only provide up to 4 creators")]
-    TooManyCreators,
+    #[msg("At least one mint phase is required")]
+    NoMintPhaseFound,
+
+    #[msg("Invalid phase dates")]
+    InvalidPhaseDates,
 
     #[msg("Fee basis point cannot exceed 10000")]
     FeeBasisPointTooHigh,
