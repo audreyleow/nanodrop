@@ -34,6 +34,7 @@ pub fn initialize_v1(
         symbol: pad_string_or_throw(initialization_params.symbol, MAX_SYMBOL_LENGTH)?,
         seller_fee_basis_points: initialization_params.seller_fee_basis_points,
         merkle_tree: ctx.accounts.merkle_tree.key(),
+        is_private: initialization_params.is_private,
         phases: initialization_params.phases,
     };
     new_nano_machine.validate()?;
@@ -76,10 +77,12 @@ pub struct InitializationParams {
     pub symbol: String,
     /// Secondary sales royalty basis points (0-10000)
     pub seller_fee_basis_points: u16,
-    /// Minting phases
-    pub phases: Vec<Phase>,
     /// background image for the collection mint page
     pub background_image_uri: String,
+    /// Is this a private drop
+    pub is_private: bool,
+    /// Minting phases
+    pub phases: Vec<Phase>,
 }
 
 #[derive(Accounts)]

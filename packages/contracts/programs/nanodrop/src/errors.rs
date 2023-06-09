@@ -5,6 +5,9 @@ pub enum NanoError {
     #[msg("Value longer than expected maximum value")]
     ExceededLengthError,
 
+    #[msg("User is not permitted to mint")]
+    Unauthorized,
+
     #[msg("At least one mint phase is required")]
     NoMintPhaseFound,
 

@@ -9,11 +9,20 @@ use mpl_bubblegum::{
 };
 use spl_account_compression::{program::SplAccountCompression, Noop};
 
-use crate::{constants::AUTHORITY_SEED, errors::NanoError, state::NanoMachine, utils::NULL_STRING};
+use crate::{
+    constants::{AUTHORITY_SEED, CONFIG_SEED},
+    errors::NanoError,
+    state::{Config, NanoMachine},
+    utils::NULL_STRING,
+};
 
 pub fn mint_v1(ctx: Context<Mint>) -> Result<()> {
     // checks
     let nano_machine = &mut ctx.accounts.nano_machine;
+
+    if nano_machine.is_private && !ctx.accounts.co_signer.is_signer {
+        return err!(NanoError::Unauthorized);
+    }
 
     let clock = Clock::get()?;
     let current_phase = nano_machine.phases.iter().find(|phase| {
@@ -172,6 +181,18 @@ pub struct Mint<'info> {
         bump
     )]
     pub collection_authority_record: UncheckedAccount<'info>,
+
+    #[account(
+		seeds = [CONFIG_SEED],
+        bump,
+	)]
+    pub config: Account<'info, Config>,
+
+    /// CHECK: account constraints checked in account trait
+    #[account(
+        address = config.co_signer,
+    )]
+    pub co_signer: UncheckedAccount<'info>,
 
     /// CHECK: This is just used as a signing PDA.
     #[account(

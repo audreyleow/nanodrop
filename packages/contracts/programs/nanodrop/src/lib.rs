@@ -17,6 +17,10 @@ declare_id!("nano4T4ujob2vtabhnoiSmHdq4gawScPTwwhF5HSwPJ");
 pub mod nanodrop {
     use super::*;
 
+    pub fn setup(ctx: Context<Setup>) -> Result<()> {
+        setup_v1(ctx)
+    }
+
     pub fn initialize(
         ctx: Context<Initialize>,
         initialization_params: InitializationParams,
