@@ -1,56 +1,57 @@
 use anchor_lang::prelude::*;
-use mpl_token_metadata::state::MAX_CREATOR_LIMIT;
+use mpl_token_metadata::state::MAX_URI_LENGTH;
 
-use crate::errors::NanoError;
+use crate::{errors::NanoError, utils::pad_string_or_throw};
 
 #[account]
 #[derive(Default, Debug)]
 pub struct NanoMachine {
     pub version: AccountVersion,
-    pub authority: Pubkey,
+    pub creator: Pubkey,
     pub collection_mint: Pubkey,
-    /// base name for each NFT
-    pub base_name: String,
-    /// nft assets base uri
-    pub base_uri: String,
+    /// nft name
+    pub name: String,
     /// background image for the collection mint page
     pub background_image_uri: String,
     pub items_redeemed: u64,
-    pub items_available: u64,
-    pub price: u64,
     pub symbol: String,
-    /// Secondary sales royalty basis points (0-10000)
-    pub seller_fee_basis_points: u16,
-    /// List of creators
-    pub creators: Vec<Creator>,
-    pub go_live_date: Option<i64>,
-    pub payment_mint: Pubkey,
     pub merkle_tree: Pubkey,
-    // hidden data section to avoid deserialization:
-    // - (u32 * items_available) mint indices
+    pub phases: Vec<Phase>,
 }
 
 impl NanoMachine {
     pub fn validate(&self) -> Result<()> {
-        if self.seller_fee_basis_points > 10000 {
-            return err!(NanoError::FeeBasisPointTooHigh);
+        if self.phases.len() < 1 {
+            return err!(NanoError::NoMintPhaseFound);
         }
 
-        // (MAX_CREATOR_LIMIT - 1) because the nano machine id is going to be a creator
-        if self.creators.len() > MAX_CREATOR_LIMIT - 1 {
-            return err!(NanoError::TooManyCreators);
+        let mut updated_mint_phases: Vec<Phase> = vec![];
+        for phase in self.phases {
+            if phase.start_date < 0 || phase.end_date < 0 {
+                return err!(NanoError::InvalidPhaseDates);
+            }
+
+            if phase.start_date > phase.end_date {
+                return err!(NanoError::InvalidPhaseDates);
+            }
+
+            updated_mint_phases.push(Phase {
+                start_date: phase.start_date,
+                end_date: phase.end_date,
+                metadata_uri: pad_string_or_throw(phase.metadata_uri, MAX_URI_LENGTH).unwrap(),
+            });
         }
+
+        self.phases = updated_mint_phases;
 
         Ok(())
     }
 }
-
 #[derive(AnchorSerialize, AnchorDeserialize, Clone, Debug)]
-pub struct Creator {
-    pub address: Pubkey,
-    pub verified: bool,
-    // Share of secondary sales royalty
-    pub percentage_share: u8,
+pub struct Phase {
+    pub start_date: i64,
+    pub end_date: i64,
+    pub metadata_uri: String,
 }
 
 #[derive(AnchorSerialize, AnchorDeserialize, Clone, Default, Debug)]

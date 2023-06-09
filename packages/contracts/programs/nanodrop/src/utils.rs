@@ -1,4 +1,7 @@
 use anchor_lang::prelude::*;
+pub use mpl_token_metadata::state::{
+    MAX_CREATOR_LEN, MAX_CREATOR_LIMIT, MAX_NAME_LENGTH, MAX_SYMBOL_LENGTH, MAX_URI_LENGTH,
+};
 
 use crate::errors::NanoError;
 
@@ -16,12 +19,15 @@ pub fn pad_string_or_throw(value: String, length: usize) -> Result<String> {
     Ok(value + &padding)
 }
 
-pub fn get_metadata_uri(base_uri: &String, mint_index: u32) -> String {
-    format!(
-        "{}{}.json",
-        base_uri.trim_matches(NULL_STRING.chars().next().unwrap()),
-        mint_index.to_string()
-    )
-    .trim()
-    .to_string()
+pub fn get_space_for_nano_machine(phases: usize) -> usize {
+    8   //discriminator
+    + 1                                       // version
+    + 32                                      // creator
+    + 32                                      // collection_mint
+    + 4 + MAX_NAME_LENGTH                     // u32 + max base_name length
+    + 4 + MAX_URI_LENGTH                      // u32 + background uri length
+    + 4                                       // items_redeemed
+    + 4 + MAX_SYMBOL_LENGTH                   // u32 + symbol length
+    + 32                                      // merkle_tree
+    + 4 + phases * (4 + MAX_URI_LENGTH)       // u32 + phase length
 }
