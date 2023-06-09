@@ -21,6 +21,8 @@ pub struct NanoMachine {
     pub seller_fee_basis_points: u16,
     /// Merkle tree for compression
     pub merkle_tree: Pubkey,
+    /// Is this a private drop
+    pub is_private: bool,
     /// Minting phases
     pub phases: Vec<Phase>,
 }
