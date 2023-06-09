@@ -1,8 +1,4 @@
-use anchor_lang::{
-    prelude::*,
-    solana_program::{program::invoke, sysvar},
-    Discriminator,
-};
+use anchor_lang::{prelude::*, solana_program::program::invoke, Discriminator};
 use anchor_spl::token::Mint;
 use mpl_bubblegum::state::{
     metaplex_anchor::{MasterEdition, MplTokenMetadata, TokenMetadata},
@@ -76,12 +72,11 @@ pub fn initialize_v1(
 
 #[derive(AnchorSerialize, AnchorDeserialize, Clone, Debug)]
 pub struct InitializationParams {
-    /// Number of assets available
-    pub items_available: u64,
     /// Symbol for the asset
     pub symbol: String,
     /// Secondary sales royalty basis points (0-10000)
     pub seller_fee_basis_points: u16,
+    /// Minting phases
     pub phases: Vec<Phase>,
     /// background image for the collection mint page
     pub background_image_uri: String,
@@ -150,10 +145,6 @@ pub struct Initialize<'info> {
     pub merkle_tree: UncheckedAccount<'info>,
 
     pub system_program: Program<'info, System>,
-    pub rent: Sysvar<'info, Rent>,
-    /// CHECK: account constraint checked in account trait
-    #[account(address = sysvar::instructions::id())]
-    pub sysvar_instructions: UncheckedAccount<'info>,
     /// CHECK: account constraint checked in account trait
     #[account(address = mpl_token_metadata::id())]
     pub token_metadata_program: Program<'info, MplTokenMetadata>,

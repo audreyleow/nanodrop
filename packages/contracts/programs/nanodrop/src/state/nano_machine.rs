@@ -7,15 +7,21 @@ use crate::{errors::NanoError, utils::pad_string_or_throw};
 #[derive(Default, Debug)]
 pub struct NanoMachine {
     pub version: AccountVersion,
+    /// The creator of the nano machine
     pub creator: Pubkey,
+    /// The collection mint for this nano machine
     pub collection_mint: Pubkey,
     /// background image for the collection mint page
     pub background_image_uri: String,
+    /// Number of NFTs minted
     pub items_redeemed: u64,
+    /// Symbol for the NFTs in this collection
     pub symbol: String,
     /// Secondary sales royalty basis points (0-10000)
     pub seller_fee_basis_points: u16,
+    /// Merkle tree for compression
     pub merkle_tree: Pubkey,
+    /// Minting phases
     pub phases: Vec<Phase>,
 }
 

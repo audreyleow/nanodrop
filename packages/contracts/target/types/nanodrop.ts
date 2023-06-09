@@ -56,16 +56,6 @@ export type Nanodrop = {
           "isSigner": false
         },
         {
-          "name": "rent",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "sysvarInstructions",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
           "name": "tokenMetadataProgram",
           "isMut": false,
           "isSigner": false
@@ -197,10 +187,16 @@ export type Nanodrop = {
           },
           {
             "name": "creator",
+            "docs": [
+              "The creator of the nano machine"
+            ],
             "type": "publicKey"
           },
           {
             "name": "collectionMint",
+            "docs": [
+              "The collection mint for this nano machine"
+            ],
             "type": "publicKey"
           },
           {
@@ -212,10 +208,16 @@ export type Nanodrop = {
           },
           {
             "name": "itemsRedeemed",
+            "docs": [
+              "Number of NFTs minted"
+            ],
             "type": "u64"
           },
           {
             "name": "symbol",
+            "docs": [
+              "Symbol for the NFTs in this collection"
+            ],
             "type": "string"
           },
           {
@@ -227,10 +229,16 @@ export type Nanodrop = {
           },
           {
             "name": "merkleTree",
+            "docs": [
+              "Merkle tree for compression"
+            ],
             "type": "publicKey"
           },
           {
             "name": "phases",
+            "docs": [
+              "Minting phases"
+            ],
             "type": {
               "vec": {
                 "defined": "Phase"
@@ -248,13 +256,6 @@ export type Nanodrop = {
         "kind": "struct",
         "fields": [
           {
-            "name": "itemsAvailable",
-            "docs": [
-              "Number of assets available"
-            ],
-            "type": "u64"
-          },
-          {
             "name": "symbol",
             "docs": [
               "Symbol for the asset"
@@ -270,6 +271,9 @@ export type Nanodrop = {
           },
           {
             "name": "phases",
+            "docs": [
+              "Minting phases"
+            ],
             "type": {
               "vec": {
                 "defined": "Phase"
@@ -444,16 +448,6 @@ export const IDL: Nanodrop = {
           "isSigner": false
         },
         {
-          "name": "rent",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "sysvarInstructions",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
           "name": "tokenMetadataProgram",
           "isMut": false,
           "isSigner": false
@@ -585,10 +579,16 @@ export const IDL: Nanodrop = {
           },
           {
             "name": "creator",
+            "docs": [
+              "The creator of the nano machine"
+            ],
             "type": "publicKey"
           },
           {
             "name": "collectionMint",
+            "docs": [
+              "The collection mint for this nano machine"
+            ],
             "type": "publicKey"
           },
           {
@@ -600,10 +600,16 @@ export const IDL: Nanodrop = {
           },
           {
             "name": "itemsRedeemed",
+            "docs": [
+              "Number of NFTs minted"
+            ],
             "type": "u64"
           },
           {
             "name": "symbol",
+            "docs": [
+              "Symbol for the NFTs in this collection"
+            ],
             "type": "string"
           },
           {
@@ -615,10 +621,16 @@ export const IDL: Nanodrop = {
           },
           {
             "name": "merkleTree",
+            "docs": [
+              "Merkle tree for compression"
+            ],
             "type": "publicKey"
           },
           {
             "name": "phases",
+            "docs": [
+              "Minting phases"
+            ],
             "type": {
               "vec": {
                 "defined": "Phase"
@@ -636,13 +648,6 @@ export const IDL: Nanodrop = {
         "kind": "struct",
         "fields": [
           {
-            "name": "itemsAvailable",
-            "docs": [
-              "Number of assets available"
-            ],
-            "type": "u64"
-          },
-          {
             "name": "symbol",
             "docs": [
               "Symbol for the asset"
@@ -658,6 +663,9 @@ export const IDL: Nanodrop = {
           },
           {
             "name": "phases",
+            "docs": [
+              "Minting phases"
+            ],
             "type": {
               "vec": {
                 "defined": "Phase"
