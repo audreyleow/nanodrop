@@ -11,7 +11,7 @@ export type Nanodrop = {
           "isSigner": false
         },
         {
-          "name": "authority",
+          "name": "creator",
           "isMut": false,
           "isSigner": true
         },
@@ -49,12 +49,6 @@ export type Nanodrop = {
           "name": "merkleTree",
           "isMut": false,
           "isSigner": false
-        },
-        {
-          "name": "paymentMint",
-          "isMut": false,
-          "isSigner": false,
-          "isOptional": true
         },
         {
           "name": "systemProgram",
@@ -105,18 +99,6 @@ export type Nanodrop = {
           "isSigner": false
         },
         {
-          "name": "nanoMachineAuthorityAta",
-          "isMut": true,
-          "isSigner": true,
-          "isOptional": true
-        },
-        {
-          "name": "paymentMint",
-          "isMut": false,
-          "isSigner": false,
-          "isOptional": true
-        },
-        {
           "name": "treeAuthority",
           "isMut": true,
           "isSigner": false
@@ -130,12 +112,6 @@ export type Nanodrop = {
           "name": "nftMinter",
           "isMut": true,
           "isSigner": true
-        },
-        {
-          "name": "nftMinterAta",
-          "isMut": false,
-          "isSigner": false,
-          "isOptional": true
         },
         {
           "name": "collectionMint",
@@ -178,11 +154,6 @@ export type Nanodrop = {
           "isSigner": false
         },
         {
-          "name": "tokenProgram",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
           "name": "tokenMetadataProgram",
           "isMut": false,
           "isSigner": false
@@ -191,58 +162,9 @@ export type Nanodrop = {
           "name": "systemProgram",
           "isMut": false,
           "isSigner": false
-        },
-        {
-          "name": "associatedTokenProgram",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "clock",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "recentSlothashes",
-          "isMut": false,
-          "isSigner": false
         }
       ],
       "args": []
-    },
-    {
-      "name": "update",
-      "accounts": [
-        {
-          "name": "nanoMachine",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "authority",
-          "isMut": true,
-          "isSigner": true
-        },
-        {
-          "name": "paymentMint",
-          "isMut": false,
-          "isSigner": false,
-          "isOptional": true
-        },
-        {
-          "name": "clock",
-          "isMut": false,
-          "isSigner": false
-        }
-      ],
-      "args": [
-        {
-          "name": "updateParams",
-          "type": {
-            "defined": "UpdateParams"
-          }
-        }
-      ]
     },
     {
       "name": "close",
@@ -253,7 +175,7 @@ export type Nanodrop = {
           "isSigner": false
         },
         {
-          "name": "authority",
+          "name": "creator",
           "isMut": true,
           "isSigner": true
         }
@@ -274,26 +196,12 @@ export type Nanodrop = {
             }
           },
           {
-            "name": "authority",
+            "name": "creator",
             "type": "publicKey"
           },
           {
             "name": "collectionMint",
             "type": "publicKey"
-          },
-          {
-            "name": "baseName",
-            "docs": [
-              "base name for each NFT"
-            ],
-            "type": "string"
-          },
-          {
-            "name": "baseUri",
-            "docs": [
-              "nft assets base uri"
-            ],
-            "type": "string"
           },
           {
             "name": "backgroundImageUri",
@@ -304,14 +212,6 @@ export type Nanodrop = {
           },
           {
             "name": "itemsRedeemed",
-            "type": "u64"
-          },
-          {
-            "name": "itemsAvailable",
-            "type": "u64"
-          },
-          {
-            "name": "price",
             "type": "u64"
           },
           {
@@ -326,29 +226,16 @@ export type Nanodrop = {
             "type": "u16"
           },
           {
-            "name": "creators",
-            "docs": [
-              "List of creators"
-            ],
-            "type": {
-              "vec": {
-                "defined": "Creator"
-              }
-            }
-          },
-          {
-            "name": "goLiveDate",
-            "type": {
-              "option": "i64"
-            }
-          },
-          {
-            "name": "paymentMint",
-            "type": "publicKey"
-          },
-          {
             "name": "merkleTree",
             "type": "publicKey"
+          },
+          {
+            "name": "phases",
+            "type": {
+              "vec": {
+                "defined": "Phase"
+              }
+            }
           }
         ]
       }
@@ -382,29 +269,12 @@ export type Nanodrop = {
             "type": "u16"
           },
           {
-            "name": "creators",
-            "docs": [
-              "List of creators"
-            ],
+            "name": "phases",
             "type": {
               "vec": {
-                "defined": "Creator"
+                "defined": "Phase"
               }
             }
-          },
-          {
-            "name": "baseName",
-            "docs": [
-              "base name for each NFT"
-            ],
-            "type": "string"
-          },
-          {
-            "name": "baseUri",
-            "docs": [
-              "nft assets base uri"
-            ],
-            "type": "string"
           },
           {
             "name": "backgroundImageUri",
@@ -412,56 +282,30 @@ export type Nanodrop = {
               "background image for the collection mint page"
             ],
             "type": "string"
-          },
-          {
-            "name": "price",
-            "type": "u64"
-          },
-          {
-            "name": "goLiveDate",
-            "type": {
-              "option": "i64"
-            }
           }
         ]
       }
     },
     {
-      "name": "UpdateParams",
+      "name": "Phase",
       "type": {
         "kind": "struct",
         "fields": [
           {
-            "name": "goLiveDate",
-            "type": {
-              "option": "i64"
-            }
+            "name": "startDate",
+            "type": "i64"
           },
           {
-            "name": "price",
-            "type": {
-              "option": "u64"
-            }
-          }
-        ]
-      }
-    },
-    {
-      "name": "Creator",
-      "type": {
-        "kind": "struct",
-        "fields": [
-          {
-            "name": "address",
-            "type": "publicKey"
+            "name": "endDate",
+            "type": "i64"
           },
           {
-            "name": "verified",
-            "type": "bool"
+            "name": "metadataUri",
+            "type": "string"
           },
           {
-            "name": "percentageShare",
-            "type": "u8"
+            "name": "nftName",
+            "type": "string"
           }
         ]
       }
@@ -486,28 +330,28 @@ export type Nanodrop = {
     },
     {
       "code": 6001,
-      "name": "TooManyCreators",
-      "msg": "Can only provide up to 4 creators"
+      "name": "NoMintPhaseFound",
+      "msg": "At least one mint phase is required"
     },
     {
       "code": 6002,
+      "name": "InvalidPhaseDates",
+      "msg": "Invalid phase dates"
+    },
+    {
+      "code": 6003,
       "name": "FeeBasisPointTooHigh",
       "msg": "Fee basis point cannot exceed 10000"
     },
     {
-      "code": 6003,
+      "code": 6004,
       "name": "InstructionBuilderFailed",
       "msg": "Instruction could not be created"
     },
     {
-      "code": 6004,
-      "name": "NanoMachineEmpty",
-      "msg": "Nano machine is empty!"
-    },
-    {
       "code": 6005,
-      "name": "NanoMachineNotLive",
-      "msg": "Nano machine is not live!"
+      "name": "MintHasNotStarted",
+      "msg": "Mint has not started or has already ended!"
     },
     {
       "code": 6006,
@@ -555,7 +399,7 @@ export const IDL: Nanodrop = {
           "isSigner": false
         },
         {
-          "name": "authority",
+          "name": "creator",
           "isMut": false,
           "isSigner": true
         },
@@ -593,12 +437,6 @@ export const IDL: Nanodrop = {
           "name": "merkleTree",
           "isMut": false,
           "isSigner": false
-        },
-        {
-          "name": "paymentMint",
-          "isMut": false,
-          "isSigner": false,
-          "isOptional": true
         },
         {
           "name": "systemProgram",
@@ -649,18 +487,6 @@ export const IDL: Nanodrop = {
           "isSigner": false
         },
         {
-          "name": "nanoMachineAuthorityAta",
-          "isMut": true,
-          "isSigner": true,
-          "isOptional": true
-        },
-        {
-          "name": "paymentMint",
-          "isMut": false,
-          "isSigner": false,
-          "isOptional": true
-        },
-        {
           "name": "treeAuthority",
           "isMut": true,
           "isSigner": false
@@ -674,12 +500,6 @@ export const IDL: Nanodrop = {
           "name": "nftMinter",
           "isMut": true,
           "isSigner": true
-        },
-        {
-          "name": "nftMinterAta",
-          "isMut": false,
-          "isSigner": false,
-          "isOptional": true
         },
         {
           "name": "collectionMint",
@@ -722,11 +542,6 @@ export const IDL: Nanodrop = {
           "isSigner": false
         },
         {
-          "name": "tokenProgram",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
           "name": "tokenMetadataProgram",
           "isMut": false,
           "isSigner": false
@@ -735,58 +550,9 @@ export const IDL: Nanodrop = {
           "name": "systemProgram",
           "isMut": false,
           "isSigner": false
-        },
-        {
-          "name": "associatedTokenProgram",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "clock",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "recentSlothashes",
-          "isMut": false,
-          "isSigner": false
         }
       ],
       "args": []
-    },
-    {
-      "name": "update",
-      "accounts": [
-        {
-          "name": "nanoMachine",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "authority",
-          "isMut": true,
-          "isSigner": true
-        },
-        {
-          "name": "paymentMint",
-          "isMut": false,
-          "isSigner": false,
-          "isOptional": true
-        },
-        {
-          "name": "clock",
-          "isMut": false,
-          "isSigner": false
-        }
-      ],
-      "args": [
-        {
-          "name": "updateParams",
-          "type": {
-            "defined": "UpdateParams"
-          }
-        }
-      ]
     },
     {
       "name": "close",
@@ -797,7 +563,7 @@ export const IDL: Nanodrop = {
           "isSigner": false
         },
         {
-          "name": "authority",
+          "name": "creator",
           "isMut": true,
           "isSigner": true
         }
@@ -818,26 +584,12 @@ export const IDL: Nanodrop = {
             }
           },
           {
-            "name": "authority",
+            "name": "creator",
             "type": "publicKey"
           },
           {
             "name": "collectionMint",
             "type": "publicKey"
-          },
-          {
-            "name": "baseName",
-            "docs": [
-              "base name for each NFT"
-            ],
-            "type": "string"
-          },
-          {
-            "name": "baseUri",
-            "docs": [
-              "nft assets base uri"
-            ],
-            "type": "string"
           },
           {
             "name": "backgroundImageUri",
@@ -848,14 +600,6 @@ export const IDL: Nanodrop = {
           },
           {
             "name": "itemsRedeemed",
-            "type": "u64"
-          },
-          {
-            "name": "itemsAvailable",
-            "type": "u64"
-          },
-          {
-            "name": "price",
             "type": "u64"
           },
           {
@@ -870,29 +614,16 @@ export const IDL: Nanodrop = {
             "type": "u16"
           },
           {
-            "name": "creators",
-            "docs": [
-              "List of creators"
-            ],
-            "type": {
-              "vec": {
-                "defined": "Creator"
-              }
-            }
-          },
-          {
-            "name": "goLiveDate",
-            "type": {
-              "option": "i64"
-            }
-          },
-          {
-            "name": "paymentMint",
-            "type": "publicKey"
-          },
-          {
             "name": "merkleTree",
             "type": "publicKey"
+          },
+          {
+            "name": "phases",
+            "type": {
+              "vec": {
+                "defined": "Phase"
+              }
+            }
           }
         ]
       }
@@ -926,29 +657,12 @@ export const IDL: Nanodrop = {
             "type": "u16"
           },
           {
-            "name": "creators",
-            "docs": [
-              "List of creators"
-            ],
+            "name": "phases",
             "type": {
               "vec": {
-                "defined": "Creator"
+                "defined": "Phase"
               }
             }
-          },
-          {
-            "name": "baseName",
-            "docs": [
-              "base name for each NFT"
-            ],
-            "type": "string"
-          },
-          {
-            "name": "baseUri",
-            "docs": [
-              "nft assets base uri"
-            ],
-            "type": "string"
           },
           {
             "name": "backgroundImageUri",
@@ -956,56 +670,30 @@ export const IDL: Nanodrop = {
               "background image for the collection mint page"
             ],
             "type": "string"
-          },
-          {
-            "name": "price",
-            "type": "u64"
-          },
-          {
-            "name": "goLiveDate",
-            "type": {
-              "option": "i64"
-            }
           }
         ]
       }
     },
     {
-      "name": "UpdateParams",
+      "name": "Phase",
       "type": {
         "kind": "struct",
         "fields": [
           {
-            "name": "goLiveDate",
-            "type": {
-              "option": "i64"
-            }
+            "name": "startDate",
+            "type": "i64"
           },
           {
-            "name": "price",
-            "type": {
-              "option": "u64"
-            }
-          }
-        ]
-      }
-    },
-    {
-      "name": "Creator",
-      "type": {
-        "kind": "struct",
-        "fields": [
-          {
-            "name": "address",
-            "type": "publicKey"
+            "name": "endDate",
+            "type": "i64"
           },
           {
-            "name": "verified",
-            "type": "bool"
+            "name": "metadataUri",
+            "type": "string"
           },
           {
-            "name": "percentageShare",
-            "type": "u8"
+            "name": "nftName",
+            "type": "string"
           }
         ]
       }
@@ -1030,28 +718,28 @@ export const IDL: Nanodrop = {
     },
     {
       "code": 6001,
-      "name": "TooManyCreators",
-      "msg": "Can only provide up to 4 creators"
+      "name": "NoMintPhaseFound",
+      "msg": "At least one mint phase is required"
     },
     {
       "code": 6002,
+      "name": "InvalidPhaseDates",
+      "msg": "Invalid phase dates"
+    },
+    {
+      "code": 6003,
       "name": "FeeBasisPointTooHigh",
       "msg": "Fee basis point cannot exceed 10000"
     },
     {
-      "code": 6003,
+      "code": 6004,
       "name": "InstructionBuilderFailed",
       "msg": "Instruction could not be created"
     },
     {
-      "code": 6004,
-      "name": "NanoMachineEmpty",
-      "msg": "Nano machine is empty!"
-    },
-    {
       "code": 6005,
-      "name": "NanoMachineNotLive",
-      "msg": "Nano machine is not live!"
+      "name": "MintHasNotStarted",
+      "msg": "Mint has not started or has already ended!"
     },
     {
       "code": 6006,

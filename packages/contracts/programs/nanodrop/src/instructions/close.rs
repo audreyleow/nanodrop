@@ -10,11 +10,11 @@ pub fn close_v1(_ctx: Context<Close>) -> Result<()> {
 pub struct Close<'info> {
     #[account(
         mut,
-        constraint = nano_machine.authority.key() == authority.key(),
-        close = authority
+        constraint = nano_machine.creator.key() == creator.key(),
+        close = creator
     )]
     pub nano_machine: Account<'info, NanoMachine>,
 
     #[account(mut)]
-    pub authority: Signer<'info>,
+    pub creator: Signer<'info>,
 }

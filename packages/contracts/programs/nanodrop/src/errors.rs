@@ -17,11 +17,8 @@ pub enum NanoError {
     #[msg("Instruction could not be created")]
     InstructionBuilderFailed,
 
-    #[msg("Nano machine is empty!")]
-    NanoMachineEmpty,
-
-    #[msg("Nano machine is not live!")]
-    NanoMachineNotLive,
+    #[msg("Mint has not started or has already ended!")]
+    MintHasNotStarted,
 
     #[msg("Collection public key mismatch")]
     CollectionKeyMismatch,

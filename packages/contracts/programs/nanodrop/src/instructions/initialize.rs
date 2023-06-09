@@ -1,6 +1,7 @@
 use anchor_lang::{
     prelude::*,
     solana_program::{program::invoke, sysvar},
+    Discriminator,
 };
 use anchor_spl::token::Mint;
 use mpl_bubblegum::state::{
@@ -9,7 +10,7 @@ use mpl_bubblegum::state::{
 };
 use mpl_token_metadata::{
     instruction::approve_collection_authority,
-    state::{MAX_NAME_LENGTH, MAX_SYMBOL_LENGTH, MAX_URI_LENGTH},
+    state::{MAX_SYMBOL_LENGTH, MAX_URI_LENGTH},
 };
 
 use crate::{
@@ -25,10 +26,9 @@ pub fn initialize_v1(
     // initialize the nano_machine account
     let nano_machine_account = &mut ctx.accounts.nano_machine;
 
-    let new_nano_machine = NanoMachine {
+    let mut new_nano_machine = NanoMachine {
         version: AccountVersion::V1,
         creator: ctx.accounts.creator.key(),
-        name: pad_string_or_throw(initialization_params.name, MAX_NAME_LENGTH)?,
         collection_mint: ctx.accounts.collection_mint.key(),
         background_image_uri: pad_string_or_throw(
             initialization_params.background_image_uri,
@@ -36,10 +36,17 @@ pub fn initialize_v1(
         )?,
         items_redeemed: 0,
         symbol: pad_string_or_throw(initialization_params.symbol, MAX_SYMBOL_LENGTH)?,
+        seller_fee_basis_points: initialization_params.seller_fee_basis_points,
         merkle_tree: ctx.accounts.merkle_tree.key(),
         phases: initialization_params.phases,
     };
     new_nano_machine.validate()?;
+
+    // initialize the nano_machine account
+    let mut struct_data = NanoMachine::discriminator().try_to_vec().unwrap();
+    struct_data.append(&mut new_nano_machine.try_to_vec().unwrap());
+    let mut account_data = nano_machine_account.data.borrow_mut();
+    account_data[..struct_data.len()].copy_from_slice(&struct_data);
 
     // approve collection delegate authority
     let approve_collection_authority_ix = approve_collection_authority(
@@ -73,8 +80,8 @@ pub struct InitializationParams {
     pub items_available: u64,
     /// Symbol for the asset
     pub symbol: String,
-    /// nft name
-    pub name: String,
+    /// Secondary sales royalty basis points (0-10000)
+    pub seller_fee_basis_points: u16,
     pub phases: Vec<Phase>,
     /// background image for the collection mint page
     pub background_image_uri: String,
