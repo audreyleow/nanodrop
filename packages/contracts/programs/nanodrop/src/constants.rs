@@ -1,3 +1,1 @@
 pub const AUTHORITY_SEED: &[u8; 12] = b"nano_machine";
-
-pub const NATIVE_MINT: &str = "So11111111111111111111111111111111111111112";

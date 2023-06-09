@@ -28,10 +28,6 @@ pub mod nanodrop {
         mint_v1(ctx)
     }
 
-    pub fn update(ctx: Context<Update>, update_params: UpdateParams) -> Result<()> {
-        update_v1(ctx, update_params)
-    }
-
     pub fn close(ctx: Context<Close>) -> Result<()> {
         close_v1(ctx)
     }

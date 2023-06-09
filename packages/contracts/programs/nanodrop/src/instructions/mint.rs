@@ -1,11 +1,4 @@
-use std::str::FromStr;
-
-use anchor_lang::{prelude::*, solana_program::sysvar, system_program};
-use anchor_spl::{
-    associated_token::AssociatedToken,
-    token::{self, Token, TokenAccount},
-};
-use arrayref::array_ref;
+use anchor_lang::prelude::*;
 use mpl_bubblegum::{
     program::Bubblegum,
     state::{
@@ -16,104 +9,34 @@ use mpl_bubblegum::{
 };
 use spl_account_compression::{program::SplAccountCompression, Noop};
 
-use crate::{
-    constants::{AUTHORITY_SEED, HIDDEN_SECTION_START, NATIVE_MINT},
-    errors::NanoError,
-    state::NanoMachine,
-    utils::{get_metadata_uri, NULL_STRING},
-};
+use crate::{constants::AUTHORITY_SEED, errors::NanoError, state::NanoMachine, utils::NULL_STRING};
 
 pub fn mint_v1(ctx: Context<Mint>) -> Result<()> {
     // checks
     let nano_machine = &mut ctx.accounts.nano_machine;
-    if nano_machine.items_redeemed >= nano_machine.items_available {
-        return err!(NanoError::NanoMachineEmpty);
-    }
 
     let clock = Clock::get()?;
-    match nano_machine.go_live_date {
-        Some(go_live_date) => {
-            if clock.unix_timestamp < go_live_date {
-                return err!(NanoError::NanoMachineNotLive);
-            }
-        }
-        None => (),
-    }
+    let current_phase = nano_machine.phases.iter().find(|phase| {
+        clock.unix_timestamp >= phase.start_date && clock.unix_timestamp <= phase.end_date
+    });
 
-    // transfer mint price
-    if nano_machine.price > 0 {
-        if nano_machine.payment_mint.key() != Pubkey::from_str(NATIVE_MINT).unwrap() {
-            token::transfer(
-                CpiContext::new(
-                    ctx.accounts.token_program.to_account_info(),
-                    token::Transfer {
-                        from: ctx
-                            .accounts
-                            .nft_minter_ata
-                            .as_ref()
-                            .unwrap()
-                            .to_account_info(),
-                        to: ctx
-                            .accounts
-                            .nano_machine_authority_ata
-                            .as_ref()
-                            .unwrap()
-                            .to_account_info(),
-                        authority: ctx.accounts.nft_minter.to_account_info(),
-                    },
-                ),
-                nano_machine.price,
-            )?;
-        } else {
-            system_program::transfer(
-                CpiContext::new(
-                    ctx.accounts.system_program.to_account_info(),
-                    system_program::Transfer {
-                        from: ctx.accounts.nft_minter.to_account_info(),
-                        to: ctx.accounts.nano_machine_authority.to_account_info(),
-                    },
-                ),
-                nano_machine.price,
-            )?;
-        }
+    if current_phase.is_none() {
+        return err!(NanoError::MintHasNotStarted);
     }
-
-    // select random index
-    let recent_slothashes = &ctx.accounts.recent_slothashes;
-    let data = recent_slothashes.data.borrow();
-    let most_recent = array_ref![data, 12, 8];
-    // seed for the random number is a combination of the slot_hash - timestamp
-    let seed = u64::from_le_bytes(*most_recent).saturating_sub(clock.unix_timestamp as u64);
-    let hidden_item_index = seed
-        .checked_rem(nano_machine.items_available - nano_machine.items_redeemed)
-        .unwrap();
-    let data_index = HIDDEN_SECTION_START + ((hidden_item_index as usize) * 4);
-    // get mint index
-    let account_info = nano_machine.to_account_info();
-    let mut account_data = account_info.data.borrow_mut();
-    let mint_index = u32::from_le_bytes(*array_ref![account_data, data_index, 4]);
-    // replace the item at the mint index with the last value
-    let items_left = nano_machine.items_available - nano_machine.items_redeemed;
-    let last_index = HIDDEN_SECTION_START + 4 + ((items_left - 1) * 4) as usize;
-    let last_value = u32::from_le_bytes(*array_ref![account_data, last_index, 4]);
-    account_data[data_index..data_index + 4].copy_from_slice(&u32::to_le_bytes(last_value));
-    nano_machine.items_redeemed = nano_machine.items_redeemed.checked_add(1).unwrap();
 
     // mint nft
-    let mut creators: Vec<mpl_bubblegum::state::metaplex_adapter::Creator> =
-        vec![mpl_bubblegum::state::metaplex_adapter::Creator {
+    let creators: Vec<mpl_bubblegum::state::metaplex_adapter::Creator> = vec![
+        mpl_bubblegum::state::metaplex_adapter::Creator {
             address: ctx.accounts.nano_machine_pda_authority.key(),
             verified: true,
             share: 0,
-        }];
-
-    for creator in &nano_machine.creators {
-        creators.push(mpl_bubblegum::state::metaplex_adapter::Creator {
-            address: creator.address,
+        },
+        mpl_bubblegum::state::metaplex_adapter::Creator {
+            address: nano_machine.creator,
             verified: false,
-            share: creator.percentage_share,
-        });
-    }
+            share: 100,
+        },
+    ];
 
     let nano_machine_pda_authority = &mut ctx.accounts.nano_machine_pda_authority.to_account_info();
     nano_machine_pda_authority.is_signer = true;
@@ -149,15 +72,20 @@ pub fn mint_v1(ctx: Context<Mint>) -> Result<()> {
         )
         .with_remaining_accounts(vec![nano_machine_pda_authority.clone()]),
         MetadataArgs {
-            name: format!(
-                "{}{}",
-                nano_machine
-                    .base_name
-                    .trim_matches(NULL_STRING.chars().next().unwrap()),
-                (mint_index + 1).to_string()
-            ),
-            symbol: nano_machine.symbol.to_string(),
-            uri: get_metadata_uri(&nano_machine.base_uri, mint_index),
+            name: current_phase
+                .unwrap()
+                .nft_name
+                .trim_matches(NULL_STRING.chars().next().unwrap())
+                .to_string(),
+            symbol: nano_machine
+                .symbol
+                .trim_matches(NULL_STRING.chars().next().unwrap())
+                .to_string(),
+            uri: current_phase
+                .unwrap()
+                .metadata_uri
+                .trim_matches(NULL_STRING.chars().next().unwrap())
+                .to_string(),
             seller_fee_basis_points: nano_machine.seller_fee_basis_points,
             primary_sale_happened: false,
             is_mutable: true,
@@ -172,6 +100,8 @@ pub fn mint_v1(ctx: Context<Mint>) -> Result<()> {
             creators,
         },
     )?;
+
+    nano_machine.items_redeemed = nano_machine.items_redeemed.checked_add(1).unwrap();
 
     Ok(())
 }
@@ -194,27 +124,16 @@ pub struct Mint<'info> {
     /// CHECK: account constraints checked in account trait
     #[account(
         mut,
-        address = nano_machine.authority.key()
+        address = nano_machine.creator.key()
     )]
     pub nano_machine_authority: UncheckedAccount<'info>,
-
-    #[account(
-        init_if_needed,
-        payer = nft_minter,
-        token::mint = payment_mint,
-        token::authority = nano_machine_authority,
-    )]
-    pub nano_machine_authority_ata: Option<Box<Account<'info, TokenAccount>>>,
-
-    #[account(address = nano_machine.payment_mint)]
-    pub payment_mint: Option<Box<Account<'info, anchor_spl::token::Mint>>>,
 
     #[account(
         mut,
         seeds = [merkle_tree.key().as_ref()],
         seeds::program = mpl_bubblegum::id(),
         bump,
-        constraint = tree_authority.tree_creator == nano_machine.authority.key()
+        constraint = tree_authority.tree_creator == nano_machine.creator.key()
             && tree_authority.tree_delegate == nano_machine_pda_authority.to_account_info().key()
     )]
     pub tree_authority: Box<Account<'info, TreeConfig>>,
@@ -228,12 +147,6 @@ pub struct Mint<'info> {
 
     #[account(mut)]
     pub nft_minter: Signer<'info>,
-
-    #[account(
-        token::mint = payment_mint,
-        token::authority = nft_minter,
-    )]
-    pub nft_minter_ata: Option<Box<Account<'info, TokenAccount>>>,
 
     #[account(
         constraint =
@@ -270,12 +183,6 @@ pub struct Mint<'info> {
     pub bubblegum_program: Program<'info, Bubblegum>,
     pub log_wrapper: Program<'info, Noop>,
     pub compression_program: Program<'info, SplAccountCompression>,
-    pub token_program: Program<'info, Token>,
     pub token_metadata_program: Program<'info, MplTokenMetadata>,
     pub system_program: Program<'info, System>,
-    pub associated_token_program: Program<'info, AssociatedToken>,
-    pub clock: Sysvar<'info, Clock>,
-    /// CHECK: account constraints checked in account trait
-    #[account(address = sysvar::slot_hashes::id())]
-    pub recent_slothashes: UncheckedAccount<'info>,
 }
