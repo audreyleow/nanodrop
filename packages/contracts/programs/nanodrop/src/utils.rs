@@ -30,5 +30,5 @@ pub fn get_space_for_nano_machine(phases: usize) -> usize {
     + 4 + MAX_SYMBOL_LENGTH                   // u32 + symbol length
     + 2                                       // seller_fee_basis_points
     + 32                                      // merkle_tree
-    + 4 + phases * (4 + MAX_URI_LENGTH)       // u32 + phase length
+    + 4 + phases * (4 + MAX_URI_LENGTH) // u32 + phase length
 }

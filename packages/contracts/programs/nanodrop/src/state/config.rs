@@ -9,7 +9,7 @@ pub struct Config {
 impl Config {
     pub const LEN: usize = 4 // discriminator
     + 1                      // version
-    + 32;                    // co_signer
+    + 32; // co_signer
 }
 
 #[derive(AnchorSerialize, AnchorDeserialize, Clone, Default, Debug)]

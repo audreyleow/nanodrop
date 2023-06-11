@@ -42,18 +42,18 @@ const keypair = Keypair.fromSecretKey(Uint8Array.from(keypairJson));
 
 // createTree(connection, keypair);
 
-// getTreeInfo(
-//   connection,
-//   new PublicKey("BiFKKFoTLh1wmr4UP8H3JgUPWbFaGtzuZxwoM7wZ956N")
-// );
+getTreeInfo(
+  connection,
+  new PublicKey("CeQFpf5USvUFkfLjvSwr5RjFA3CqCjYjGJMuQaG2bYBR")
+);
 
 // setTreeDelegate(connection, keypair).catch((e) => {
 //   console.log(e);
 // });
 
-initializeNanoMachine(connection, keypair).catch((e) => {
-  console.log(e);
-});
+// initializeNanoMachine(connection, keypair).catch((e) => {
+//   console.log(e);
+// });
 
 // fetchNanoMachine();
 
