@@ -10,7 +10,7 @@ use mpl_token_metadata::{
 };
 
 use crate::{
-    constants::AUTHORITY_SEED,
+    constants::{AUTHORITY_SEED, SHARED_TREE, TREE_DELEGATE_SEED},
     state::{AccountVersion, NanoMachine, Phase},
     utils::{get_space_for_nano_machine, pad_string_or_throw},
 };
@@ -131,12 +131,21 @@ pub struct Initialize<'info> {
     )]
     pub nano_machine_pda_authority: UncheckedAccount<'info>,
 
+    /// CHECK: This is just used as a signing PDA.
+    #[account(
+        seeds = [TREE_DELEGATE_SEED],
+        bump
+    )]
+    pub tree_delegate: UncheckedAccount<'info>,
+
     #[account(
         seeds = [merkle_tree.key().as_ref()],
         seeds::program = mpl_bubblegum::id(),
         bump,
-        constraint = tree_authority.tree_creator == creator.key()
-            && tree_authority.tree_delegate == nano_machine_pda_authority.key()
+        constraint = (tree_authority.tree_creator == creator.key()
+            && tree_authority.tree_delegate == tree_delegate.key())
+            || (merkle_tree.key() == SHARED_TREE.key()
+                && tree_authority.tree_delegate == tree_delegate.key())
     )]
     pub tree_authority: Account<'info, TreeConfig>,
 
