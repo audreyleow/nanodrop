@@ -20,15 +20,16 @@ pub fn pad_string_or_throw(value: String, length: usize) -> Result<String> {
 }
 
 pub fn get_space_for_nano_machine(phases: usize) -> usize {
-    8   //discriminator
-    + 1                                       // version
-    + 32                                      // creator
-    + 32                                      // collection_mint
-    + 4 + MAX_NAME_LENGTH                     // u32 + max base_name length
-    + 4 + MAX_URI_LENGTH                      // u32 + background uri length
-    + 4                                       // items_redeemed
-    + 4 + MAX_SYMBOL_LENGTH                   // u32 + symbol length
-    + 2                                       // seller_fee_basis_points
-    + 32                                      // merkle_tree
-    + 4 + phases * (4 + MAX_URI_LENGTH) // u32 + phase length
+    8                                                          //discriminator
+    + 1                                                        // version
+    + 32                                                       // creator
+    + 32                                                       // collection_mint
+    + 4 + MAX_URI_LENGTH                                       // u32 + background uri length
+    + 8                                                        // items_redeemed
+    + 4 + MAX_SYMBOL_LENGTH                                    // u32 + symbol length
+    + 2                                                        // seller_fee_basis_points
+    + 32                                                       // merkle_tree
+    + 1                                                        // is_private
+    + 4 + phases * 
+        (8 + 8 + (4 + MAX_URI_LENGTH) + (4 + MAX_NAME_LENGTH)) // u32 + phases * (start_date + end_date + (u32 + metadata_uri) + (u32 + nft_name))
 }
