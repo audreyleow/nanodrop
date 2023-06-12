@@ -42,79 +42,79 @@ export async function getMintIx(
     minter: PublicKey;
   }
 ) {
-  const [nanoMachinePdaAuthority] = PublicKey.findProgramAddressSync(
-    [Buffer.from("nano_machine"), nanoMachineId.toBuffer()],
-    NANODROP_PROGRAM_ID
-  );
+  // const [nanoMachinePdaAuthority] = PublicKey.findProgramAddressSync(
+  //   [Buffer.from("nano_machine"), nanoMachineId.toBuffer()],
+  //   NANODROP_PROGRAM_ID
+  // );
 
-  const [collectionMetadata] = PublicKey.findProgramAddressSync(
-    [
-      Buffer.from("metadata"),
-      TOKEN_METADATA_PROGRAM_ID.toBuffer(),
-      collectionMint.toBuffer(),
-    ],
-    TOKEN_METADATA_PROGRAM_ID
-  );
+  // const [collectionMetadata] = PublicKey.findProgramAddressSync(
+  //   [
+  //     Buffer.from("metadata"),
+  //     TOKEN_METADATA_PROGRAM_ID.toBuffer(),
+  //     collectionMint.toBuffer(),
+  //   ],
+  //   TOKEN_METADATA_PROGRAM_ID
+  // );
 
-  const [collectionMasterEdition] = PublicKey.findProgramAddressSync(
-    [
-      Buffer.from("metadata"),
-      TOKEN_METADATA_PROGRAM_ID.toBuffer(),
-      collectionMint.toBuffer(),
-      Buffer.from("edition"),
-    ],
-    TOKEN_METADATA_PROGRAM_ID
-  );
+  // const [collectionMasterEdition] = PublicKey.findProgramAddressSync(
+  //   [
+  //     Buffer.from("metadata"),
+  //     TOKEN_METADATA_PROGRAM_ID.toBuffer(),
+  //     collectionMint.toBuffer(),
+  //     Buffer.from("edition"),
+  //   ],
+  //   TOKEN_METADATA_PROGRAM_ID
+  // );
 
-  const [collectionAuthorityRecord] = PublicKey.findProgramAddressSync(
-    [
-      Buffer.from("metadata"),
-      TOKEN_METADATA_PROGRAM_ID.toBuffer(),
-      collectionMint.toBuffer(),
-      Buffer.from("collection_authority"),
-      nanoMachinePdaAuthority.toBuffer(),
-    ],
-    TOKEN_METADATA_PROGRAM_ID
-  );
+  // const [collectionAuthorityRecord] = PublicKey.findProgramAddressSync(
+  //   [
+  //     Buffer.from("metadata"),
+  //     TOKEN_METADATA_PROGRAM_ID.toBuffer(),
+  //     collectionMint.toBuffer(),
+  //     Buffer.from("collection_authority"),
+  //     nanoMachinePdaAuthority.toBuffer(),
+  //   ],
+  //   TOKEN_METADATA_PROGRAM_ID
+  // );
 
-  const [treeAuthority] = PublicKey.findProgramAddressSync(
-    [merkleTree.toBuffer()],
-    BUBBLEGUM_PROGRAM_ID
-  );
+  // const [treeAuthority] = PublicKey.findProgramAddressSync(
+  //   [merkleTree.toBuffer()],
+  //   BUBBLEGUM_PROGRAM_ID
+  // );
 
-  const [bubblegumSigner] = PublicKey.findProgramAddressSync(
-    [Buffer.from("collection_cpi")],
-    BUBBLEGUM_PROGRAM_ID
-  );
+  // const [bubblegumSigner] = PublicKey.findProgramAddressSync(
+  //   [Buffer.from("collection_cpi")],
+  //   BUBBLEGUM_PROGRAM_ID
+  // );
 
-  const mintIx = await program.methods
-    .mint()
-    .accounts({
-      associatedTokenProgram: ASSOCIATED_TOKEN_PROGRAM_ID,
-      bubblegumProgram: BUBBLEGUM_PROGRAM_ID,
-      bubblegumSigner,
-      clock: SYSVAR_CLOCK_PUBKEY,
-      collectionAuthorityRecord,
-      collectionMasterEdition,
-      collectionMetadata,
-      collectionMint,
-      compressionProgram: SPL_ACCOUNT_COMPRESSION_PROGRAM_ID,
-      logWrapper: SPL_NOOP_PROGRAM_ID,
-      merkleTree,
-      nanoMachine: nanoMachineId,
-      nanoMachineAuthority: creator,
-      nanoMachineAuthorityAta: NANODROP_PROGRAM_ID,
-      nanoMachinePdaAuthority,
-      nftMinter: minter,
-      nftMinterAta: NANODROP_PROGRAM_ID,
-      paymentMint: NANODROP_PROGRAM_ID,
-      recentSlothashes: SYSVAR_SLOT_HASHES_PUBKEY,
-      systemProgram: SystemProgram.programId,
-      tokenMetadataProgram: TOKEN_METADATA_PROGRAM_ID,
-      tokenProgram: TOKEN_PROGRAM_ID,
-      treeAuthority,
-    })
-    .instruction();
+  // const mintIx = await program.methods
+  //   .mint()
+  //   .accounts({
+  //     associatedTokenProgram: ASSOCIATED_TOKEN_PROGRAM_ID,
+  //     bubblegumProgram: BUBBLEGUM_PROGRAM_ID,
+  //     bubblegumSigner,
+  //     clock: SYSVAR_CLOCK_PUBKEY,
+  //     collectionAuthorityRecord,
+  //     collectionMasterEdition,
+  //     collectionMetadata,
+  //     collectionMint,
+  //     compressionProgram: SPL_ACCOUNT_COMPRESSION_PROGRAM_ID,
+  //     logWrapper: SPL_NOOP_PROGRAM_ID,
+  //     merkleTree,
+  //     nanoMachine: nanoMachineId,
+  //     nanoMachineAuthority: creator,
+  //     nanoMachineAuthorityAta: NANODROP_PROGRAM_ID,
+  //     nanoMachinePdaAuthority,
+  //     nftMinter: minter,
+  //     nftMinterAta: NANODROP_PROGRAM_ID,
+  //     paymentMint: NANODROP_PROGRAM_ID,
+  //     recentSlothashes: SYSVAR_SLOT_HASHES_PUBKEY,
+  //     systemProgram: SystemProgram.programId,
+  //     tokenMetadataProgram: TOKEN_METADATA_PROGRAM_ID,
+  //     tokenProgram: TOKEN_PROGRAM_ID,
+  //     treeAuthority,
+  //   })
+  //   .instruction();
 
-  return mintIx;
+  // return mintIx;
 }
