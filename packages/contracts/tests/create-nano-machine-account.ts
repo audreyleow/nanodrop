@@ -6,7 +6,7 @@ import {
   Transaction,
 } from "@solana/web3.js";
 
-import { HIDDEN_SECTION_START } from "../src/constants/hiddenSectionStart";
+import { HIDDEN_SECTION_START } from "../src/constants/maxLengths";
 import { CONNECTION } from "./constants";
 
 export async function createNanoMachineAccount(

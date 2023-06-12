@@ -62,18 +62,16 @@ export default function MyApp(props: MyAppProps) {
         <title>Nanodrop</title>
       </Head>
       <ThemeProvider theme={theme}>
-        <SolanaProvider>
-          <GlobalStyles
-            styles={{
-              "html, body, #__next": {
-                height: "100%",
-              },
-            }}
-          />
-          <CssBaseline />
-          <Toaster expand position="bottom-left" duration={5000} />
-          <Component {...pageProps} />
-        </SolanaProvider>
+        <GlobalStyles
+          styles={{
+            "html, body, #__next": {
+              height: "100%",
+            },
+          }}
+        />
+        <CssBaseline />
+        <Toaster expand position="bottom-left" duration={5000} />
+        <Component {...pageProps} />
       </ThemeProvider>
     </CacheProvider>
   );

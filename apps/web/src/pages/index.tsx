@@ -1,5 +1,6 @@
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 
+import AppLayout from "@/common/components/AppLayout";
 import { Home } from "@/features/landing-page";
 
 import NanoMachine from "../features/nano-machine/components/NanoMachine";
@@ -14,7 +15,11 @@ const router =
         },
         {
           path: "/:nanoMachineId",
-          element: <NanoMachine />,
+          element: (
+            <AppLayout>
+              <NanoMachine />
+            </AppLayout>
+          ),
         },
       ]);
 
