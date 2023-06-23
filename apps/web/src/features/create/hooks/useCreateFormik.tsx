@@ -17,21 +17,24 @@ const DROPZONE_BASE_SETTINGS = {
 const validationSchema = yup.object({
   phases: yup
     .array()
-    .min(1)
     .of(
-      yup.object({
+      yup.object().shape({
         name: yup
           .string()
           .required("Phase name is required")
           .max(MAX_NAME_LENGTH),
-        startDate: yup.date().required("Phase start date is required"),
+        startDate: yup.date().required("Phase start time is required"),
       })
-    ),
+    )
+    .required("At least one phase is required")
+    .min(1, "At least one phase is required"),
   description: yup
     .string()
     .required("POAP description is required")
     .max(MAX_DESCRIPTION_LENGTH),
-  website: yup.string().url("Website must be a valid URL"),
+  website: yup
+    .string()
+    .url("Website must be a valid URL that starts with https://"),
 });
 
 interface Phase {

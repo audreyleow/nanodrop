@@ -126,7 +126,11 @@ export default React.memo(function CreatePhase({
           <MobileDateTimePicker
             value={dayjs(startDate)}
             onChange={(newStartDate) => {
-              setStartDate(newStartDate.toISOString());
+              if (!newStartDate) {
+                setStartDate("");
+              } else {
+                setStartDate(newStartDate.toISOString());
+              }
             }}
             minDate={dayjs()}
             slots={{

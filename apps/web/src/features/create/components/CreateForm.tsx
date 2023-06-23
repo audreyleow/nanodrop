@@ -1,6 +1,9 @@
-import { Backdrop, Container } from "@mui/material";
+import { Backdrop, Box, Button, Container, Typography } from "@mui/material";
+import { useWallet } from "@solana/wallet-adapter-react";
 import dynamic from "next/dynamic";
 import { useEffect, useState } from "react";
+
+import ErrorPage from "@/common/components/ErrorPage";
 
 import useCreateFormik from "../hooks/useCreateFormik";
 import CreateMetadata from "./CreateMetadata";
@@ -17,6 +20,7 @@ const Background3d = dynamic(
 
 export default function CreateForm() {
   const formik = useCreateFormik();
+  const { wallet } = useWallet();
 
   const [backgroundImageUri, setBackgroundImageUri] = useState<string | null>(
     null
@@ -38,6 +42,14 @@ export default function CreateForm() {
     [formik.backgroundImage]
   );
 
+  if (!wallet) {
+    return (
+      <ErrorPage>
+        <Typography variant="h6">Please connect your Solana wallet</Typography>
+      </ErrorPage>
+    );
+  }
+
   return (
     <>
       <Background3d backgroundImageUri={backgroundImageUri} />
@@ -50,6 +62,8 @@ export default function CreateForm() {
         open
       />
       <Container
+        component="form"
+        onSubmit={formik.handleSubmit}
         sx={{
           position: "relative",
           py: 2,
@@ -60,6 +74,17 @@ export default function CreateForm() {
       >
         <CreatePhases createFormik={formik} />
         <CreateMetadata createFormik={formik} />
+        <Box
+          sx={{
+            display: "flex",
+            justifyContent: "end",
+            mt: 8,
+          }}
+        >
+          <Button type="submit" variant="contained">
+            Create Drop
+          </Button>
+        </Box>
       </Container>
     </>
   );

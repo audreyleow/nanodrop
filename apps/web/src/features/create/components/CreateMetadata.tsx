@@ -64,12 +64,11 @@ export default function CreateMetadata({
               name="website"
               onChange={createFormik.handleChange}
             />
-            {createFormik.touched.description &&
-              !!createFormik.errors.description && (
-                <FormHelperText error>
-                  {createFormik.errors.description}
-                </FormHelperText>
-              )}
+            {createFormik.touched.website && !!createFormik.errors.website && (
+              <FormHelperText error>
+                {createFormik.errors.website}
+              </FormHelperText>
+            )}
           </Grid>
           <Grid item xs={12} sm={6} mt={2}>
             <Box>
