@@ -23,7 +23,6 @@ pub fn initialize_v1(
         version: AccountVersion::V1,
         creator: ctx.accounts.creator.key(),
         collection_mint: ctx.accounts.collection_mint.key(),
-        start_date: initialization_params.start_date,
         items_redeemed: 0,
         symbol: pad_string_or_throw(initialization_params.symbol, MAX_SYMBOL_LENGTH)?,
         seller_fee_basis_points: initialization_params.seller_fee_basis_points,
@@ -67,8 +66,6 @@ pub fn initialize_v1(
 
 #[derive(AnchorSerialize, AnchorDeserialize, Clone, Debug)]
 pub struct InitializationParams {
-    /// mint start_date
-    pub start_date: i64,
     /// Symbol for the asset
     pub symbol: String,
     /// Secondary sales royalty basis points (0-10000)
