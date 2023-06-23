@@ -53,30 +53,46 @@ export default function MintBackground({ nanoMachine }: MintBackgroundProps) {
         }}
         open
       />
-      <Canvas
-        orthographic
-        camera={{ zoom: 5, position: [0, 0, 200], far: 300, near: 50 }}
-        style={{
-          position: "fixed",
-          top: 0,
-          left: 0,
-          width: "100%",
-          height: "100%",
+      <Background3d
+        onError={() => {
+          setHasError(true);
         }}
-      >
-        <ErrorBoundary
-          onError={() => {
-            setHasError(true);
-          }}
-        >
-          <ThreeJsScene backgroundImageUri={backgroundImageUri} />
-          <Effects />
-        </ErrorBoundary>
-      </Canvas>
+        backgroundImageUri={backgroundImageUri}
+      />
     </>
   );
 }
 
+export const Background3d = ({
+  backgroundImageUri,
+  onError,
+}: {
+  backgroundImageUri: string | null;
+  onError?: () => void;
+}) => {
+  if (backgroundImageUri === null) {
+    return null;
+  }
+
+  return (
+    <Canvas
+      orthographic
+      camera={{ zoom: 5, position: [0, 0, 200], far: 300, near: 50 }}
+      style={{
+        position: "fixed",
+        top: 0,
+        left: 0,
+        width: "100%",
+        height: "100%",
+      }}
+    >
+      <ErrorBoundary onError={onError}>
+        <ThreeJsScene backgroundImageUri={backgroundImageUri} />
+        <Effects />
+      </ErrorBoundary>
+    </Canvas>
+  );
+};
 function ThreeJsScene({ backgroundImageUri }: { backgroundImageUri: string }) {
   const texture = useTexture(backgroundImageUri);
   const scale = useAspect(

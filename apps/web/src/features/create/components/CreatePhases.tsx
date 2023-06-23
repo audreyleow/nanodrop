@@ -24,12 +24,16 @@ export default function CreatePhases({
           <Typography>
             Drop or upload POAP image for your mint phases here{" "}
           </Typography>
-          <Typography variant="caption">
-            (PNG, JPEG, GIF - Max. 5 MiB)
-          </Typography>
+          <Typography variant="caption">(PNG, JPEG - Max. 5 MiB)</Typography>
         </Box>
       </AppDropzone>
-      <Grid container spacing={8}>
+      <Grid
+        sx={{
+          mt: 0,
+        }}
+        container
+        spacing={8}
+      >
         {createFormik.values.phases.map((phase, index) => (
           <CreatePhase
             key={phase.id}

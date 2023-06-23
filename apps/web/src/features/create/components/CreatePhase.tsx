@@ -7,10 +7,9 @@ import {
   IconButton,
   Typography,
 } from "@mui/material";
-import { DateTimePicker, MobileDateTimePicker } from "@mui/x-date-pickers";
+import { MobileDateTimePicker } from "@mui/x-date-pickers";
 import { MAX_NAME_LENGTH } from "@nanodrop/contracts";
 import dayjs from "dayjs";
-import { FormikErrors } from "formik";
 import React, { useEffect, useState } from "react";
 
 import AppInput from "@/common/components/AppInput";
@@ -52,8 +51,6 @@ export default React.memo(function CreatePhase({
     },
     [image]
   );
-
-  console.log(error);
 
   return (
     <Grid
@@ -109,7 +106,7 @@ export default React.memo(function CreatePhase({
         <div>
           <AppInputLabel required>Name</AppInputLabel>
           <AppInput
-            placeholder="e.g. Hacker house early birds"
+            placeholder="e.g. Hacker house early bird"
             value={name}
             onChange={(e) => {
               if (e.target.value.length > MAX_NAME_LENGTH) {

@@ -18,7 +18,7 @@ export default function AppDropzone({
         sx={{
           border: "1px dashed",
           p: 8,
-          borderRadius: 2,
+          borderRadius: 1,
           cursor: "pointer",
           ...sx,
         }}

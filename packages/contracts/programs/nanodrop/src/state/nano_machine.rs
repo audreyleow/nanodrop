@@ -11,8 +11,6 @@ pub struct NanoMachine {
     pub creator: Pubkey,
     /// The collection mint for this nano machine
     pub collection_mint: Pubkey,
-    /// mint start_date
-    pub start_date: i64,
     /// Number of NFTs minted
     pub items_redeemed: u64,
     /// Symbol for the NFTs in this collection
@@ -39,10 +37,6 @@ impl NanoMachine {
 
         let mut updated_mint_phases: Vec<Phase> = vec![];
         for phase in &self.phases {
-            if phase.start_date < self.start_date {
-                return err!(NanoError::InvalidPhaseDates);
-            }
-
             updated_mint_phases.push(Phase {
                 start_date: phase.start_date,
                 nft_name: pad_string_or_throw(phase.nft_name.clone(), MAX_NAME_LENGTH).unwrap(),

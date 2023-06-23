@@ -269,13 +269,6 @@ export type Nanodrop = {
             "type": "publicKey"
           },
           {
-            "name": "startDate",
-            "docs": [
-              "mint start_date"
-            ],
-            "type": "i64"
-          },
-          {
             "name": "itemsRedeemed",
             "docs": [
               "Number of NFTs minted"
@@ -331,13 +324,6 @@ export type Nanodrop = {
       "type": {
         "kind": "struct",
         "fields": [
-          {
-            "name": "startDate",
-            "docs": [
-              "mint start_date"
-            ],
-            "type": "i64"
-          },
           {
             "name": "symbol",
             "docs": [
@@ -756,13 +742,6 @@ export const IDL: Nanodrop = {
             "type": "publicKey"
           },
           {
-            "name": "startDate",
-            "docs": [
-              "mint start_date"
-            ],
-            "type": "i64"
-          },
-          {
             "name": "itemsRedeemed",
             "docs": [
               "Number of NFTs minted"
@@ -818,13 +797,6 @@ export const IDL: Nanodrop = {
       "type": {
         "kind": "struct",
         "fields": [
-          {
-            "name": "startDate",
-            "docs": [
-              "mint start_date"
-            ],
-            "type": "i64"
-          },
           {
             "name": "symbol",
             "docs": [
