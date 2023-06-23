@@ -25,9 +25,10 @@ pub fn mint_v1(ctx: Context<Mint>) -> Result<()> {
     }
 
     let clock = Clock::get()?;
-    let current_phase = nano_machine.phases.iter().find(|phase| {
-        clock.unix_timestamp >= phase.start_date && clock.unix_timestamp <= phase.end_date
-    });
+    let current_phase = nano_machine
+        .phases
+        .iter()
+        .find(|phase| clock.unix_timestamp >= phase.start_date);
 
     if current_phase.is_none() {
         return err!(NanoError::MintHasNotStarted);

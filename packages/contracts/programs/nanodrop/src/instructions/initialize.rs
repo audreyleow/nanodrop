@@ -4,10 +4,7 @@ use mpl_bubblegum::state::{
     metaplex_anchor::{MasterEdition, MplTokenMetadata, TokenMetadata},
     TreeConfig,
 };
-use mpl_token_metadata::{
-    instruction::approve_collection_authority,
-    state::{MAX_SYMBOL_LENGTH, MAX_URI_LENGTH},
-};
+use mpl_token_metadata::{instruction::approve_collection_authority, state::MAX_SYMBOL_LENGTH};
 
 use crate::{
     constants::{AUTHORITY_SEED, SHARED_TREE, TREE_DELEGATE_SEED},
@@ -26,10 +23,7 @@ pub fn initialize_v1(
         version: AccountVersion::V1,
         creator: ctx.accounts.creator.key(),
         collection_mint: ctx.accounts.collection_mint.key(),
-        background_image_uri: pad_string_or_throw(
-            initialization_params.background_image_uri,
-            MAX_URI_LENGTH,
-        )?,
+        start_date: initialization_params.start_date,
         items_redeemed: 0,
         symbol: pad_string_or_throw(initialization_params.symbol, MAX_SYMBOL_LENGTH)?,
         seller_fee_basis_points: initialization_params.seller_fee_basis_points,
@@ -73,12 +67,12 @@ pub fn initialize_v1(
 
 #[derive(AnchorSerialize, AnchorDeserialize, Clone, Debug)]
 pub struct InitializationParams {
+    /// mint start_date
+    pub start_date: i64,
     /// Symbol for the asset
     pub symbol: String,
     /// Secondary sales royalty basis points (0-10000)
     pub seller_fee_basis_points: u16,
-    /// background image for the collection mint page
-    pub background_image_uri: String,
     /// Is this a private drop
     pub is_private: bool,
     /// Minting phases
