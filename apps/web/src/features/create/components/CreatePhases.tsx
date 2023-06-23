@@ -1,4 +1,4 @@
-import { Box, Grid, Typography } from "@mui/material";
+import { Box, FormHelperText, Grid, Typography } from "@mui/material";
 
 import AppDropzone from "@/common/components/AppDropzone";
 
@@ -10,6 +10,7 @@ export default function CreatePhases({
 }: {
   createFormik: ReturnType<typeof useCreateFormik>;
 }) {
+  console.log("createFormik", createFormik.touched);
   return (
     <Box>
       <Typography variant="h5" component="h2" sx={{ fontWeight: 700, mb: 8 }}>
@@ -58,15 +59,19 @@ export default function CreatePhases({
             }}
             error={{
               name:
-                createFormik.touched.phases?.[index]?.name &&
+                createFormik.touched.website && // hack to show errors
                 (createFormik.errors.phases?.[index] as any)?.name,
               startDate:
-                createFormik.touched.phases?.[index]?.startDate &&
+                createFormik.touched.website && // hack to show errors
                 (createFormik.errors.phases?.[index] as any)?.startDate,
             }}
           />
         ))}
       </Grid>
+      {createFormik.touched.website &&
+        typeof createFormik.errors.phases === "string" && (
+          <FormHelperText error>{createFormik.errors.phases}</FormHelperText>
+        )}
     </Box>
   );
 }
