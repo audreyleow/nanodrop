@@ -11,8 +11,8 @@ pub struct NanoMachine {
     pub creator: Pubkey,
     /// The collection mint for this nano machine
     pub collection_mint: Pubkey,
-    /// background image for the collection mint page
-    pub background_image_uri: String,
+    /// mint start_date
+    pub start_date: i64,
     /// Number of NFTs minted
     pub items_redeemed: u64,
     /// Symbol for the NFTs in this collection
@@ -38,27 +38,13 @@ impl NanoMachine {
         }
 
         let mut updated_mint_phases: Vec<Phase> = vec![];
-        for i in 0..self.phases.len() {
-            let phase = &self.phases[i];
-
-            if i > 0 {
-                let previous_phase = &self.phases[i - 1];
-                if phase.start_date <= previous_phase.end_date {
-                    return err!(NanoError::InvalidPhaseDates);
-                }
-            }
-
-            if phase.start_date < 0 || phase.end_date < 0 {
-                return err!(NanoError::InvalidPhaseDates);
-            }
-
-            if phase.start_date > phase.end_date {
+        for phase in &self.phases {
+            if phase.start_date < self.start_date {
                 return err!(NanoError::InvalidPhaseDates);
             }
 
             updated_mint_phases.push(Phase {
                 start_date: phase.start_date,
-                end_date: phase.end_date,
                 nft_name: pad_string_or_throw(phase.nft_name.clone(), MAX_NAME_LENGTH).unwrap(),
                 metadata_uri: pad_string_or_throw(phase.metadata_uri.clone(), MAX_URI_LENGTH)
                     .unwrap(),
@@ -73,7 +59,6 @@ impl NanoMachine {
 #[derive(AnchorSerialize, AnchorDeserialize, Clone, Debug)]
 pub struct Phase {
     pub start_date: i64,
-    pub end_date: i64,
     pub metadata_uri: String,
     pub nft_name: String,
 }

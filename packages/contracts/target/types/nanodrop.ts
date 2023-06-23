@@ -3,6 +3,42 @@ export type Nanodrop = {
   "name": "nanodrop",
   "instructions": [
     {
+      "name": "setup",
+      "accounts": [
+        {
+          "name": "programAuthority",
+          "isMut": true,
+          "isSigner": true
+        },
+        {
+          "name": "program",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "programData",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "coSigner",
+          "isMut": false,
+          "isSigner": true
+        },
+        {
+          "name": "config",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "systemProgram",
+          "isMut": false,
+          "isSigner": false
+        }
+      ],
+      "args": []
+    },
+    {
       "name": "initialize",
       "accounts": [
         {
@@ -37,6 +73,11 @@ export type Nanodrop = {
         },
         {
           "name": "nanoMachinePdaAuthority",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "treeDelegate",
           "isMut": false,
           "isSigner": false
         },
@@ -124,6 +165,16 @@ export type Nanodrop = {
           "isSigner": false
         },
         {
+          "name": "config",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "coSigner",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
           "name": "bubblegumSigner",
           "isMut": false,
           "isSigner": false
@@ -175,6 +226,24 @@ export type Nanodrop = {
   ],
   "accounts": [
     {
+      "name": "config",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "version",
+            "type": {
+              "defined": "ConfigVersion"
+            }
+          },
+          {
+            "name": "coSigner",
+            "type": "publicKey"
+          }
+        ]
+      }
+    },
+    {
       "name": "nanoMachine",
       "type": {
         "kind": "struct",
@@ -200,11 +269,11 @@ export type Nanodrop = {
             "type": "publicKey"
           },
           {
-            "name": "backgroundImageUri",
+            "name": "startDate",
             "docs": [
-              "background image for the collection mint page"
+              "mint start_date"
             ],
-            "type": "string"
+            "type": "i64"
           },
           {
             "name": "itemsRedeemed",
@@ -235,6 +304,13 @@ export type Nanodrop = {
             "type": "publicKey"
           },
           {
+            "name": "isPrivate",
+            "docs": [
+              "Is this a private drop"
+            ],
+            "type": "bool"
+          },
+          {
             "name": "phases",
             "docs": [
               "Minting phases"
@@ -256,6 +332,13 @@ export type Nanodrop = {
         "kind": "struct",
         "fields": [
           {
+            "name": "startDate",
+            "docs": [
+              "mint start_date"
+            ],
+            "type": "i64"
+          },
+          {
             "name": "symbol",
             "docs": [
               "Symbol for the asset"
@@ -270,6 +353,13 @@ export type Nanodrop = {
             "type": "u16"
           },
           {
+            "name": "isPrivate",
+            "docs": [
+              "Is this a private drop"
+            ],
+            "type": "bool"
+          },
+          {
             "name": "phases",
             "docs": [
               "Minting phases"
@@ -279,13 +369,6 @@ export type Nanodrop = {
                 "defined": "Phase"
               }
             }
-          },
-          {
-            "name": "backgroundImageUri",
-            "docs": [
-              "background image for the collection mint page"
-            ],
-            "type": "string"
           }
         ]
       }
@@ -300,16 +383,23 @@ export type Nanodrop = {
             "type": "i64"
           },
           {
-            "name": "endDate",
-            "type": "i64"
-          },
-          {
             "name": "metadataUri",
             "type": "string"
           },
           {
             "name": "nftName",
             "type": "string"
+          }
+        ]
+      }
+    },
+    {
+      "name": "ConfigVersion",
+      "type": {
+        "kind": "enum",
+        "variants": [
+          {
+            "name": "V1"
           }
         ]
       }
@@ -334,56 +424,61 @@ export type Nanodrop = {
     },
     {
       "code": 6001,
+      "name": "Unauthorized",
+      "msg": "User is not permitted to mint"
+    },
+    {
+      "code": 6002,
       "name": "NoMintPhaseFound",
       "msg": "At least one mint phase is required"
     },
     {
-      "code": 6002,
+      "code": 6003,
       "name": "InvalidPhaseDates",
       "msg": "Invalid phase dates"
     },
     {
-      "code": 6003,
+      "code": 6004,
       "name": "FeeBasisPointTooHigh",
       "msg": "Fee basis point cannot exceed 10000"
     },
     {
-      "code": 6004,
+      "code": 6005,
       "name": "InstructionBuilderFailed",
       "msg": "Instruction could not be created"
     },
     {
-      "code": 6005,
+      "code": 6006,
       "name": "MintHasNotStarted",
       "msg": "Mint has not started or has already ended!"
     },
     {
-      "code": 6006,
+      "code": 6007,
       "name": "CollectionKeyMismatch",
       "msg": "Collection public key mismatch"
     },
     {
-      "code": 6007,
+      "code": 6008,
       "name": "NoPriceUpdatesAfterMintOrGoLiveDate",
       "msg": "Cannot update price after mint has started or begun"
     },
     {
-      "code": 6008,
+      "code": 6009,
       "name": "InvalidPayerAta",
       "msg": "Invalid payer ATA"
     },
     {
-      "code": 6009,
+      "code": 6010,
       "name": "InvalidAuthorityAta",
       "msg": "Invalid Nano Machine authority ATA"
     },
     {
-      "code": 6010,
+      "code": 6011,
       "name": "InvalidPaymentMint",
       "msg": "Invalid payment mint"
     },
     {
-      "code": 6011,
+      "code": 6012,
       "name": "UnableToCreateAuthorityAta",
       "msg": "Unable to create Nano Machine authority ATA"
     }
@@ -395,6 +490,42 @@ export const IDL: Nanodrop = {
   "name": "nanodrop",
   "instructions": [
     {
+      "name": "setup",
+      "accounts": [
+        {
+          "name": "programAuthority",
+          "isMut": true,
+          "isSigner": true
+        },
+        {
+          "name": "program",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "programData",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "coSigner",
+          "isMut": false,
+          "isSigner": true
+        },
+        {
+          "name": "config",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "systemProgram",
+          "isMut": false,
+          "isSigner": false
+        }
+      ],
+      "args": []
+    },
+    {
       "name": "initialize",
       "accounts": [
         {
@@ -429,6 +560,11 @@ export const IDL: Nanodrop = {
         },
         {
           "name": "nanoMachinePdaAuthority",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "treeDelegate",
           "isMut": false,
           "isSigner": false
         },
@@ -516,6 +652,16 @@ export const IDL: Nanodrop = {
           "isSigner": false
         },
         {
+          "name": "config",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "coSigner",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
           "name": "bubblegumSigner",
           "isMut": false,
           "isSigner": false
@@ -567,6 +713,24 @@ export const IDL: Nanodrop = {
   ],
   "accounts": [
     {
+      "name": "config",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "version",
+            "type": {
+              "defined": "ConfigVersion"
+            }
+          },
+          {
+            "name": "coSigner",
+            "type": "publicKey"
+          }
+        ]
+      }
+    },
+    {
       "name": "nanoMachine",
       "type": {
         "kind": "struct",
@@ -592,11 +756,11 @@ export const IDL: Nanodrop = {
             "type": "publicKey"
           },
           {
-            "name": "backgroundImageUri",
+            "name": "startDate",
             "docs": [
-              "background image for the collection mint page"
+              "mint start_date"
             ],
-            "type": "string"
+            "type": "i64"
           },
           {
             "name": "itemsRedeemed",
@@ -627,6 +791,13 @@ export const IDL: Nanodrop = {
             "type": "publicKey"
           },
           {
+            "name": "isPrivate",
+            "docs": [
+              "Is this a private drop"
+            ],
+            "type": "bool"
+          },
+          {
             "name": "phases",
             "docs": [
               "Minting phases"
@@ -648,6 +819,13 @@ export const IDL: Nanodrop = {
         "kind": "struct",
         "fields": [
           {
+            "name": "startDate",
+            "docs": [
+              "mint start_date"
+            ],
+            "type": "i64"
+          },
+          {
             "name": "symbol",
             "docs": [
               "Symbol for the asset"
@@ -662,6 +840,13 @@ export const IDL: Nanodrop = {
             "type": "u16"
           },
           {
+            "name": "isPrivate",
+            "docs": [
+              "Is this a private drop"
+            ],
+            "type": "bool"
+          },
+          {
             "name": "phases",
             "docs": [
               "Minting phases"
@@ -671,13 +856,6 @@ export const IDL: Nanodrop = {
                 "defined": "Phase"
               }
             }
-          },
-          {
-            "name": "backgroundImageUri",
-            "docs": [
-              "background image for the collection mint page"
-            ],
-            "type": "string"
           }
         ]
       }
@@ -692,16 +870,23 @@ export const IDL: Nanodrop = {
             "type": "i64"
           },
           {
-            "name": "endDate",
-            "type": "i64"
-          },
-          {
             "name": "metadataUri",
             "type": "string"
           },
           {
             "name": "nftName",
             "type": "string"
+          }
+        ]
+      }
+    },
+    {
+      "name": "ConfigVersion",
+      "type": {
+        "kind": "enum",
+        "variants": [
+          {
+            "name": "V1"
           }
         ]
       }
@@ -726,56 +911,61 @@ export const IDL: Nanodrop = {
     },
     {
       "code": 6001,
+      "name": "Unauthorized",
+      "msg": "User is not permitted to mint"
+    },
+    {
+      "code": 6002,
       "name": "NoMintPhaseFound",
       "msg": "At least one mint phase is required"
     },
     {
-      "code": 6002,
+      "code": 6003,
       "name": "InvalidPhaseDates",
       "msg": "Invalid phase dates"
     },
     {
-      "code": 6003,
+      "code": 6004,
       "name": "FeeBasisPointTooHigh",
       "msg": "Fee basis point cannot exceed 10000"
     },
     {
-      "code": 6004,
+      "code": 6005,
       "name": "InstructionBuilderFailed",
       "msg": "Instruction could not be created"
     },
     {
-      "code": 6005,
+      "code": 6006,
       "name": "MintHasNotStarted",
       "msg": "Mint has not started or has already ended!"
     },
     {
-      "code": 6006,
+      "code": 6007,
       "name": "CollectionKeyMismatch",
       "msg": "Collection public key mismatch"
     },
     {
-      "code": 6007,
+      "code": 6008,
       "name": "NoPriceUpdatesAfterMintOrGoLiveDate",
       "msg": "Cannot update price after mint has started or begun"
     },
     {
-      "code": 6008,
+      "code": 6009,
       "name": "InvalidPayerAta",
       "msg": "Invalid payer ATA"
     },
     {
-      "code": 6009,
+      "code": 6010,
       "name": "InvalidAuthorityAta",
       "msg": "Invalid Nano Machine authority ATA"
     },
     {
-      "code": 6010,
+      "code": 6011,
       "name": "InvalidPaymentMint",
       "msg": "Invalid payment mint"
     },
     {
-      "code": 6011,
+      "code": 6012,
       "name": "UnableToCreateAuthorityAta",
       "msg": "Unable to create Nano Machine authority ATA"
     }
