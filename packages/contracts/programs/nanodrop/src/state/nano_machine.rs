@@ -13,8 +13,6 @@ pub struct NanoMachine {
     pub collection_mint: Pubkey,
     /// Number of NFTs minted
     pub items_redeemed: u64,
-    /// Symbol for the NFTs in this collection
-    pub symbol: String,
     /// Secondary sales royalty basis points (0-10000)
     pub seller_fee_basis_points: u16,
     /// Merkle tree for compression

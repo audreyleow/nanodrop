@@ -26,7 +26,6 @@ pub fn get_space_for_nano_machine(phases: usize) -> usize {
     + 32                                                       // collection_mint
     + 8                                                        // start_date
     + 8                                                        // items_redeemed
-    + 4 + MAX_SYMBOL_LENGTH                                    // u32 + symbol length
     + 2                                                        // seller_fee_basis_points
     + 32                                                       // merkle_tree
     + 1                                                        // is_private
