@@ -6,6 +6,8 @@ import "@fontsource/work-sans/700.css";
 import { CacheProvider, EmotionCache } from "@emotion/react";
 import { CssBaseline, GlobalStyles } from "@mui/material";
 import { ThemeProvider } from "@mui/material/styles";
+import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
+import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { AppProps } from "next/app";
 import Head from "next/head";
 import * as React from "react";
@@ -71,7 +73,9 @@ export default function MyApp(props: MyAppProps) {
         />
         <CssBaseline />
         <Toaster expand position="bottom-left" duration={5000} />
-        <Component {...pageProps} />
+        <LocalizationProvider dateAdapter={AdapterDayjs}>
+          <Component {...pageProps} />
+        </LocalizationProvider>
       </ThemeProvider>
     </CacheProvider>
   );

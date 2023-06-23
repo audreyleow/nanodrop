@@ -1,6 +1,6 @@
 const config = {
   reactStrictMode: true,
-  transpilePackages: ["@nanodrop/sdk"],
+  transpilePackages: ["@nanodrop/contracts"],
   images: {
     unoptimized: true,
   },

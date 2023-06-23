@@ -1,11 +1,17 @@
-import { Box, Typography } from "@mui/material";
+import { Box, Container, Typography } from "@mui/material";
 import { MAX_DESCRIPTION_LENGTH, MAX_NAME_LENGTH } from "@nanodrop/contracts";
 import { useFormik } from "formik";
+import { useState } from "react";
+import { useDropzone } from "react-dropzone";
 import * as yup from "yup";
 
+import AppDropzone from "@/common/components/AppDropzone";
 import AppInput from "@/common/components/AppInput";
 import AppInputLabel from "@/common/components/AppInputLabel";
 import FormHelperTextWithLength from "@/common/components/FormHelperTextWithLength";
+
+import useCreateFormik from "../hooks/useCreateFormik";
+import CreatePhases from "./CreatePhases";
 
 const validationSchema = yup.object({
   name: yup.string().required("POAP name is required").max(MAX_NAME_LENGTH),
@@ -16,16 +22,19 @@ const validationSchema = yup.object({
 });
 
 export default function CreateForm() {
-  const formik = useFormik({
-    initialValues: {
-      name: "",
-      description: "",
-    },
-    validationSchema: validationSchema,
-    onSubmit: (values) => {
-      alert(JSON.stringify(values, null, 2));
-    },
-  });
+  const formik = useCreateFormik();
+
+  return (
+    <Container
+      sx={{
+        py: 2,
+      }}
+      fixed
+      maxWidth="lg"
+    >
+      <CreatePhases createFormik={formik} />
+    </Container>
+  );
 
   return (
     <Box
