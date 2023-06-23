@@ -276,13 +276,6 @@ export type Nanodrop = {
             "type": "u64"
           },
           {
-            "name": "symbol",
-            "docs": [
-              "Symbol for the NFTs in this collection"
-            ],
-            "type": "string"
-          },
-          {
             "name": "sellerFeeBasisPoints",
             "docs": [
               "Secondary sales royalty basis points (0-10000)"
@@ -324,13 +317,6 @@ export type Nanodrop = {
       "type": {
         "kind": "struct",
         "fields": [
-          {
-            "name": "symbol",
-            "docs": [
-              "Symbol for the asset"
-            ],
-            "type": "string"
-          },
           {
             "name": "sellerFeeBasisPoints",
             "docs": [
@@ -749,13 +735,6 @@ export const IDL: Nanodrop = {
             "type": "u64"
           },
           {
-            "name": "symbol",
-            "docs": [
-              "Symbol for the NFTs in this collection"
-            ],
-            "type": "string"
-          },
-          {
             "name": "sellerFeeBasisPoints",
             "docs": [
               "Secondary sales royalty basis points (0-10000)"
@@ -797,13 +776,6 @@ export const IDL: Nanodrop = {
       "type": {
         "kind": "struct",
         "fields": [
-          {
-            "name": "symbol",
-            "docs": [
-              "Symbol for the asset"
-            ],
-            "type": "string"
-          },
           {
             "name": "sellerFeeBasisPoints",
             "docs": [

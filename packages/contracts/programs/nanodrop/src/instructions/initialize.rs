@@ -4,12 +4,12 @@ use mpl_bubblegum::state::{
     metaplex_anchor::{MasterEdition, MplTokenMetadata, TokenMetadata},
     TreeConfig,
 };
-use mpl_token_metadata::{instruction::approve_collection_authority, state::MAX_SYMBOL_LENGTH};
+use mpl_token_metadata::{instruction::approve_collection_authority};
 
 use crate::{
     constants::{AUTHORITY_SEED, SHARED_TREE, TREE_DELEGATE_SEED},
     state::{AccountVersion, NanoMachine, Phase},
-    utils::{get_space_for_nano_machine, pad_string_or_throw},
+    utils::get_space_for_nano_machine,
 };
 
 pub fn initialize_v1(
@@ -24,7 +24,6 @@ pub fn initialize_v1(
         creator: ctx.accounts.creator.key(),
         collection_mint: ctx.accounts.collection_mint.key(),
         items_redeemed: 0,
-        symbol: pad_string_or_throw(initialization_params.symbol, MAX_SYMBOL_LENGTH)?,
         seller_fee_basis_points: initialization_params.seller_fee_basis_points,
         merkle_tree: ctx.accounts.merkle_tree.key(),
         is_private: initialization_params.is_private,
@@ -66,8 +65,6 @@ pub fn initialize_v1(
 
 #[derive(AnchorSerialize, AnchorDeserialize, Clone, Debug)]
 pub struct InitializationParams {
-    /// Symbol for the asset
-    pub symbol: String,
     /// Secondary sales royalty basis points (0-10000)
     pub seller_fee_basis_points: u16,
     /// Is this a private drop

@@ -87,10 +87,7 @@ pub fn mint_v1(ctx: Context<Mint>) -> Result<()> {
                 .nft_name
                 .trim_matches(NULL_STRING.chars().next().unwrap())
                 .to_string(),
-            symbol: nano_machine
-                .symbol
-                .trim_matches(NULL_STRING.chars().next().unwrap())
-                .to_string(),
+            symbol: "POAP".to_string(),
             uri: current_phase
                 .unwrap()
                 .metadata_uri
