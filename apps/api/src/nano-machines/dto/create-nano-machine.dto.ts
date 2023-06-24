@@ -29,6 +29,9 @@ export class CreateNanoMachineDto {
   @Type(() => Phase)
   readonly phases: Phase[];
 
+  @IsString()
+  symbol: string;
+
   @IsUrl()
   @IsOptional()
   readonly backgroundImageUrl?: string;

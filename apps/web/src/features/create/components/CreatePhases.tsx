@@ -10,7 +10,6 @@ export default function CreatePhases({
 }: {
   createFormik: ReturnType<typeof useCreateFormik>;
 }) {
-  console.log("createFormik", createFormik.touched);
   return (
     <Box>
       <Typography variant="h5" component="h2" sx={{ fontWeight: 700, mb: 8 }}>

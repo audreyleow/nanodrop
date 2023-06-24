@@ -252,6 +252,13 @@ export type Nanodrop = {
             "type": "publicKey"
           },
           {
+            "name": "symbol",
+            "docs": [
+              "Symbol for all the NFTs minted"
+            ],
+            "type": "string"
+          },
+          {
             "name": "collectionMint",
             "docs": [
               "The collection mint for this nano machine"
@@ -300,6 +307,13 @@ export type Nanodrop = {
       "type": {
         "kind": "struct",
         "fields": [
+          {
+            "name": "symbol",
+            "docs": [
+              "Symbol for all the NFTs minted"
+            ],
+            "type": "string"
+          },
           {
             "name": "sellerFeeBasisPoints",
             "docs": [
@@ -694,6 +708,13 @@ export const IDL: Nanodrop = {
             "type": "publicKey"
           },
           {
+            "name": "symbol",
+            "docs": [
+              "Symbol for all the NFTs minted"
+            ],
+            "type": "string"
+          },
+          {
             "name": "collectionMint",
             "docs": [
               "The collection mint for this nano machine"
@@ -742,6 +763,13 @@ export const IDL: Nanodrop = {
       "type": {
         "kind": "struct",
         "fields": [
+          {
+            "name": "symbol",
+            "docs": [
+              "Symbol for all the NFTs minted"
+            ],
+            "type": "string"
+          },
           {
             "name": "sellerFeeBasisPoints",
             "docs": [
