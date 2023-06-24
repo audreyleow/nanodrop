@@ -11,7 +11,7 @@ import {
 } from "@solana/web3.js";
 
 import { Nanodrop } from "../../target/types/nanodrop";
-import { NANODROP_PROGRAM_ID } from "../constants/nanodropProgramId";
+import { NANODROP_PROGRAM_ID } from "../constants/publicKeys";
 
 const BUBBLEGUM_PROGRAM_ID = new PublicKey(
   "BGUMAp9Gq7iTEuizy4pqaxsTyUCBK68MDfK752saRPUY"
@@ -46,7 +46,6 @@ export async function getMintIx(
   //   [Buffer.from("nano_machine"), nanoMachineId.toBuffer()],
   //   NANODROP_PROGRAM_ID
   // );
-
   // const [collectionMetadata] = PublicKey.findProgramAddressSync(
   //   [
   //     Buffer.from("metadata"),
@@ -55,7 +54,6 @@ export async function getMintIx(
   //   ],
   //   TOKEN_METADATA_PROGRAM_ID
   // );
-
   // const [collectionMasterEdition] = PublicKey.findProgramAddressSync(
   //   [
   //     Buffer.from("metadata"),
@@ -65,7 +63,6 @@ export async function getMintIx(
   //   ],
   //   TOKEN_METADATA_PROGRAM_ID
   // );
-
   // const [collectionAuthorityRecord] = PublicKey.findProgramAddressSync(
   //   [
   //     Buffer.from("metadata"),
@@ -76,17 +73,14 @@ export async function getMintIx(
   //   ],
   //   TOKEN_METADATA_PROGRAM_ID
   // );
-
   // const [treeAuthority] = PublicKey.findProgramAddressSync(
   //   [merkleTree.toBuffer()],
   //   BUBBLEGUM_PROGRAM_ID
   // );
-
   // const [bubblegumSigner] = PublicKey.findProgramAddressSync(
   //   [Buffer.from("collection_cpi")],
   //   BUBBLEGUM_PROGRAM_ID
   // );
-
   // const mintIx = await program.methods
   //   .mint()
   //   .accounts({
@@ -115,6 +109,5 @@ export async function getMintIx(
   //     treeAuthority,
   //   })
   //   .instruction();
-
   // return mintIx;
 }

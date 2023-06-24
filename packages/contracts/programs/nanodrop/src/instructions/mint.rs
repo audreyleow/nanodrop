@@ -10,10 +10,10 @@ use mpl_bubblegum::{
 use spl_account_compression::{program::SplAccountCompression, Noop};
 
 use crate::{
-    constants::{AUTHORITY_SEED, CONFIG_SEED},
+    constants::{AUTHORITY_SEED, CONFIG_SEED, SHARED_TREE},
     errors::NanoError,
     state::{Config, NanoMachine},
-    utils::NULL_STRING,
+    utils::{get_metadata_uri, NULL_STRING},
 };
 
 pub fn mint_v1(ctx: Context<Mint>) -> Result<()> {
@@ -25,12 +25,12 @@ pub fn mint_v1(ctx: Context<Mint>) -> Result<()> {
     }
 
     let clock = Clock::get()?;
-    let current_phase = nano_machine
+    let phase = nano_machine
         .phases
         .iter()
         .find(|phase| clock.unix_timestamp >= phase.start_date);
 
-    if current_phase.is_none() {
+    if phase.is_none() {
         return err!(NanoError::MintHasNotStarted);
     }
 
@@ -82,17 +82,13 @@ pub fn mint_v1(ctx: Context<Mint>) -> Result<()> {
         )
         .with_remaining_accounts(vec![nano_machine_pda_authority.clone()]),
         MetadataArgs {
-            name: current_phase
+            name: phase
                 .unwrap()
                 .nft_name
                 .trim_matches(NULL_STRING.chars().next().unwrap())
                 .to_string(),
             symbol: "POAP".to_string(),
-            uri: current_phase
-                .unwrap()
-                .metadata_uri
-                .trim_matches(NULL_STRING.chars().next().unwrap())
-                .to_string(),
+            uri: get_metadata_uri(phase.unwrap().index, nano_machine.key()),
             seller_fee_basis_points: nano_machine.seller_fee_basis_points,
             primary_sale_happened: false,
             is_mutable: true,
@@ -128,27 +124,18 @@ pub struct Mint<'info> {
     )]
     pub nano_machine_pda_authority: UncheckedAccount<'info>,
 
-    /// CHECK: account constraints checked in account trait
-    #[account(
-        mut,
-        address = nano_machine.creator.key()
-    )]
-    pub nano_machine_authority: UncheckedAccount<'info>,
-
     #[account(
         mut,
         seeds = [merkle_tree.key().as_ref()],
         seeds::program = mpl_bubblegum::id(),
-        bump,
-        constraint = tree_authority.tree_creator == nano_machine.creator.key()
-            && tree_authority.tree_delegate == nano_machine_pda_authority.to_account_info().key()
+        bump
     )]
     pub tree_authority: Box<Account<'info, TreeConfig>>,
 
     /// CHECK: unsafe
     #[account(
         mut,
-        address = nano_machine.merkle_tree.key()
+        address = SHARED_TREE.key()
     )]
     pub merkle_tree: UncheckedAccount<'info>,
 

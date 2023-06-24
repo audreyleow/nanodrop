@@ -1,2 +1,2 @@
 export * from "./maxLengths";
-export * from "./nanodropProgramId";
+export * from "./publicKeys";

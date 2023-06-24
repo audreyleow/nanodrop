@@ -19,16 +19,17 @@ pub fn pad_string_or_throw(value: String, length: usize) -> Result<String> {
     Ok(value + &padding)
 }
 
+pub fn get_metadata_uri(phase_index: u32, nano_machine_id: Pubkey) -> String {
+    format!("https://files.nanodrop.it/{}/{}.json", nano_machine_id, phase_index)
+} 
+
 pub fn get_space_for_nano_machine(phases: usize) -> usize {
     8                                                          //discriminator
     + 1                                                        // version
     + 32                                                       // creator
     + 32                                                       // collection_mint
-    + 8                                                        // start_date
     + 8                                                        // items_redeemed
     + 2                                                        // seller_fee_basis_points
-    + 32                                                       // merkle_tree
     + 1                                                        // is_private
-    + 4 + phases * 
-        (8 + (4 + MAX_URI_LENGTH) + (4 + MAX_NAME_LENGTH)) // u32 + phases * (start_date + (u32 + metadata_uri) + (u32 + nft_name))
+    + 4 + phases * (8 + (4 + MAX_NAME_LENGTH))                 // u32 + phases * (start_date + (u32 + nft_name))
 }

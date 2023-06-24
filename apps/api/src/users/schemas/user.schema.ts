@@ -1,7 +1,7 @@
 import { Prop, Schema, SchemaFactory } from "@nestjs/mongoose";
 import { HydratedDocument } from "mongoose";
 import {
-  NanoMachineDocument,
+  INanoMachine,
   NanoMachineSchema,
 } from "src/nano-machines/schemas/nano-machine.schema";
 
@@ -13,7 +13,7 @@ export class User {
   publicKey: string;
 
   @Prop({ type: [NanoMachineSchema], required: true, default: [] })
-  nanoMachines: NanoMachineDocument[];
+  nanoMachines: INanoMachine[];
 
   @Prop()
   nonce: string;
