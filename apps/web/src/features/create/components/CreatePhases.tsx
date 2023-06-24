@@ -23,7 +23,7 @@ export default function CreatePhases({
           }}
         >
           <Typography>
-            Drop or upload POAP image for your mint phases here{" "}
+            Drop or upload POAP image for your mint phases here (Max 3 phases)
           </Typography>
           <Typography variant="caption">(PNG, JPEG - Max. 5 MiB)</Typography>
         </Box>

@@ -1,10 +1,15 @@
 import { MAX_DESCRIPTION_LENGTH, MAX_NAME_LENGTH } from "@nanodrop/contracts";
+import { Keypair } from "@solana/web3.js";
 import { useFormik } from "formik";
 import { nanoid } from "nanoid";
 import { useCallback, useState } from "react";
 import { FileRejection, useDropzone } from "react-dropzone";
 import { toast } from "sonner";
 import * as yup from "yup";
+
+import { Phase } from "../types/phase";
+import generateMetadata from "../utils/generateMetadata";
+import upload from "../utils/upload";
 
 const DROPZONE_BASE_SETTINGS = {
   accept: {
@@ -26,8 +31,8 @@ const validationSchema = yup.object({
         startDate: yup.date().required("Phase start time is required"),
       })
     )
-    .required("At least one phase is required")
-    .min(1, "At least one phase is required"),
+    .required("At least one mint phase is required")
+    .min(1, "At least one mint phase is required"),
   description: yup
     .string()
     .required("POAP description is required")
@@ -36,13 +41,6 @@ const validationSchema = yup.object({
     .string()
     .url("Website must be a valid URL that starts with https://"),
 });
-
-interface Phase {
-  id: string; // used internally as react key
-  name: string;
-  startDate: string;
-  image: File;
-}
 
 interface CreateValues {
   phases: Phase[];
@@ -54,6 +52,42 @@ const MAX_NUMBER_OF_PHASES = 3;
 
 export default function useCreateFormik() {
   const [backgroundImage, setBackgroundImage] = useState<File | null>(null);
+  const [submissionState, setSubmissionState] = useState<string | null>(null);
+
+  const formik = useFormik<CreateValues>({
+    initialValues: {
+      phases: [],
+      description: "",
+      website: "",
+    },
+    validationSchema: validationSchema,
+    onSubmit: async (values, { setFieldError }) => {
+      try {
+        const error = getPhasesError(values.phases);
+        if (error !== null) {
+          for (let i = 0; i < values.phases.length; i++) {
+            setFieldError(`phases.${i}.startDate`, error);
+          }
+        }
+
+        const nanoMachineKeypair = Keypair.generate();
+        const nanoMachineId = nanoMachineKeypair.publicKey.toBase58();
+
+        setSubmissionState("Uploading images");
+        await upload({
+          nanoMachineId,
+          backgroundImage,
+          description: values.description,
+          phases: values.phases,
+          website: values.website,
+        });
+      } catch (error) {
+        toast.error(error.message);
+      } finally {
+        setSubmissionState(null);
+      }
+    },
+  });
 
   const getOnDrop = useCallback(
     (
@@ -84,17 +118,6 @@ export default function useCreateFormik() {
       },
     []
   );
-  const formik = useFormik<CreateValues>({
-    initialValues: {
-      phases: [],
-      description: "",
-      website: "",
-    },
-    validationSchema: validationSchema,
-    onSubmit: (values) => {
-      alert(JSON.stringify(values, null, 2));
-    },
-  });
 
   const phasesDropzone = useDropzone({
     ...DROPZONE_BASE_SETTINGS,
@@ -132,3 +155,17 @@ export default function useCreateFormik() {
     setBackgroundImage,
   };
 }
+
+const getPhasesError = (phases: Phase[]) => {
+  const startDateSet = new Set<string>();
+
+  for (const phase of phases) {
+    if (startDateSet.has(phase.startDate)) {
+      return "Phase start dates must be unique";
+    }
+
+    startDateSet.add(phase.startDate);
+  }
+
+  return null;
+};

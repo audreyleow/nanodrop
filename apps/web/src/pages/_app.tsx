@@ -8,18 +8,19 @@ import { CssBaseline, GlobalStyles } from "@mui/material";
 import { ThemeProvider } from "@mui/material/styles";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
+import axios from "axios";
 import { AppProps } from "next/app";
 import Head from "next/head";
 import * as React from "react";
 import { useEffect } from "react";
 import { Toaster } from "sonner";
 
-import SolanaProvider from "@/common/providers/SolanaProvider";
-
 import theme from "../common/theme";
 import createEmotionCache from "../common/utils/createEmotionCache";
 
 require("@solana/wallet-adapter-react-ui/styles.css");
+
+axios.defaults.baseURL = process.env.NEXT_PUBLIC_API_ORIGIN;
 
 const clientSideEmotionCache = createEmotionCache();
 
