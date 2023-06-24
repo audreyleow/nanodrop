@@ -12,12 +12,8 @@ import {
 
 import { program } from "./program";
 
-const NANO_MACHINE = new PublicKey(
-  "metaMWNWwC39BVDkuhpLKCtt4nVfJfBkJucDpERFBid" // 10 items
-);
-
 const MERKLE_TREE = new PublicKey(
-  "BiFKKFoTLh1wmr4UP8H3JgUPWbFaGtzuZxwoM7wZ956N"
+  "CeQFpf5USvUFkfLjvSwr5RjFA3CqCjYjGJMuQaG2bYBR"
 );
 const [TREE_AUTHORITY] = PublicKey.findProgramAddressSync(
   [MERKLE_TREE.toBuffer()],
@@ -25,28 +21,25 @@ const [TREE_AUTHORITY] = PublicKey.findProgramAddressSync(
 );
 
 export async function setTreeDelegate(connection: Connection, payer: Keypair) {
-  const [nanoMachinePdaAuthority] = PublicKey.findProgramAddressSync(
-    [Buffer.from("nano_machine"), NANO_MACHINE.toBuffer()],
+  const [config] = PublicKey.findProgramAddressSync(
+    [Buffer.from("config")],
     program.programId
   );
 
   const ix = createSetTreeDelegateInstruction({
     merkleTree: MERKLE_TREE,
-    newTreeDelegate: nanoMachinePdaAuthority,
+    newTreeDelegate: config,
     treeAuthority: TREE_AUTHORITY,
     treeCreator: payer.publicKey,
   });
   const tx = new Transaction().add(ix);
+  tx.recentBlockhash = (await connection.getLatestBlockhash()).blockhash;
   tx.feePayer = payer.publicKey;
+  tx.sign(payer);
 
-  // send the transaction
-  await sendAndConfirmTransaction(connection, tx, [payer], {
-    commitment: "confirmed",
-    skipPreflight: true,
-  });
+  const txId = await connection.sendRawTransaction(tx.serialize());
 
-  console.log(
-    "\nMerkle tree delegate set successfully!",
-    nanoMachinePdaAuthority.toBase58()
-  );
+  await connection.confirmTransaction(txId, "confirmed");
+
+  console.log(`https://solscan.io/tx/${txId}`);
 }

@@ -6,7 +6,7 @@ export class AuthController {
   constructor(private readonly authService: AuthService) {}
 
   @Get(":publicKey")
-  getAuthMessageParams(@Param("publicKey") publicKey) {
+  getAuthMessageParams(@Param("publicKey") publicKey: string) {
     return this.authService.getAuthMessageParams(publicKey);
   }
 }

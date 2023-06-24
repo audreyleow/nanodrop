@@ -7,6 +7,7 @@ export interface NanoMachine {
   creator: PublicKey;
   itemsRedeemed: string;
   collectionName: string;
+  collectionMint: string;
   backgroundImageUrl: string | null;
   currentPhase: FetchedPhase & {
     phaseImageUrl: string;

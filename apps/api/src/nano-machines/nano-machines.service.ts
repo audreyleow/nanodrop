@@ -18,8 +18,13 @@ import {
   VersionedTransaction,
 } from "@solana/web3.js";
 import { PROGRAM_ID as TOKEN_METADATA_PROGRAM_ID } from "@metaplex-foundation/mpl-token-metadata";
-import { NANODROP_PROGRAM_ID } from "@nanodrop/contracts";
+import { NANODROP_PROGRAM_ID, SHARED_TREE_ID } from "@nanodrop/contracts";
 import * as crypto from "crypto";
+import { PROGRAM_ID as BUBBLEGUM_PROGRAM_ID } from "@metaplex-foundation/mpl-bubblegum";
+import {
+  SPL_ACCOUNT_COMPRESSION_PROGRAM_ID,
+  SPL_NOOP_PROGRAM_ID,
+} from "@solana/spl-account-compression";
 
 @Injectable()
 export class NanoMachinesService {
@@ -97,6 +102,14 @@ export class NanoMachinesService {
       nanoMachineId: nanoMachine.nanoMachineId,
       backgroundImageUrl: nanoMachine.backgroundImageUrl,
     };
+  }
+
+  buildMintTransaction() {
+    return this.getMintFromNanoMachineTransaction(
+      "5chCx7tuftBe8RWrXjfonCmDeRA16e1o6qjygBfUwUrH",
+      "FWdKmwiuHiRXMtdpEEDdJjy5EPRhGoLUcGWvXTCGMyy",
+      "3QuMzdeVtdTE4G1wpPar97NSTdzN7CHRjFhHgqhabKC2"
+    );
   }
 
   private async initializeNanoMachine(
@@ -190,5 +203,94 @@ export class NanoMachinesService {
     }
 
     return txId;
+  }
+
+  private async getMintFromNanoMachineTransaction(
+    nanoMachineId: string,
+    collectionMintId: string,
+    minterAddress: string
+  ) {
+    const collectionMint = new PublicKey(collectionMintId);
+    const [collectionMetadata] = PublicKey.findProgramAddressSync(
+      [
+        Buffer.from("metadata"),
+        TOKEN_METADATA_PROGRAM_ID.toBuffer(),
+        collectionMint.toBuffer(),
+      ],
+      TOKEN_METADATA_PROGRAM_ID
+    );
+    const [collectionMasterEdition] = PublicKey.findProgramAddressSync(
+      [
+        Buffer.from("metadata"),
+        TOKEN_METADATA_PROGRAM_ID.toBuffer(),
+        collectionMint.toBuffer(),
+        Buffer.from("edition"),
+      ],
+      TOKEN_METADATA_PROGRAM_ID
+    );
+    const nanoMachine = new PublicKey(nanoMachineId);
+    const [nanoMachinePdaAuthority] = PublicKey.findProgramAddressSync(
+      [Buffer.from("nano_machine"), nanoMachine.toBuffer()],
+      NANODROP_PROGRAM_ID
+    );
+    const [collectionAuthorityRecord] = PublicKey.findProgramAddressSync(
+      [
+        Buffer.from("metadata"),
+        TOKEN_METADATA_PROGRAM_ID.toBuffer(),
+        collectionMint.toBuffer(),
+        Buffer.from("collection_authority"),
+        nanoMachinePdaAuthority.toBuffer(),
+      ],
+      TOKEN_METADATA_PROGRAM_ID
+    );
+    const [config] = PublicKey.findProgramAddressSync(
+      [Buffer.from("config")],
+      NANODROP_PROGRAM_ID
+    );
+    const [bubblegumSigner] = PublicKey.findProgramAddressSync(
+      [Buffer.from("collection_cpi")],
+      BUBBLEGUM_PROGRAM_ID
+    );
+    const [treeAuthority] = PublicKey.findProgramAddressSync(
+      [SHARED_TREE_ID.toBuffer()],
+      BUBBLEGUM_PROGRAM_ID
+    );
+
+    const instruction = await this.solanaService.nanodropProgram.methods
+      .mint()
+      .accounts({
+        collectionAuthorityRecord,
+        bubblegumProgram: BUBBLEGUM_PROGRAM_ID,
+        bubblegumSigner,
+        collectionMasterEdition,
+        collectionMetadata,
+        collectionMint,
+        compressionProgram: SPL_ACCOUNT_COMPRESSION_PROGRAM_ID,
+        config,
+        coSigner: this.solanaService.coSignerKeypair.publicKey,
+        logWrapper: SPL_NOOP_PROGRAM_ID,
+        nanoMachine,
+        merkleTree: SHARED_TREE_ID,
+        nanoMachinePdaAuthority,
+        nftMinter: new PublicKey(minterAddress),
+        systemProgram: SystemProgram.programId,
+        tokenMetadataProgram: TOKEN_METADATA_PROGRAM_ID,
+        treeAuthority,
+      })
+      .instruction();
+
+    const blockhash = await this.solanaService.connection
+      .getLatestBlockhash()
+      .then((res) => res.blockhash);
+    const messageV0 = new TransactionMessage({
+      payerKey: this.solanaService.coSignerKeypair.publicKey,
+      instructions: [instruction],
+      recentBlockhash: blockhash,
+    }).compileToV0Message();
+
+    const transaction = new VersionedTransaction(messageV0);
+    transaction.sign([this.solanaService.coSignerKeypair]);
+
+    return Buffer.from(transaction.serialize()).toString("base64");
   }
 }

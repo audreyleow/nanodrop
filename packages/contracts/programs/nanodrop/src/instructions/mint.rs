@@ -51,6 +51,9 @@ pub fn mint_v1(ctx: Context<Mint>) -> Result<()> {
         },
     ];
 
+    let config = &mut ctx.accounts.config.to_account_info();
+    config.is_signer = true;
+
     let nano_machine_pda_authority = &mut ctx.accounts.nano_machine_pda_authority.to_account_info();
     nano_machine_pda_authority.is_signer = true;
     mpl_bubblegum::cpi::mint_to_collection_v1(
@@ -75,13 +78,19 @@ pub fn mint_v1(ctx: Context<Mint>) -> Result<()> {
                 system_program: ctx.accounts.system_program.to_account_info(),
                 token_metadata_program: ctx.accounts.token_metadata_program.to_account_info(),
                 tree_authority: ctx.accounts.tree_authority.to_account_info(),
-                tree_delegate: ctx.accounts.nano_machine_pda_authority.to_account_info(),
+                tree_delegate: ctx.accounts.config.to_account_info(),
             },
-            &[&[
-                AUTHORITY_SEED,
-                nano_machine.key().as_ref(),
-                &[*ctx.bumps.get("nano_machine_pda_authority").unwrap()],
-            ]],
+            &[
+                &[
+                    AUTHORITY_SEED,
+                    nano_machine.key().as_ref(),
+                    &[*ctx.bumps.get("nano_machine_pda_authority").unwrap()],
+                ],
+                &[
+                    CONFIG_SEED,
+                    &[*ctx.bumps.get("config").unwrap()],
+                ],
+            ],
         )
         .with_remaining_accounts(vec![nano_machine_pda_authority.clone()]),
         MetadataArgs {

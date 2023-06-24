@@ -17,9 +17,12 @@ import { setTreeDelegate } from "./set-tree-delegate";
 import { setup } from "./setup";
 import { updateNanoMachine } from "./update-nano-machine";
 
-const connection = new Connection("", {
-  commitment: "confirmed",
-});
+const connection = new Connection(
+  "",
+  {
+    commitment: "confirmed",
+  }
+);
 
 const keypairJson = JSON.parse(
   fs.readFileSync("./target/deploy/test-authority-keypair.json").toString()
@@ -33,14 +36,14 @@ const testMinterKeypairJson = JSON.parse(
   fs.readFileSync("./target/deploy/test-minter.json").toString()
 );
 
-const keypair = Keypair.fromSecretKey(Uint8Array.from(prodKeypairJson));
+const keypair = Keypair.fromSecretKey(Uint8Array.from(keypairJson));
 
 // setup(connection, keypair);
 
-checkCollectionAuthorityRecord(
-  new PublicKey("FKCK5bxzNbQNqrGUx1tbzG1u4HHNvznNAiSJhTQPm8Rd"),
-  connection
-);
+// checkCollectionAuthorityRecord(
+//   new PublicKey("FKCK5bxzNbQNqrGUx1tbzG1u4HHNvznNAiSJhTQPm8Rd"),
+//   connection
+// );
 
 // createCollection(connection, keypair);
 
@@ -53,9 +56,9 @@ checkCollectionAuthorityRecord(
 //   new PublicKey("CeQFpf5USvUFkfLjvSwr5RjFA3CqCjYjGJMuQaG2bYBR")
 // );
 
-// setTreeDelegate(connection, keypair).catch((e) => {
-//   console.log(e);
-// });
+setTreeDelegate(connection, keypair).catch((e) => {
+  console.log(e);
+});
 
 // initializeNanoMachine(connection, keypair).catch((e) => {
 //   console.log(e);
