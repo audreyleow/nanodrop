@@ -20,16 +20,16 @@ import {
 
 const MAX_DEPTH_SIZE_PAIR: ValidDepthSizePair = {
   // max=8 nodes
-  maxDepth: 3,
-  maxBufferSize: 8,
+  // maxDepth: 3,
+  // maxBufferSize: 8,
 
   // max=32 nodes
   // maxDepth: 5,
   // maxBufferSize: 8,
 
   // max=16,384 nodes
-  // maxDepth: 14,
-  // maxBufferSize: 64,
+  maxDepth: 14,
+  maxBufferSize: 64,
 
   // max=131,072 nodes
   // maxDepth: 17,

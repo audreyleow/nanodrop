@@ -7,7 +7,7 @@ pub struct Config {
 }
 
 impl Config {
-    pub const LEN: usize = 4 // discriminator
+    pub const LEN: usize = 8 // discriminator
     + 1                      // version
     + 32; // co_signer
 }

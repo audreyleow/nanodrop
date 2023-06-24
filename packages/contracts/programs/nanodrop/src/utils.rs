@@ -32,5 +32,5 @@ pub fn get_space_for_nano_machine(phases: usize) -> usize {
     + 8                                                        // items_redeemed
     + 2                                                        // seller_fee_basis_points
     + 1                                                        // is_private
-    + 4 + phases * (8 + (4 + MAX_NAME_LENGTH))                 // u32 + phases * (start_date + (u32 + nft_name))
+    + 4 + (phases * (8 + 4 + (4 + MAX_NAME_LENGTH)))           // u32 + phases * (start_date + index + (u32 + nft_name))
 }

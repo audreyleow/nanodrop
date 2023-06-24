@@ -9,11 +9,11 @@
     "build": "anchor build",
     "build:lib": "rollup --config",
     "dev": "yarn run build:lib --watch",
-    "deploy": "solana program deploy --url https://solana-mainnet-api.rpc-node.com --program-id target/deploy/nanodrop-keypair.json --keypair target/deploy/authority-keypair.json --max-len 1000000 target/deploy/nanodrop.so",
+    "deploy": "solana program deploy --url $MAINNET_RPC --program-id target/deploy/nanodrop-keypair.json --keypair target/deploy/authority-keypair.json --max-len 1000000 target/deploy/nanodrop.so",
     "test": "anchor test --skip-build  --skip-deploy --skip-local-validator",
     "build:test": "anchor build -- --features \"test\"",
     "deploy:test": "anchor deploy --provider.cluster https://solana-mainnet-api.rpc-node.com --program-keypair target/deploy/test-program-keypair.json --provider.wallet target/deploy/test-authority-keypair.json",
-    "publish": "anchor idl init nano4T4ujob2vtabhnoiSmHdq4gawScPTwwhF5HSwPJ -f target/idl/nanodrop.json --provider.cluster https://warmhearted-solemn-shard.solana-mainnet.discover.quiknode.pro/ba1621153f9558a7ef443c254761d8667036320f --provider.wallet target/deploy/authority-keypair.json"
+    "publish": "anchor idl upgrade nano4T4ujob2vtabhnoiSmHdq4gawScPTwwhF5HSwPJ -f target/idl/nanodrop.json --provider.cluster $MAINNET_RPC --provider.wallet target/deploy/authority-keypair.json"
   },
   "dependencies": {
     "@coral-xyz/anchor": "^0.27.0"
@@ -28,8 +28,8 @@
     "@solana/spl-token": "^0.3.7",
     "@solana/web3.js": "^1.76.0",
     "@types/bn.js": "^5.1.0",
-    "@types/chai": "^4.3.0",
-    "@types/mocha": "^9.0.0",
+    "@types/chai": "^4.3.5",
+    "@types/mocha": "^10.0.1",
     "@types/node": "^17.0.12",
     "axios": "^1.4.0",
     "axios-retry": "^3.5.0",

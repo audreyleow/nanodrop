@@ -40,4 +40,7 @@ pub enum NanoError {
 
     #[msg("Unable to create Nano Machine authority ATA")]
     UnableToCreateAuthorityAta,
+
+    #[msg("Collection Update Authority is invalid")]
+    InvalidCollectionUpdateAuthority,
 }

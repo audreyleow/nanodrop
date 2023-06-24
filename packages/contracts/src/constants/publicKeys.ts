@@ -5,5 +5,5 @@ export const NANODROP_PROGRAM_ID = new PublicKey(
 );
 
 export const SHARED_TREE_ID = new PublicKey(
-  "treeNZ9UveZq3mKbGfd8QtfostL2Cqn7vtZejsuce5g"
+  "CeQFpf5USvUFkfLjvSwr5RjFA3CqCjYjGJMuQaG2bYBR"
 );

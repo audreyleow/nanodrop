@@ -77,7 +77,7 @@ export default function CreateForm() {
             display: "flex",
             flexDirection: "column",
             alignItems: "center",
-            gap: 8,
+            gap: 6,
           }}
         >
           <CircularProgress color="inherit" />
