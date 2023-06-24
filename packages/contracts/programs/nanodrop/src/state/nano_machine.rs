@@ -1,5 +1,5 @@
 use anchor_lang::prelude::*;
-use mpl_token_metadata::state::{MAX_NAME_LENGTH, MAX_URI_LENGTH};
+use mpl_token_metadata::state::MAX_NAME_LENGTH;
 
 use crate::{errors::NanoError, utils::pad_string_or_throw};
 
@@ -15,8 +15,6 @@ pub struct NanoMachine {
     pub items_redeemed: u64,
     /// Secondary sales royalty basis points (0-10000)
     pub seller_fee_basis_points: u16,
-    /// Merkle tree for compression
-    pub merkle_tree: Pubkey,
     /// Is this a private drop
     pub is_private: bool,
     /// Minting phases
@@ -37,9 +35,8 @@ impl NanoMachine {
         for phase in &self.phases {
             updated_mint_phases.push(Phase {
                 start_date: phase.start_date,
+                index: phase.index,
                 nft_name: pad_string_or_throw(phase.nft_name.clone(), MAX_NAME_LENGTH).unwrap(),
-                metadata_uri: pad_string_or_throw(phase.metadata_uri.clone(), MAX_URI_LENGTH)
-                    .unwrap(),
             });
         }
 
@@ -51,7 +48,7 @@ impl NanoMachine {
 #[derive(AnchorSerialize, AnchorDeserialize, Clone, Debug)]
 pub struct Phase {
     pub start_date: i64,
-    pub metadata_uri: String,
+    pub index: u32,
     pub nft_name: String,
 }
 

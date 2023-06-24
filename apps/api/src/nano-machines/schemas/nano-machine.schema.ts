@@ -3,9 +3,15 @@ import { HydratedDocument } from "mongoose";
 
 export type NanoMachineDocument = HydratedDocument<NanoMachine>;
 
+export interface INanoMachine {
+  nanoMachineId: string;
+  backgroundImageUrl?: string;
+  jwtSecret: string;
+}
+
 @Schema()
 export class NanoMachine {
-  @Prop({ index: true, unique: true, required: true, type: String })
+  @Prop({ index: true, required: true, type: String })
   nanoMachineId: string;
 
   @Prop()

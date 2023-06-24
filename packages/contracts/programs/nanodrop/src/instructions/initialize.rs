@@ -1,14 +1,11 @@
 use anchor_lang::{prelude::*, solana_program::program::invoke, Discriminator};
 use anchor_spl::token::Mint;
-use mpl_bubblegum::state::{
-    metaplex_anchor::{MasterEdition, MplTokenMetadata, TokenMetadata},
-    TreeConfig,
-};
-use mpl_token_metadata::{instruction::approve_collection_authority};
+use mpl_bubblegum::state::metaplex_anchor::{MasterEdition, MplTokenMetadata, TokenMetadata};
+use mpl_token_metadata::instruction::approve_collection_authority;
 
 use crate::{
-    constants::{AUTHORITY_SEED, SHARED_TREE, TREE_DELEGATE_SEED},
-    state::{AccountVersion, NanoMachine, Phase},
+    constants::{AUTHORITY_SEED, CONFIG_SEED},
+    state::{AccountVersion, Config, NanoMachine, Phase},
     utils::get_space_for_nano_machine,
 };
 
@@ -25,7 +22,6 @@ pub fn initialize_v1(
         collection_mint: ctx.accounts.collection_mint.key(),
         items_redeemed: 0,
         seller_fee_basis_points: initialization_params.seller_fee_basis_points,
-        merkle_tree: ctx.accounts.merkle_tree.key(),
         is_private: initialization_params.is_private,
         phases: initialization_params.phases,
     };
@@ -85,7 +81,19 @@ pub struct Initialize<'info> {
     )]
     pub nano_machine: UncheckedAccount<'info>,
 
-    pub creator: Signer<'info>,
+    /// CHECK: account not read from or written to
+    pub creator: UncheckedAccount<'info>,
+
+    #[account(
+		seeds = [CONFIG_SEED],
+        bump,
+	)]
+    pub config: Account<'info, Config>,
+
+    #[account(
+        address = config.co_signer,
+    )]
+    pub co_signer: Signer<'info>,
 
     pub collection_mint: Box<Account<'info, Mint>>,
 
@@ -119,33 +127,8 @@ pub struct Initialize<'info> {
     )]
     pub nano_machine_pda_authority: UncheckedAccount<'info>,
 
-    /// CHECK: This is just used as a signing PDA.
-    #[account(
-        seeds = [TREE_DELEGATE_SEED],
-        bump
-    )]
-    pub tree_delegate: UncheckedAccount<'info>,
-
-    #[account(
-        seeds = [merkle_tree.key().as_ref()],
-        seeds::program = mpl_bubblegum::id(),
-        bump,
-        constraint = (tree_authority.tree_creator == creator.key()
-            && tree_authority.tree_delegate == tree_delegate.key())
-            || (merkle_tree.key() == SHARED_TREE.key()
-                && tree_authority.tree_delegate == tree_delegate.key())
-    )]
-    pub tree_authority: Account<'info, TreeConfig>,
-
-    /// CHECK: unsafe
-    #[account(
-        constraint =
-            merkle_tree.to_account_info().owner.as_ref() == spl_account_compression::id().key().as_ref()
-    )]
-    pub merkle_tree: UncheckedAccount<'info>,
-
     pub system_program: Program<'info, System>,
+
     /// CHECK: account constraint checked in account trait
-    #[account(address = mpl_token_metadata::id())]
     pub token_metadata_program: Program<'info, MplTokenMetadata>,
 }

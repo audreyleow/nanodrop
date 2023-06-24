@@ -1,7 +1,9 @@
 import { Module } from "@nestjs/common";
+import { ConfigModule } from "@nestjs/config";
 import { MongooseModule } from "@nestjs/mongoose";
 import { UsersModule } from "./users/users.module";
 import { NanoMachinesModule } from "./nano-machines/nano-machines.module";
+import { SolanaService } from "./solana/solana.service";
 
 @Module({
   imports: [
@@ -9,8 +11,10 @@ import { NanoMachinesModule } from "./nano-machines/nano-machines.module";
       autoIndex: true,
       autoCreate: true,
     }),
+    ConfigModule.forRoot(),
     UsersModule,
     NanoMachinesModule,
   ],
+  providers: [SolanaService],
 })
 export class AppModule {}

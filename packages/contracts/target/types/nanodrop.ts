@@ -49,6 +49,16 @@ export type Nanodrop = {
         {
           "name": "creator",
           "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "config",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "coSigner",
+          "isMut": false,
           "isSigner": true
         },
         {
@@ -73,21 +83,6 @@ export type Nanodrop = {
         },
         {
           "name": "nanoMachinePdaAuthority",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "treeDelegate",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "treeAuthority",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "merkleTree",
           "isMut": false,
           "isSigner": false
         },
@@ -122,11 +117,6 @@ export type Nanodrop = {
         {
           "name": "nanoMachinePdaAuthority",
           "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "nanoMachineAuthority",
-          "isMut": true,
           "isSigner": false
         },
         {
@@ -283,13 +273,6 @@ export type Nanodrop = {
             "type": "u16"
           },
           {
-            "name": "merkleTree",
-            "docs": [
-              "Merkle tree for compression"
-            ],
-            "type": "publicKey"
-          },
-          {
             "name": "isPrivate",
             "docs": [
               "Is this a private drop"
@@ -355,8 +338,8 @@ export type Nanodrop = {
             "type": "i64"
           },
           {
-            "name": "metadataUri",
-            "type": "string"
+            "name": "index",
+            "type": "u32"
           },
           {
             "name": "nftName",
@@ -508,6 +491,16 @@ export const IDL: Nanodrop = {
         {
           "name": "creator",
           "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "config",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "coSigner",
+          "isMut": false,
           "isSigner": true
         },
         {
@@ -532,21 +525,6 @@ export const IDL: Nanodrop = {
         },
         {
           "name": "nanoMachinePdaAuthority",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "treeDelegate",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "treeAuthority",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "merkleTree",
           "isMut": false,
           "isSigner": false
         },
@@ -581,11 +559,6 @@ export const IDL: Nanodrop = {
         {
           "name": "nanoMachinePdaAuthority",
           "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "nanoMachineAuthority",
-          "isMut": true,
           "isSigner": false
         },
         {
@@ -742,13 +715,6 @@ export const IDL: Nanodrop = {
             "type": "u16"
           },
           {
-            "name": "merkleTree",
-            "docs": [
-              "Merkle tree for compression"
-            ],
-            "type": "publicKey"
-          },
-          {
             "name": "isPrivate",
             "docs": [
               "Is this a private drop"
@@ -814,8 +780,8 @@ export const IDL: Nanodrop = {
             "type": "i64"
           },
           {
-            "name": "metadataUri",
-            "type": "string"
+            "name": "index",
+            "type": "u32"
           },
           {
             "name": "nftName",
