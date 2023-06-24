@@ -29,12 +29,12 @@ interface MintBackgroundProps {
 export default function MintBackground({ nanoMachine }: MintBackgroundProps) {
   const [hasError, setHasError] = useState(false);
 
-  const shouldRenderCollectionImage =
-    hasError || nanoMachine.backgroundImageUri === null;
+  const shouldRenderPhaseImage =
+    hasError || nanoMachine.backgroundImageUrl === null;
 
-  const backgroundImageUri = shouldRenderCollectionImage
-    ? nanoMachine.collectionImageUri
-    : nanoMachine.backgroundImageUri;
+  const backgroundImageUri = shouldRenderPhaseImage
+    ? nanoMachine.currentPhase.phaseImageUrl
+    : nanoMachine.backgroundImageUrl;
 
   if (typeof window === "undefined") {
     return null;
@@ -47,9 +47,6 @@ export default function MintBackground({ nanoMachine }: MintBackgroundProps) {
           zIndex: 1,
           pointerEvents: "none",
           backgroundColor: "rgba(0, 0, 0, 0.3)",
-        }}
-        style={{
-          backdropFilter: shouldRenderCollectionImage ? "blur(1rem)" : "none",
         }}
         open
       />

@@ -9,13 +9,15 @@ export default function NanoMachine() {
     fetchCollectionMetadataError,
     fetchCollectionUriMetadataError,
     fetchNanoMachineError,
+    fetchBackgroundImageError,
   } = useNanoMachine();
 
   return (
     <>
       {fetchCollectionMetadataError ||
       fetchCollectionUriMetadataError ||
-      fetchNanoMachineError ? (
+      fetchNanoMachineError ||
+      fetchBackgroundImageError ? (
         <ErrorPage>
           {fetchNanoMachineError ? (
             <Typography variant="h6">Nano Machine not found.</Typography>

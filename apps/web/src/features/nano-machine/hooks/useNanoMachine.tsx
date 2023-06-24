@@ -5,7 +5,6 @@ import {
 import { useConnection } from "@solana/wallet-adapter-react";
 import { PublicKey } from "@solana/web3.js";
 import axios from "axios";
-import Decimal from "decimal.js";
 import { useEffect, useMemo, useState } from "react";
 import { useParams } from "react-router-dom";
 import useSWR from "swr";
@@ -14,6 +13,7 @@ import useSWRSubscription from "swr/subscription";
 import useNanodrop from "@/common/hooks/useNanodrop";
 
 import type { NanoMachine } from "../types/nanoMachine";
+import useCurrentPhase from "./useCurrentPhase";
 
 export default function useNanoMachine() {
   const { nanoMachineId } = useParams();
@@ -22,6 +22,22 @@ export default function useNanoMachine() {
   const { nanoMachineData, fetchNanoMachineError, mutate } = useNanoMachineData(
     typeof nanoMachineId === "string" ? nanoMachineId : undefined
   );
+  const {
+    data: backgroundImageUrl,
+    error: fetchBackgroundImageError,
+    isLoading: isBackgroundImageLoading,
+  } = useBackgroundImageUri(nanoMachineId, nanoMachineData?.creator);
+
+  const phases = useMemo(
+    () =>
+      nanoMachineData?.phases.map((phase) => ({
+        name: phase.nftName,
+        startDate: new Date(phase.startDate.toNumber() * 1000),
+        metadata: `https://files.nanodrop.it/${nanoMachineId}/${phase.index}.json`,
+      })),
+    [nanoMachineData?.phases, nanoMachineId]
+  );
+  const currentPhase = useCurrentPhase(phases);
 
   const { data: collectionMetadata, error: fetchCollectionMetadataError } =
     useSWR(
@@ -71,45 +87,27 @@ export default function useNanoMachine() {
       !collectionMetadata ||
       !collectionUriMetadata ||
       !collectionMetadata?.collectionDetails ||
+      isBackgroundImageLoading ||
+      !currentPhase ||
       typeof nanoMachineId !== "string"
     ) {
       return undefined;
     } else {
-      const decimals = 9; // TODO: currently only supporting SOL
-      const displayPrice = new Decimal(nanoMachineData.price.toString())
-        .div(10 ** decimals)
-        .toFixed();
-
-      const backgroundImageUri =
-        nanoMachineData.backgroundImageUri.replaceAll("\u0000", "").trim()
-          .length === 0
-          ? null
-          : nanoMachineData.backgroundImageUri.replaceAll("\u0000", "").trim();
-
       return {
         id: new PublicKey(nanoMachineId),
-        creator: nanoMachineData.authority,
-        collectionImageUri: collectionUriMetadata.image ?? "",
+        creator: nanoMachineData.creator,
         collectionName: collectionUriMetadata.name ?? "",
-        collectionDescription: collectionUriMetadata.description ?? "",
-        collectionMint: nanoMachineData.collectionMint,
-        collectionSize: collectionMetadata.collectionDetails.size.toString(),
-        displayPrice,
-        goLiveDate:
-          nanoMachineData.goLiveDate === null
-            ? null
-            : new Date(nanoMachineData.goLiveDate.toNumber() * 1000),
-        itemsAvailable: nanoMachineData.itemsAvailable.toString(),
         itemsRedeemed: nanoMachineData.itemsRedeemed.toString(),
-        paymentMint: nanoMachineData.paymentMint,
-        merkleTree: nanoMachineData.merkleTree,
-        sellerFeePercent: nanoMachineData.sellerFeeBasisPoints / 100 + "%",
-        backgroundImageUri,
+        backgroundImageUrl,
+        currentPhase,
       };
     }
   }, [
+    backgroundImageUrl,
     collectionMetadata,
     collectionUriMetadata,
+    currentPhase,
+    isBackgroundImageLoading,
     nanoMachineData,
     nanoMachineId,
   ]);
@@ -119,6 +117,7 @@ export default function useNanoMachine() {
     fetchNanoMachineError,
     fetchCollectionMetadataError,
     fetchCollectionUriMetadataError,
+    fetchBackgroundImageError,
     mutate,
   };
 }
@@ -172,4 +171,21 @@ const useNanoMachineData = (nanoMachineId?: string) => {
   );
 
   return { nanoMachineData, fetchNanoMachineError, mutate };
+};
+
+const useBackgroundImageUri = (
+  nanoMachineId: string,
+  creator: PublicKey | undefined
+) => {
+  const swr = useSWR(
+    creator === undefined ? null : [nanoMachineId, creator.toBase58()],
+    async ([nanoMachineId, creator]) =>
+      axios
+        .get<{ backgroundImageUrl?: string }>(
+          `/v1/nano-machines/${creator}/${nanoMachineId}`
+        )
+        .then((response) => response.data.backgroundImageUrl ?? null)
+  );
+
+  return swr;
 };

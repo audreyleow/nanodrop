@@ -33,7 +33,7 @@ export default function MintPage() {
           elevation={3}
           sx={{
             width: "100%",
-            maxWidth: "26rem",
+            maxWidth: "20rem",
             zIndex: 1,
           }}
         >

@@ -25,8 +25,11 @@ pub fn mint_v1(ctx: Context<Mint>) -> Result<()> {
     }
 
     let clock = Clock::get()?;
-    let phase = nano_machine
-        .phases
+
+    let mut sorted_phases = nano_machine.phases.clone();
+    sorted_phases.sort_by(|a, b| b.start_date.cmp(&a.start_date));
+
+    let phase = sorted_phases
         .iter()
         .find(|phase| clock.unix_timestamp >= phase.start_date);
 
