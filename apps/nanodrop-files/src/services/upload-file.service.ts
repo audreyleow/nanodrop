@@ -53,7 +53,7 @@ export const handleFileUpload = async (request: Request, env: Env) => {
   url.pathname = "/" + fileName;
 
   const client = getAwsClient(env);
-  return client.fetch(url, {
+  await client.fetch(url, {
     method: "PUT",
     headers: [
       ["content-type", file.type],

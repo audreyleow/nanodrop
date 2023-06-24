@@ -5,7 +5,9 @@ import { handleGetFile } from "./services/get-file.service";
 import { handleFileUpload } from "./services/upload-file.service";
 import { Env } from "./types";
 
-const { preflight, corsify } = createCors();
+const { preflight, corsify } = createCors({
+  origins: ["*"],
+});
 
 const router = Router();
 
@@ -15,7 +17,17 @@ router.get("/*", async (request: Request, env: Env) =>
   corsify(await handleGetFile(request, env))
 );
 
-router.post("/upload", handleFileUpload);
+router.post("/upload", async (request: Request, env: Env) => {
+  await handleFileUpload(request, env);
+  return corsify(
+    new Response("OK", {
+      status: 201,
+      headers: {
+        "Access-Control-Allow-Origin": "*",
+      },
+    })
+  );
+});
 
 router.all("*", () => new Response("404, not found!", { status: 404 }));
 
@@ -23,7 +35,8 @@ const fetchHandler = {
   fetch: (request: Request, ...extra: any) =>
     router
       .handle(request, ...extra)
-      .catch(() => new Response("Error", { status: 500 })),
+      .catch(() => new Response("Error", { status: 500 }))
+      .then(corsify),
 };
 
 export default fetchHandler;

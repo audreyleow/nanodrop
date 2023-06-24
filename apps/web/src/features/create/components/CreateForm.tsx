@@ -66,7 +66,7 @@ export default function CreateForm() {
         onSubmit={formik.handleSubmit}
         sx={{
           position: "relative",
-          py: 2,
+          pb: 8,
           zIndex: 2,
         }}
         fixed
@@ -81,7 +81,7 @@ export default function CreateForm() {
             mt: 8,
           }}
         >
-          <Button type="submit" variant="contained">
+          <Button size="large" type="submit" variant="contained">
             Create Drop
           </Button>
         </Box>

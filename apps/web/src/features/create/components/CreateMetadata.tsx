@@ -55,8 +55,8 @@ export default function CreateMetadata({
             maxLength={MAX_DESCRIPTION_LENGTH}
           />
         </div>
-        <Grid container spacing={4}>
-          <Grid item xs={12} sm={6}>
+        <Grid container spacing={4} mt={2}>
+          <Grid item xs={12} md={6}>
             <AppInputLabel>Website</AppInputLabel>
             <AppInput
               placeholder="https://mywebsite.com"
@@ -70,7 +70,7 @@ export default function CreateMetadata({
               </FormHelperText>
             )}
           </Grid>
-          <Grid item xs={12} sm={6} mt={2}>
+          <Grid item xs={12} md={6}>
             <Box>
               <AppDropzone dropzoneState={createFormik.backgroundDropzone}>
                 <Box
@@ -89,6 +89,8 @@ export default function CreateMetadata({
               </AppDropzone>
               {createFormik.backgroundImage !== null && (
                 <Button
+                  type="button"
+                  color="secondary"
                   onClick={() => {
                     createFormik.setBackgroundImage(null);
                   }}
