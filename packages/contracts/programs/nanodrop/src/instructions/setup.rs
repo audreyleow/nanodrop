@@ -1,9 +1,14 @@
 use anchor_lang::prelude::*;
 
-use crate::{constants::CONFIG_SEED, program::Nanodrop, state::Config};
+use crate::{
+    constants::CONFIG_SEED,
+    program::Nanodrop,
+    state::{Config, ConfigVersion},
+};
 
 pub fn setup_v1(ctx: Context<Setup>) -> Result<()> {
     let config = &mut ctx.accounts.config;
+    config.version = ConfigVersion::V1;
     config.co_signer = ctx.accounts.co_signer.key();
 
     Ok(())

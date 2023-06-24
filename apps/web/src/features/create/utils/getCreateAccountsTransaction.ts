@@ -1,5 +1,9 @@
 import { Metaplex, walletAdapterIdentity } from "@metaplex-foundation/js";
 import {
+  createApproveCollectionAuthorityInstruction,
+  PROGRAM_ID as TOKEN_METADATA_PROGRAM_ID,
+} from "@metaplex-foundation/mpl-token-metadata";
+import {
   getSpaceForNanoMachine,
   NANODROP_PROGRAM_ID,
 } from "@nanodrop/contracts";
@@ -9,6 +13,7 @@ import {
   Keypair,
   PublicKey,
   SystemProgram,
+  SYSVAR_RENT_PUBKEY,
   TransactionMessage,
   VersionedTransaction,
 } from "@solana/web3.js";
@@ -46,6 +51,7 @@ export default async function getCreateAccountsTransaction({
     symbol,
     walletAdapter,
     collectionMintKeypair,
+    nanoMachineKeypair,
   });
 
   const blockhash = await connection
@@ -93,6 +99,7 @@ async function createCreateCollectionIxs({
   symbol,
   collectionMintKeypair,
   walletAdapter,
+  nanoMachineKeypair,
 }: {
   connection: Connection;
   collectionName: string;
@@ -100,6 +107,7 @@ async function createCreateCollectionIxs({
   symbol: string;
   collectionMintKeypair: Keypair;
   walletAdapter: WalletContextState;
+  nanoMachineKeypair: Keypair;
 }) {
   const metaplex = Metaplex.make(connection).use(
     walletAdapterIdentity(walletAdapter)
@@ -123,7 +131,41 @@ async function createCreateCollectionIxs({
       ],
     });
 
-  const ixs = transactionBuilder.getInstructions();
+  const [metadata] = PublicKey.findProgramAddressSync(
+    [
+      Buffer.from("metadata"),
+      TOKEN_METADATA_PROGRAM_ID.toBuffer(),
+      collectionMintKeypair.publicKey.toBuffer(),
+    ],
+    TOKEN_METADATA_PROGRAM_ID
+  );
+  const [nanoMachinePdaAuthority] = PublicKey.findProgramAddressSync(
+    [Buffer.from("nano_machine"), nanoMachineKeypair.publicKey.toBuffer()],
+    NANODROP_PROGRAM_ID
+  );
+  const [collectionAuthorityRecord] = PublicKey.findProgramAddressSync(
+    [
+      Buffer.from("metadata"),
+      TOKEN_METADATA_PROGRAM_ID.toBuffer(),
+      collectionMintKeypair.publicKey.toBuffer(),
+      Buffer.from("collection_authority"),
+      nanoMachinePdaAuthority.toBuffer(),
+    ],
+    TOKEN_METADATA_PROGRAM_ID
+  );
+  const approveCollectionAuthorityIx =
+    createApproveCollectionAuthorityInstruction({
+      collectionAuthorityRecord,
+      metadata,
+      mint: collectionMintKeypair.publicKey,
+      newCollectionAuthority: nanoMachinePdaAuthority,
+      payer: walletAdapter.publicKey,
+      updateAuthority: walletAdapter.publicKey,
+      rent: SYSVAR_RENT_PUBKEY,
+      systemProgram: SystemProgram.programId,
+    });
 
-  return ixs;
+  const createCollectionIxs = transactionBuilder.getInstructions();
+
+  return [...createCollectionIxs, approveCollectionAuthorityIx];
 }

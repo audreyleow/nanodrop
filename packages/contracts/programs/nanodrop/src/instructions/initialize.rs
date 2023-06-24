@@ -1,18 +1,25 @@
-use anchor_lang::{prelude::*, solana_program::program::invoke, Discriminator};
+use anchor_lang::{prelude::*, Discriminator};
 use anchor_spl::token::Mint;
 use mpl_bubblegum::state::metaplex_anchor::{MasterEdition, MplTokenMetadata, TokenMetadata};
-use mpl_token_metadata::{instruction::approve_collection_authority, state::MAX_SYMBOL_LENGTH};
+use mpl_token_metadata::{state::{MAX_SYMBOL_LENGTH, CollectionAuthorityRecord}};
 
 use crate::{
     constants::{AUTHORITY_SEED, CONFIG_SEED},
     state::{AccountVersion, Config, NanoMachine, Phase},
-    utils::{get_space_for_nano_machine, pad_string_or_throw},
+    utils::{get_space_for_nano_machine, pad_string_or_throw}, errors::NanoError,
 };
 
 pub fn initialize_v1(
     ctx: Context<Initialize>,
     initialization_params: InitializationParams,
 ) -> Result<()> {
+    // check collection authority record
+    let data = ctx.accounts.collection_authority_record.try_borrow_data()?;
+    let record = CollectionAuthorityRecord::from_bytes(&data)?;
+    if record.update_authority.unwrap() != ctx.accounts.creator.key() {
+        return err!(NanoError::InvalidCollectionUpdateAuthority);
+    }
+
     // initialize the nano_machine account
     let nano_machine_account = &mut ctx.accounts.nano_machine;
 
@@ -33,29 +40,6 @@ pub fn initialize_v1(
     struct_data.append(&mut new_nano_machine.try_to_vec().unwrap());
     let mut account_data = nano_machine_account.data.borrow_mut();
     account_data[..struct_data.len()].copy_from_slice(&struct_data);
-
-    // approve collection delegate authority
-    let approve_collection_authority_ix = approve_collection_authority(
-        ctx.accounts.token_metadata_program.key(),
-        ctx.accounts.collection_authority_record.key(),
-        ctx.accounts.nano_machine_pda_authority.key(),
-        ctx.accounts.creator.key(),
-        ctx.accounts.creator.key(),
-        ctx.accounts.collection_metadata.key(),
-        ctx.accounts.collection_mint.key(),
-    );
-    invoke(
-        &approve_collection_authority_ix,
-        vec![
-            ctx.accounts.collection_authority_record.to_account_info(),
-            ctx.accounts.nano_machine_pda_authority.to_account_info(),
-            ctx.accounts.creator.to_account_info(),
-            ctx.accounts.collection_metadata.to_account_info(),
-            ctx.accounts.collection_mint.to_account_info(),
-            ctx.accounts.system_program.to_account_info(),
-        ]
-        .as_slice(),
-    )?;
 
     Ok(())
 }
@@ -107,9 +91,8 @@ pub struct Initialize<'info> {
 
     pub collection_master_edition: Box<Account<'info, MasterEdition>>,
 
-    /// CHECK: account checked in seeds constraint and in CPI
+    /// CHECK: account checked in seeds constraint and in instruction
     #[account(
-        mut,
         seeds = [
             b"metadata",
             token_metadata_program.key.as_ref(),
@@ -118,8 +101,7 @@ pub struct Initialize<'info> {
             nano_machine_pda_authority.key.as_ref()
         ],
         seeds::program = mpl_token_metadata::id(),
-        bump,
-        constraint = collection_authority_record.data_is_empty() == true
+        bump
     )]
     pub collection_authority_record: UncheckedAccount<'info>,
 

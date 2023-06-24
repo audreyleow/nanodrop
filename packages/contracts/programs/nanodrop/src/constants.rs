@@ -7,5 +7,5 @@ pub const AUTHORITY_SEED: &[u8; 12] = b"nano_machine";
 pub use shared_tree::ID as SHARED_TREE;
 mod shared_tree {
     use super::*;
-    declare_id!("treeNZ9UveZq3mKbGfd8QtfostL2Cqn7vtZejsuce5g");
+    declare_id!("CeQFpf5USvUFkfLjvSwr5RjFA3CqCjYjGJMuQaG2bYBR");
 }

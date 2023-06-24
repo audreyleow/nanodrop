@@ -78,7 +78,7 @@ export type Nanodrop = {
         },
         {
           "name": "collectionAuthorityRecord",
-          "isMut": true,
+          "isMut": false,
           "isSigner": false
         },
         {
@@ -450,6 +450,11 @@ export type Nanodrop = {
       "code": 6012,
       "name": "UnableToCreateAuthorityAta",
       "msg": "Unable to create Nano Machine authority ATA"
+    },
+    {
+      "code": 6013,
+      "name": "InvalidCollectionUpdateAuthority",
+      "msg": "Collection Update Authority is invalid"
     }
   ]
 };
@@ -534,7 +539,7 @@ export const IDL: Nanodrop = {
         },
         {
           "name": "collectionAuthorityRecord",
-          "isMut": true,
+          "isMut": false,
           "isSigner": false
         },
         {
@@ -906,6 +911,11 @@ export const IDL: Nanodrop = {
       "code": 6012,
       "name": "UnableToCreateAuthorityAta",
       "msg": "Unable to create Nano Machine authority ATA"
+    },
+    {
+      "code": 6013,
+      "name": "InvalidCollectionUpdateAuthority",
+      "msg": "Collection Update Authority is invalid"
     }
   ]
 };
