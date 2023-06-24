@@ -1,1 +1,1 @@
-export * from "./getMintIx";
+export * from "./getSpaceForNanoMachine";

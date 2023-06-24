@@ -1,4 +1,11 @@
-import { Backdrop, Box, Button, Container, Typography } from "@mui/material";
+import {
+  Backdrop,
+  Box,
+  Button,
+  CircularProgress,
+  Container,
+  Typography,
+} from "@mui/material";
 import { useWallet } from "@solana/wallet-adapter-react";
 import dynamic from "next/dynamic";
 import { useEffect, useState } from "react";
@@ -61,6 +68,22 @@ export default function CreateForm() {
         }}
         open
       />
+      <Backdrop
+        sx={{ color: "#fff", zIndex: (theme) => theme.zIndex.drawer + 1 }}
+        open={formik.isSubmitting}
+      >
+        <Box
+          sx={{
+            display: "flex",
+            flexDirection: "column",
+            alignItems: "center",
+            gap: 8,
+          }}
+        >
+          <CircularProgress color="inherit" />
+          {formik.submissionState}
+        </Box>
+      </Backdrop>
       <Container
         component="form"
         onSubmit={formik.handleSubmit}

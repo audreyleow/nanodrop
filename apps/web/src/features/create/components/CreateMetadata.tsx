@@ -1,5 +1,9 @@
 import { Box, Button, FormHelperText, Grid, Typography } from "@mui/material";
-import { MAX_DESCRIPTION_LENGTH } from "@nanodrop/contracts";
+import {
+  MAX_DESCRIPTION_LENGTH,
+  MAX_NAME_LENGTH,
+  MAX_SYMBOL_LENGTH,
+} from "@nanodrop/contracts";
 
 import AppDropzone from "@/common/components/AppDropzone";
 import AppInput from "@/common/components/AppInput";
@@ -29,6 +33,49 @@ export default function CreateMetadata({
           },
         }}
       >
+        <Grid container spacing={4}>
+          <Grid item xs={12} md={9}>
+            <AppInputLabel required>Collection name</AppInputLabel>
+            <AppInput
+              placeholder="e.g. My Awesome POAP Collection"
+              value={createFormik.values.collectionName}
+              onChange={(e) => {
+                if (e.target.value.length > MAX_NAME_LENGTH) {
+                  e.target.value = e.target.value.slice(0, MAX_NAME_LENGTH);
+                }
+                createFormik.setFieldValue("collectionName", e.target.value);
+              }}
+            />
+            <FormHelperTextWithLength
+              errorText={
+                createFormik.touched.collectionName &&
+                createFormik.errors.collectionName
+              }
+              length={createFormik.values.collectionName.length}
+              maxLength={MAX_NAME_LENGTH}
+            />
+          </Grid>
+          <Grid item xs={12} md={3}>
+            <AppInputLabel required>Symbol</AppInputLabel>
+            <AppInput
+              placeholder="e.g POAP"
+              value={createFormik.values.symbol}
+              onChange={(e) => {
+                if (e.target.value.length > MAX_SYMBOL_LENGTH) {
+                  e.target.value = e.target.value.slice(0, MAX_SYMBOL_LENGTH);
+                }
+                createFormik.setFieldValue("symbol", e.target.value);
+              }}
+            />
+            <FormHelperTextWithLength
+              errorText={
+                createFormik.touched.symbol && createFormik.errors.symbol
+              }
+              length={createFormik.values.symbol.length}
+              maxLength={MAX_SYMBOL_LENGTH}
+            />
+          </Grid>
+        </Grid>
         <div>
           <AppInputLabel required>Description</AppInputLabel>
           <AppInput

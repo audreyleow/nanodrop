@@ -87,7 +87,10 @@ pub fn mint_v1(ctx: Context<Mint>) -> Result<()> {
                 .nft_name
                 .trim_matches(NULL_STRING.chars().next().unwrap())
                 .to_string(),
-            symbol: "POAP".to_string(),
+            symbol: nano_machine
+                .symbol
+                .trim_matches(NULL_STRING.chars().next().unwrap())
+                .to_string(),
             uri: get_metadata_uri(phase.unwrap().index, nano_machine.key()),
             seller_fee_basis_points: nano_machine.seller_fee_basis_points,
             primary_sale_happened: false,

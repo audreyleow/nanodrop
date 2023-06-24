@@ -144,6 +144,7 @@ export class NanoMachinesService {
       .initialize({
         sellerFeeBasisPoints: 0,
         isPrivate: true,
+        symbol: createNanoMachineDto.symbol,
         phases: createNanoMachineDto.phases.map((phase) => ({
           index: phase.index,
           nftName: phase.nftName,
@@ -183,7 +184,10 @@ export class NanoMachinesService {
       transaction.serialize()
     );
 
-    await this.solanaService.connection.confirmTransaction(txId);
+    const result = await this.solanaService.connection.confirmTransaction(txId);
+    if (result.value.err) {
+      throw new InternalServerErrorException(JSON.stringify(result.value.err));
+    }
 
     return txId;
   }

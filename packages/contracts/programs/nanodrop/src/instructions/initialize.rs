@@ -1,12 +1,12 @@
 use anchor_lang::{prelude::*, solana_program::program::invoke, Discriminator};
 use anchor_spl::token::Mint;
 use mpl_bubblegum::state::metaplex_anchor::{MasterEdition, MplTokenMetadata, TokenMetadata};
-use mpl_token_metadata::instruction::approve_collection_authority;
+use mpl_token_metadata::{instruction::approve_collection_authority, state::MAX_SYMBOL_LENGTH};
 
 use crate::{
     constants::{AUTHORITY_SEED, CONFIG_SEED},
     state::{AccountVersion, Config, NanoMachine, Phase},
-    utils::get_space_for_nano_machine,
+    utils::{get_space_for_nano_machine, pad_string_or_throw},
 };
 
 pub fn initialize_v1(
@@ -19,6 +19,7 @@ pub fn initialize_v1(
     let mut new_nano_machine = NanoMachine {
         version: AccountVersion::V1,
         creator: ctx.accounts.creator.key(),
+        symbol: pad_string_or_throw(initialization_params.symbol, MAX_SYMBOL_LENGTH)?,
         collection_mint: ctx.accounts.collection_mint.key(),
         items_redeemed: 0,
         seller_fee_basis_points: initialization_params.seller_fee_basis_points,
@@ -61,6 +62,8 @@ pub fn initialize_v1(
 
 #[derive(AnchorSerialize, AnchorDeserialize, Clone, Debug)]
 pub struct InitializationParams {
+    /// Symbol for all the NFTs minted
+    pub symbol: String,
     /// Secondary sales royalty basis points (0-10000)
     pub seller_fee_basis_points: u16,
     /// Is this a private drop
