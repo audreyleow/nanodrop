@@ -2,18 +2,14 @@ import {
   Avatar,
   Box,
   CircularProgress,
+  Link,
   Skeleton,
   Typography,
 } from "@mui/material";
 
 import AspectRatioBox from "@/common/components/AspectRatioBox";
-import SolanaLogo from "@/common/components/SolanaLogo";
 
 import useNanoMachine from "../hooks/useNanoMachine";
-import AdditionalInformation from "./AddtionalInformation";
-import BorderLinearProgress from "./BorderLinearProgress";
-import MintButton from "./MintButton";
-import MintOnMobile from "./MintOnMobile";
 
 const styles = {
   logo: {
@@ -26,16 +22,12 @@ const styles = {
 export default function NanoMachineInfo() {
   const { nanoMachine } = useNanoMachine();
 
-  const mintedPercentage = !nanoMachine
-    ? undefined
-    : (+nanoMachine.itemsRedeemed / +nanoMachine.itemsAvailable) * 100;
-
   return (
     <>
       <AspectRatioBox aspectHeight={1} aspectWidth={1}>
         <Avatar
           variant="rounded"
-          src={nanoMachine?.collectionImageUri}
+          src={nanoMachine?.currentPhase.phaseImageUrl}
           sx={styles.logo}
         >
           <CircularProgress color="inherit" />
@@ -46,60 +38,44 @@ export default function NanoMachineInfo() {
           p: 8,
           pb: 5,
           "&& > *": {
-            mb: 3,
+            mb: 2,
           },
         }}
       >
         {!nanoMachine ? (
-          <Skeleton variant="text" sx={{ height: "2rem", maxWidth: "6rem" }} />
-        ) : (
-          <Box
-            sx={{
-              display: "flex",
-              alignItems: "center",
-              gap: 2.5,
-            }}
-          >
-            <Typography variant="h5" fontWeight={700} component="p">
-              {nanoMachine.displayPrice}
-            </Typography>
-            <SolanaLogo width={20} />
-          </Box>
-        )}
-        {!nanoMachine ? (
           <Skeleton variant="text" sx={{ height: "2.5rem" }} />
         ) : (
           <Typography variant="h4" fontWeight="500">
-            {nanoMachine.collectionName}
+            {nanoMachine.currentPhase.name}
           </Typography>
         )}
         {!nanoMachine ? (
-          <Box height="2.375rem" />
+          <Skeleton variant="text" sx={{ height: "1.5rem" }} />
         ) : (
-          <div>
-            <Box
-              sx={{
-                display: "flex",
-                justifyContent: "space-between",
-                mb: 1,
-                gap: 2,
-                alignItems: "center",
-              }}
-            >
-              <Typography>Total minted</Typography>
-              <Typography>
-                {nanoMachine.itemsRedeemed}/{nanoMachine.itemsAvailable}
-              </Typography>
-            </Box>
-            <BorderLinearProgress
-              variant="determinate"
-              value={mintedPercentage}
-            />
-          </div>
+          <Typography>{nanoMachine.collectionName}</Typography>
         )}
-        <MintButton sx={{ mt: 8 }} />
-        <MintOnMobile />
-        <AdditionalInformation />
+        {!nanoMachine ? (
+          <Skeleton variant="text" sx={{ height: "1.25rem" }} />
+        ) : (
+          <Typography variant="body2">
+            Created by:{" "}
+            <Link
+              href={`https://solscan.io/account/${nanoMachine.creator.toBase58()}`}
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              {nanoMachine.creator.toBase58().slice(0, 4)}..
+              {nanoMachine.creator.toBase58().slice(-4)}
+            </Link>
+          </Typography>
+        )}
+        {!nanoMachine ? (
+          <Skeleton variant="text" sx={{ height: "1.25rem" }} />
+        ) : (
+          <Typography variant="body2">
+            Items minted: {nanoMachine.itemsRedeemed}
+          </Typography>
+        )}
       </Box>
     </>
   );
