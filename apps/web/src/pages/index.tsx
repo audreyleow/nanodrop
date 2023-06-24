@@ -1,9 +1,15 @@
+import dynamic from "next/dynamic";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 
 import AppLayout from "@/common/components/AppLayout";
 import { Home } from "@/features/landing-page";
 
-import NanoMachine from "../features/nano-machine/components/NanoMachine";
+const NanoMachine = dynamic(
+  async () => await import("../features/nano-machine/components/NanoMachine"),
+  {
+    ssr: false,
+  }
+);
 
 const router =
   typeof window === "undefined"
