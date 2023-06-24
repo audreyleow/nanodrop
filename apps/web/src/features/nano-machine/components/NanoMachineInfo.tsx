@@ -1,11 +1,15 @@
 import {
   Avatar,
   Box,
+  Button,
   CircularProgress,
   Link,
   Skeleton,
   Typography,
 } from "@mui/material";
+import { useConnection, useWallet } from "@solana/wallet-adapter-react";
+import { VersionedTransaction } from "@solana/web3.js";
+import axios from "axios";
 
 import AspectRatioBox from "@/common/components/AspectRatioBox";
 
@@ -21,6 +25,9 @@ const styles = {
 
 export default function NanoMachineInfo() {
   const { nanoMachine } = useNanoMachine();
+
+  const { signTransaction } = useWallet();
+  const { connection } = useConnection();
 
   return (
     <>
@@ -76,6 +83,28 @@ export default function NanoMachineInfo() {
             Items minted: {nanoMachine.itemsRedeemed}
           </Typography>
         )}
+        <Button
+          onClick={async () => {
+            const serializedTransaction = await axios
+              .post("/v1/nano-machines/mint")
+              .then((res) => res.data);
+
+            const transaction = VersionedTransaction.deserialize(
+              Buffer.from(serializedTransaction, "base64")
+            );
+
+            const signedTransaction = await signTransaction(transaction);
+            const txId = await connection.sendRawTransaction(
+              signedTransaction.serialize()
+            );
+
+            await connection.confirmTransaction(txId);
+
+            console.log(`https://solscan.io/tx/${txId}`);
+          }}
+        >
+          Test mint
+        </Button>
       </Box>
     </>
   );

@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Param } from "@nestjs/common";
+import { Controller, Get, Post, Body, Param, HttpCode } from "@nestjs/common";
 import { NanoMachinesService } from "./nano-machines.service";
 import { CreateNanoMachineDto } from "./dto/create-nano-machine.dto";
 
@@ -22,5 +22,11 @@ export class NanoMachinesController {
     @Param("nanoMachineId") nanoMachineId: string
   ) {
     return this.nanoMachinesService.findOne(userPublicKey, nanoMachineId);
+  }
+
+  @Post("mint")
+  @HttpCode(200)
+  buildMintTransaction() {
+    return this.nanoMachinesService.buildMintTransaction();
   }
 }

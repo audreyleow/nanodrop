@@ -99,6 +99,7 @@ export default function useNanoMachine() {
         collectionName: collectionUriMetadata.name ?? "",
         itemsRedeemed: nanoMachineData.itemsRedeemed.toString(),
         backgroundImageUrl,
+        collectionMint: nanoMachineData.collectionMint.toBase58(),
         currentPhase,
       };
     }
