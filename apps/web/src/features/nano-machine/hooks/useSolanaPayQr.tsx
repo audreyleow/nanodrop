@@ -18,8 +18,6 @@ export const useSolanaPayQr = (token: string) => {
         })}`
       );
 
-      console.log(link.toString());
-
       const size = 384;
       const qr = createQR(
         encodeURL({
