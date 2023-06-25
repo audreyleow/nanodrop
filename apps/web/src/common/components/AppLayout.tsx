@@ -1,4 +1,4 @@
-import { Box, Container, Typography } from "@mui/material";
+import { Box, Container, Link, Typography } from "@mui/material";
 import dynamic from "next/dynamic";
 import React from "react";
 
@@ -62,7 +62,25 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
             <NanodropLogo width="30" height="30" />
             NanoDrop
           </Typography>
-          <WalletMultiButtonDynamic />
+          <Box
+            sx={{
+              display: "flex",
+              alignItems: "center",
+              gap: 2,
+            }}
+          >
+            <Typography
+              sx={{
+                color: "#fff",
+                textDecoration: "underline",
+              }}
+              component={Link}
+              href="/me"
+            >
+              My drops
+            </Typography>
+            <WalletMultiButtonDynamic />
+          </Box>
         </Box>
         <Box
           sx={{

@@ -6,16 +6,14 @@ import useNanoMachine from "@/features/nano-machine/hooks/useNanoMachine";
 
 export default function NanoMachine() {
   const {
-    fetchCollectionMetadataError,
-    fetchCollectionUriMetadataError,
     fetchNanoMachineError,
     fetchBackgroundImageError,
+    fetchCollectionError,
   } = useNanoMachine();
 
   return (
     <>
-      {fetchCollectionMetadataError ||
-      fetchCollectionUriMetadataError ||
+      {fetchCollectionError ||
       fetchNanoMachineError ||
       fetchBackgroundImageError ? (
         <ErrorPage>

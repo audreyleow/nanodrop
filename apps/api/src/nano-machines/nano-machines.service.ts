@@ -84,6 +84,8 @@ export class NanoMachinesService {
     return nanoMachines.map((nanoMachine) => ({
       nanoMachineId: nanoMachine.nanoMachineId,
       backgroundImageUrl: nanoMachine.backgroundImageUrl,
+      createdAt: nanoMachine.createdAt,
+      updatedAt: nanoMachine.updatedAt,
     }));
   }
 
@@ -103,6 +105,8 @@ export class NanoMachinesService {
     return {
       nanoMachineId: nanoMachine.nanoMachineId,
       backgroundImageUrl: nanoMachine.backgroundImageUrl,
+      createdAt: nanoMachine.createdAt,
+      updatedAt: nanoMachine.updatedAt,
     };
   }
 
