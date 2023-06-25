@@ -36,7 +36,7 @@ export class NanoMachinesController {
     return this.nanoMachinesService.findOne(userPublicKey, nanoMachineId);
   }
 
-  @Post("mint")
+  @Get("mint")
   getSolanaPayMetadata() {
     return {
       label: "NanoDrop",
