@@ -13,9 +13,18 @@ const router = Router();
 
 router.all("*", preflight);
 
-router.get("/*", async (request: Request, env: Env) =>
-  corsify(await handleGetFile(request, env))
-);
+router.get("/*", async (request: Request, env: Env) => {
+  const file = await handleGetFile(request, env);
+  return corsify(
+    new Response(file.body, {
+      status: file.status,
+      headers: {
+        "Access-Control-Allow-Origin": "*",
+        "Content-Type": file.headers.get("Content-Type") || "",
+      },
+    })
+  );
+});
 
 router.post("/upload", async (request: Request, env: Env) => {
   await handleFileUpload(request, env);

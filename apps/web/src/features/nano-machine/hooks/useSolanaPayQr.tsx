@@ -13,10 +13,12 @@ export const useSolanaPayQr = (token: string) => {
       const link = new URL(
         `${
           process.env.NEXT_PUBLIC_API_ORIGIN
-        }/nano-machines/mint?${qs.stringify({
+        }/v1/nano-machines/mint?${qs.stringify({
           token,
         })}`
       );
+
+      console.log(link.toString());
 
       const size = 384;
       const qr = createQR(

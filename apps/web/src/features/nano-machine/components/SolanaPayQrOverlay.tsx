@@ -67,6 +67,9 @@ export default React.memo(function SolanaPayQrOverlay({
         backdropFilter: "blur(0.25rem)",
         textAlign: "center",
         p: 2,
+        display: "flex",
+        flexDirection: "column",
+        gap: 1,
       }}
     >
       {!nanoMachine ? null : !hasMintStarted ? (
