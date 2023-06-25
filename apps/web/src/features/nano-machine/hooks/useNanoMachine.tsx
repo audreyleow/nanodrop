@@ -38,32 +38,13 @@ export default function useNanoMachine() {
   );
   const currentPhase = useCurrentPhase(phases);
 
-  const { data: collectionMetadata, error: fetchCollectionMetadataError } =
-    useNanoMachineCollection(nanoMachineData?.collectionMint?.toBase58());
-
-  const {
-    data: collectionUriMetadata,
-    error: fetchCollectionUriMetadataError,
-  } = useSWR(
-    typeof window === "undefined" || collectionMetadata === undefined
-      ? null
-      : collectionMetadata.data.uri.replaceAll("\u0000", ""),
-    async (collectionMetadataUri) =>
-      axios
-        .get<{
-          description: string | undefined;
-          image: string | undefined;
-          name: string | undefined;
-        }>(collectionMetadataUri)
-        .then((response) => response.data)
-  );
+  const { collectionUriMetadata, fetchCollectionError } =
+    useNanoMachineCollection(nanoMachineData?.collectionMint.toBase58());
 
   const nanoMachine: NanoMachine | undefined = useMemo(() => {
     if (
       !nanoMachineData ||
-      !collectionMetadata ||
       !collectionUriMetadata ||
-      !collectionMetadata?.collectionDetails ||
       isBackgroundImageLoading ||
       !currentPhase ||
       typeof nanoMachineId !== "string"
@@ -82,7 +63,6 @@ export default function useNanoMachine() {
     }
   }, [
     backgroundImageUrl,
-    collectionMetadata,
     collectionUriMetadata,
     currentPhase,
     isBackgroundImageLoading,
@@ -93,8 +73,7 @@ export default function useNanoMachine() {
   return {
     nanoMachine,
     fetchNanoMachineError,
-    fetchCollectionMetadataError,
-    fetchCollectionUriMetadataError,
+    fetchCollectionError,
     fetchBackgroundImageError,
     mutate,
   };
@@ -155,27 +134,51 @@ export const useNanoMachineCollection = (
   collectionMint: string | undefined
 ) => {
   const { connection } = useConnection();
-  const swr = useSWR(
-    collectionMint === undefined ? null : collectionMint,
-    async (collectionMint) => {
-      const [collectionMetadataId] = PublicKey.findProgramAddressSync(
-        [
-          Buffer.from("metadata"),
-          TOKEN_METADATA_PROGRAM_ID.toBuffer(),
-          new PublicKey(collectionMint).toBuffer(),
-        ],
-        TOKEN_METADATA_PROGRAM_ID
-      );
-      const accountInfo = await connection.getAccountInfo(collectionMetadataId);
+  const { data: collectionMetadata, error: fetchCollectionMetadataError } =
+    useSWR(
+      collectionMint === undefined ? null : collectionMint,
+      async (collectionMint) => {
+        const [collectionMetadataId] = PublicKey.findProgramAddressSync(
+          [
+            Buffer.from("metadata"),
+            TOKEN_METADATA_PROGRAM_ID.toBuffer(),
+            new PublicKey(collectionMint).toBuffer(),
+          ],
+          TOKEN_METADATA_PROGRAM_ID
+        );
+        const accountInfo = await connection.getAccountInfo(
+          collectionMetadataId
+        );
 
-      if (accountInfo) {
-        const [collectionMetadata] = Metadata.deserialize(accountInfo.data);
-        return collectionMetadata;
+        if (accountInfo) {
+          const [collectionMetadata] = Metadata.deserialize(accountInfo.data);
+          return collectionMetadata;
+        }
       }
-    }
+    );
+
+  const {
+    data: collectionUriMetadata,
+    error: fetchCollectionUriMetadataError,
+  } = useSWR(
+    collectionMetadata === undefined
+      ? null
+      : collectionMetadata.data.uri.replaceAll("\u0000", ""),
+    async (collectionMetadataUri) =>
+      axios
+        .get<{
+          description: string | undefined;
+          image: string | undefined;
+          name: string | undefined;
+        }>(collectionMetadataUri)
+        .then((response) => response.data)
   );
 
-  return swr;
+  return {
+    collectionUriMetadata,
+    fetchCollectionError:
+      fetchCollectionUriMetadataError || fetchCollectionMetadataError,
+  };
 };
 
 const useBackgroundImageUri = (

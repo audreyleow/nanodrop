@@ -36,7 +36,7 @@ export default function NanoMachineInfo() {
           src={nanoMachine?.currentPhase.phaseImageUrl}
           sx={styles.logo}
         >
-          <CircularProgress color="inherit" />
+          <CircularProgress size={20} color="inherit" />
         </Avatar>
       </AspectRatioBox>
       <Box

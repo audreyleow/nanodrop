@@ -7,9 +7,11 @@ export interface INanoMachine {
   nanoMachineId: string;
   backgroundImageUrl?: string;
   jwtSecret: string;
+  createdAt: Date;
+  updatedAt: Date;
 }
 
-@Schema()
+@Schema({ timestamps: true })
 export class NanoMachine {
   @Prop({ index: true, required: true, type: String })
   nanoMachineId: string;
