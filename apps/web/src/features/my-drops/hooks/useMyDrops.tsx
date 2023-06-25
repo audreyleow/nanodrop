@@ -11,7 +11,15 @@ export default function useMyDrops() {
     async () =>
       axios<{ nanoMachineId: string; createdAt: string; updatedAt: string }[]>(
         `/v1/nano-machines/${publicKey.toBase58()}`
-      ).then((res) => res.data)
+      )
+        .then((res) => res.data)
+        .catch((err) => {
+          if (err.response && err.response.status === 404) {
+            return [];
+          } else {
+            throw err;
+          }
+        })
   );
 
   const sortedData = useMemo(

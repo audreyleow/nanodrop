@@ -16,7 +16,7 @@ import useMyDrops from "../hooks/useMyDrops";
 import Drop from "./Drop";
 
 export default function MyDrops() {
-  const { data, isLoading } = useMyDrops();
+  const { data } = useMyDrops();
 
   const { publicKey } = useWallet();
   if (!publicKey) {
@@ -27,7 +27,7 @@ export default function MyDrops() {
     );
   }
 
-  if (isLoading) {
+  if (data === undefined) {
     return (
       <CircularProgress
         sx={{
@@ -40,7 +40,7 @@ export default function MyDrops() {
     );
   }
 
-  if (data === undefined) {
+  if (data.length === 0) {
     return (
       <Box
         sx={{

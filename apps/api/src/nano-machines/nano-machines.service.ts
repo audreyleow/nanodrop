@@ -79,7 +79,11 @@ export class NanoMachinesService {
   async findAll(userPublicKey: string) {
     const nanoMachines = (
       await this.userModel.findOne({ publicKey: userPublicKey }).exec()
-    ).nanoMachines;
+    )?.nanoMachines;
+
+    if (!nanoMachines) {
+      throw new NotFoundException("Nano machines not found");
+    }
 
     return nanoMachines.map((nanoMachine) => ({
       nanoMachineId: nanoMachine.nanoMachineId,
