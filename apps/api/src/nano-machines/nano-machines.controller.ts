@@ -37,6 +37,14 @@ export class NanoMachinesController {
   }
 
   @Post("mint")
+  getSolanaPayMetadata() {
+    return {
+      label: "NanoDrop",
+      icon: "https://nanodrop.it/android-chrome-512x512.png",
+    };
+  }
+
+  @Post("mint")
   @HttpCode(200)
   buildMintTransaction(
     @Query("token") token: string,

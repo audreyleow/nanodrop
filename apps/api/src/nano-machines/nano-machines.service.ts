@@ -136,11 +136,16 @@ export class NanoMachinesService {
       throw new UnauthorizedException(e);
     }
 
-    return this.getMintFromNanoMachineTransaction(
+    const transaction = await this.getMintFromNanoMachineTransaction(
       nanoMachineId,
       collectionMint,
       minterAddress
     );
+
+    return {
+      transaction,
+      message: "Mint POAP",
+    };
   }
 
   private async initializeNanoMachine(
