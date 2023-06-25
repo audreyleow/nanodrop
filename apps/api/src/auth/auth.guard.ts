@@ -11,7 +11,7 @@ export class WalletSignatureAuthGuard implements CanActivate {
       const isAuthorized = await this.authService.validateUser(request.body);
 
       return isAuthorized;
-    } catch {
+    } catch (e) {
       return false;
     }
   }

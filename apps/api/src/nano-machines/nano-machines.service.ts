@@ -104,6 +104,22 @@ export class NanoMachinesService {
     };
   }
 
+  async findJwtSecret(userPublicKey: string, nanoMachineId: string) {
+    const nanoMachines = (
+      await this.userModel.findOne({ publicKey: userPublicKey }).exec()
+    ).nanoMachines;
+
+    const nanoMachine = nanoMachines.find(
+      (nanoMachine) => nanoMachine.nanoMachineId === nanoMachineId
+    );
+
+    if (!nanoMachine) {
+      throw new NotFoundException("Nano machine not found");
+    }
+
+    return nanoMachine.jwtSecret;
+  }
+
   buildMintTransaction() {
     return this.getMintFromNanoMachineTransaction(
       "5chCx7tuftBe8RWrXjfonCmDeRA16e1o6qjygBfUwUrH",

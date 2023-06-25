@@ -1,8 +1,6 @@
 import { Box, Typography } from "@mui/material";
 import Countdown from "react-countdown";
 
-import useNanoMachine from "../hooks/useNanoMachine";
-
 interface MintCountdownRender {
   days: number;
   hours: number;
@@ -45,12 +43,10 @@ const renderCountdown = ({
   );
 };
 
-export default function MintCountDown() {
-  const { nanoMachine } = useNanoMachine();
-
-  if (!nanoMachine) {
+export default function MintCountDown({ startDate }: { startDate?: Date }) {
+  if (!startDate) {
     return null;
   }
 
-  return <Countdown date={nanoMachine.goLiveDate} renderer={renderCountdown} />;
+  return <Countdown date={startDate} renderer={renderCountdown} />;
 }

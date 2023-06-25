@@ -3,6 +3,7 @@ import dynamic from "next/dynamic";
 
 import useNanoMachine from "../hooks/useNanoMachine";
 import NanoMachineInfo from "./NanoMachineInfo";
+import SolanaPayQr from "./SolanaPayQr";
 
 const MintBackground = dynamic(() => import("./MintBackground"), {
   ssr: false,

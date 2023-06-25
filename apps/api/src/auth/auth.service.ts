@@ -9,7 +9,7 @@ import { User } from "src/users/schemas/user.schema";
 import * as crypto from "crypto";
 import { ValidateUserDto } from "./dto/validate-user.dto";
 import { getAuthMessage } from "@nanodrop/contracts";
-import nacl from "tweetnacl";
+import * as nacl from "tweetnacl";
 import { PublicKey } from "@solana/web3.js";
 
 const AUTH_MESSAGE_EXPIRY = 15 * 1000; // 15 seconds
@@ -49,7 +49,7 @@ export class AuthService {
       })
       .exec();
 
-    if (new Date(issuedAt).getTime() + AUTH_MESSAGE_EXPIRY > Date.now()) {
+    if (Date.now() - new Date(issuedAt).getTime() > AUTH_MESSAGE_EXPIRY) {
       throw new UnauthorizedException("Auth message expired");
     }
 

@@ -1,7 +1,6 @@
 import {
   Avatar,
   Box,
-  Button,
   CircularProgress,
   Link,
   Skeleton,
@@ -9,11 +8,11 @@ import {
 } from "@mui/material";
 import { useConnection, useWallet } from "@solana/wallet-adapter-react";
 import { VersionedTransaction } from "@solana/web3.js";
-import axios from "axios";
 
 import AspectRatioBox from "@/common/components/AspectRatioBox";
 
 import useNanoMachine from "../hooks/useNanoMachine";
+import SolanaPayQr from "./SolanaPayQr";
 
 const styles = {
   logo: {
@@ -42,8 +41,8 @@ export default function NanoMachineInfo() {
       </AspectRatioBox>
       <Box
         sx={{
-          p: 8,
-          pb: 5,
+          px: 8,
+          py: 4,
           "&& > *": {
             mb: 2,
           },
@@ -65,46 +64,10 @@ export default function NanoMachineInfo() {
           <Skeleton variant="text" sx={{ height: "1.25rem" }} />
         ) : (
           <Typography variant="body2">
-            Created by:{" "}
-            <Link
-              href={`https://solscan.io/account/${nanoMachine.creator.toBase58()}`}
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              {nanoMachine.creator.toBase58().slice(0, 4)}..
-              {nanoMachine.creator.toBase58().slice(-4)}
-            </Link>
-          </Typography>
-        )}
-        {!nanoMachine ? (
-          <Skeleton variant="text" sx={{ height: "1.25rem" }} />
-        ) : (
-          <Typography variant="body2">
             Items minted: {nanoMachine.itemsRedeemed}
           </Typography>
         )}
-        <Button
-          onClick={async () => {
-            const serializedTransaction = await axios
-              .post("/v1/nano-machines/mint")
-              .then((res) => res.data);
-
-            const transaction = VersionedTransaction.deserialize(
-              Buffer.from(serializedTransaction, "base64")
-            );
-
-            const signedTransaction = await signTransaction(transaction);
-            const txId = await connection.sendRawTransaction(
-              signedTransaction.serialize()
-            );
-
-            await connection.confirmTransaction(txId);
-
-            console.log(`https://solscan.io/tx/${txId}`);
-          }}
-        >
-          Test mint
-        </Button>
+        <SolanaPayQr />
       </Box>
     </>
   );
