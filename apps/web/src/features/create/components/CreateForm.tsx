@@ -27,7 +27,7 @@ const Background3d = dynamic(
 
 export default function CreateForm() {
   const formik = useCreateFormik();
-  const { wallet } = useWallet();
+  const { publicKey } = useWallet();
 
   const [backgroundImageUri, setBackgroundImageUri] = useState<string | null>(
     null
@@ -49,7 +49,7 @@ export default function CreateForm() {
     [formik.backgroundImage]
   );
 
-  if (!wallet) {
+  if (!publicKey) {
     return (
       <ErrorPage>
         <Typography variant="h6">Please connect your Solana wallet</Typography>
