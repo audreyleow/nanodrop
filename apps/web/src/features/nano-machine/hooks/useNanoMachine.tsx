@@ -18,7 +18,6 @@ import useCurrentPhase from "./useCurrentPhase";
 export default function useNanoMachine() {
   const { nanoMachineId } = useParams();
 
-  const { connection } = useConnection();
   const { nanoMachineData, fetchNanoMachineError, mutate } = useNanoMachineData(
     typeof nanoMachineId === "string" ? nanoMachineId : undefined
   );
@@ -32,7 +31,7 @@ export default function useNanoMachine() {
     () =>
       nanoMachineData?.phases.map((phase) => ({
         name: phase.nftName,
-        startDate: new Date(phase.startDate.toNumber() * 1000),
+        startDate: new Date(phase.startDate.toNumber() * 1000).toISOString(),
         metadata: `https://files.nanodrop.it/${nanoMachineId}/${phase.index}.json`,
       })),
     [nanoMachineData?.phases, nanoMachineId]
@@ -40,29 +39,7 @@ export default function useNanoMachine() {
   const currentPhase = useCurrentPhase(phases);
 
   const { data: collectionMetadata, error: fetchCollectionMetadataError } =
-    useSWR(
-      nanoMachineData === undefined
-        ? null
-        : nanoMachineData.collectionMint.toBase58(),
-      async (collectionMint) => {
-        const [collectionMetadataId] = PublicKey.findProgramAddressSync(
-          [
-            Buffer.from("metadata"),
-            TOKEN_METADATA_PROGRAM_ID.toBuffer(),
-            new PublicKey(collectionMint).toBuffer(),
-          ],
-          TOKEN_METADATA_PROGRAM_ID
-        );
-        const accountInfo = await connection.getAccountInfo(
-          collectionMetadataId
-        );
-
-        if (accountInfo) {
-          const [collectionMetadata] = Metadata.deserialize(accountInfo.data);
-          return collectionMetadata;
-        }
-      }
-    );
+    useNanoMachineCollection(nanoMachineData?.collectionMint?.toBase58());
 
   const {
     data: collectionUriMetadata,
@@ -94,8 +71,8 @@ export default function useNanoMachine() {
       return undefined;
     } else {
       return {
-        id: new PublicKey(nanoMachineId),
-        creator: nanoMachineData.creator,
+        id: nanoMachineId,
+        creator: nanoMachineData.creator.toBase58(),
         collectionName: collectionUriMetadata.name ?? "",
         itemsRedeemed: nanoMachineData.itemsRedeemed.toString(),
         backgroundImageUrl,
@@ -123,7 +100,7 @@ export default function useNanoMachine() {
   };
 }
 
-const useNanoMachineData = (nanoMachineId?: string) => {
+export const useNanoMachineData = (nanoMachineId?: string) => {
   const program = useNanodrop();
   const [nanoMachineData, setNanoMachineData] =
     useState<Awaited<ReturnType<typeof program.account.nanoMachine.fetch>>>();
@@ -172,6 +149,33 @@ const useNanoMachineData = (nanoMachineId?: string) => {
   );
 
   return { nanoMachineData, fetchNanoMachineError, mutate };
+};
+
+export const useNanoMachineCollection = (
+  collectionMint: string | undefined
+) => {
+  const { connection } = useConnection();
+  const swr = useSWR(
+    collectionMint === undefined ? null : collectionMint,
+    async (collectionMint) => {
+      const [collectionMetadataId] = PublicKey.findProgramAddressSync(
+        [
+          Buffer.from("metadata"),
+          TOKEN_METADATA_PROGRAM_ID.toBuffer(),
+          new PublicKey(collectionMint).toBuffer(),
+        ],
+        TOKEN_METADATA_PROGRAM_ID
+      );
+      const accountInfo = await connection.getAccountInfo(collectionMetadataId);
+
+      if (accountInfo) {
+        const [collectionMetadata] = Metadata.deserialize(accountInfo.data);
+        return collectionMetadata;
+      }
+    }
+  );
+
+  return swr;
 };
 
 const useBackgroundImageUri = (

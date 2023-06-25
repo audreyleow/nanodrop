@@ -3,8 +3,8 @@ import { PublicKey } from "@solana/web3.js";
 import { Phase } from "@/features/create/types/phase";
 
 export interface NanoMachine {
-  id: PublicKey;
-  creator: PublicKey;
+  id: string;
+  creator: string;
   itemsRedeemed: string;
   collectionName: string;
   collectionMint: string;
@@ -18,5 +18,5 @@ export interface NanoMachine {
 export interface FetchedPhase {
   name: string;
   metadata: string;
-  startDate: Date;
+  startDate: string;
 }
