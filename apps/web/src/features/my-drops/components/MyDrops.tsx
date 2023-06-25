@@ -19,7 +19,16 @@ export default function MyDrops() {
   }
 
   if (!data) {
-    return <CircularProgress size={20} color="inherit" />;
+    return (
+      <CircularProgress
+        sx={{
+          mx: "auto",
+          display: "block",
+        }}
+        size={20}
+        color="inherit"
+      />
+    );
   }
 
   return (
