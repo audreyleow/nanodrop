@@ -34,13 +34,19 @@ export default React.memo(function SolanaPayQr() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
     [nanoMachine?.id.toBase58()]
   );
+  const creator = useMemo(
+    () => nanoMachine?.creator,
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [nanoMachine?.creator.toBase58()]
+  );
 
   const getJwt = useCallback(async () => {
-    if (jwtSecret) {
+    if (jwtSecret && creator && nanoMachineId && collectionMint) {
       const secret = new TextEncoder().encode(jwtSecret);
       const token = await new SignJWT({
         collectionMint,
-        nanoMachineId,
+        nanoMachineId: nanoMachineId.toBase58(),
+        creator: creator.toBase58(),
       })
         .setProtectedHeader({ alg: "HS256" })
         .setIssuedAt()
@@ -48,7 +54,7 @@ export default React.memo(function SolanaPayQr() {
         .sign(secret);
       return token;
     }
-  }, [collectionMint, jwtSecret, nanoMachineId]);
+  }, [collectionMint, creator, jwtSecret, nanoMachineId]);
 
   useEffect(
     function initJwt() {

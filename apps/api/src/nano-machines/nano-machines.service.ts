@@ -4,6 +4,7 @@ import {
   Injectable,
   InternalServerErrorException,
   NotFoundException,
+  UnauthorizedException,
 } from "@nestjs/common";
 import { CreateNanoMachineDto } from "./dto/create-nano-machine.dto";
 import { InjectModel } from "@nestjs/mongoose";
@@ -25,6 +26,7 @@ import {
   SPL_ACCOUNT_COMPRESSION_PROGRAM_ID,
   SPL_NOOP_PROGRAM_ID,
 } from "@solana/spl-account-compression";
+import * as jwt from "jsonwebtoken";
 
 @Injectable()
 export class NanoMachinesService {
@@ -120,11 +122,24 @@ export class NanoMachinesService {
     return nanoMachine.jwtSecret;
   }
 
-  buildMintTransaction() {
+  async buildMintTransaction(token: string, minterAddress: string) {
+    const { collectionMint, nanoMachineId, creator } = jwt.decode(token) as {
+      collectionMint: string;
+      nanoMachineId: string;
+      creator: string;
+    };
+    const jwtSecret = await this.findJwtSecret(creator, nanoMachineId);
+
+    try {
+      jwt.verify(token, jwtSecret);
+    } catch (e) {
+      throw new UnauthorizedException(e);
+    }
+
     return this.getMintFromNanoMachineTransaction(
-      "5chCx7tuftBe8RWrXjfonCmDeRA16e1o6qjygBfUwUrH",
-      "FWdKmwiuHiRXMtdpEEDdJjy5EPRhGoLUcGWvXTCGMyy",
-      "3QuMzdeVtdTE4G1wpPar97NSTdzN7CHRjFhHgqhabKC2"
+      nanoMachineId,
+      collectionMint,
+      minterAddress
     );
   }
 

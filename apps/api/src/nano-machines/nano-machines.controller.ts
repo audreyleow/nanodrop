@@ -6,11 +6,13 @@ import {
   Param,
   HttpCode,
   UseGuards,
+  Query,
 } from "@nestjs/common";
 import { NanoMachinesService } from "./nano-machines.service";
 import { CreateNanoMachineDto } from "./dto/create-nano-machine.dto";
 import { ValidateUserDto } from "src/auth/dto/validate-user.dto";
 import { WalletSignatureAuthGuard } from "src/auth/auth.guard";
+import { BuildMintTransactionDto } from "./dto/build-mint-transaction.dto";
 
 @Controller("nano-machines")
 export class NanoMachinesController {
@@ -36,8 +38,14 @@ export class NanoMachinesController {
 
   @Post("mint")
   @HttpCode(200)
-  buildMintTransaction() {
-    return this.nanoMachinesService.buildMintTransaction();
+  buildMintTransaction(
+    @Query("token") token: string,
+    @Body() buildMintTransactionDto: BuildMintTransactionDto
+  ) {
+    return this.nanoMachinesService.buildMintTransaction(
+      token,
+      buildMintTransactionDto.account
+    );
   }
 
   @Post("secret/:nanoMachineId")

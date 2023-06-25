@@ -3,6 +3,7 @@
 import { Box, Typography } from "@mui/material";
 import { styled } from "@mui/material/styles";
 import dynamic from "next/dynamic";
+import Link from "next/link";
 
 import NanodropLogo from "@/common/components/NanodropLogo";
 
@@ -69,16 +70,11 @@ export const Home = () => {
             textAlign: "center",
           }}
         >
-          The first NFT launchpad built for compressed NFTs.
+          Proof of attendance NFTs + compression
           <br />
           Say hi to ultra-low gas fees.
         </Typography>
-        <CtaButton
-          as="a"
-          href="https://twitter.com/NanoDropIt"
-          rel="noopener noreferrer"
-          target="_blank"
-        >
+        <CtaButton as={Link} href="/create">
           <Typography
             variant="button"
             sx={{
@@ -86,7 +82,7 @@ export const Home = () => {
               color: "#000000",
             }}
           >
-            gm, you are early
+            create your first drop
           </Typography>
           <MorphingArrow />
         </CtaButton>

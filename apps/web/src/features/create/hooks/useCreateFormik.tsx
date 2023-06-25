@@ -67,7 +67,6 @@ export default function useCreateFormik() {
   const [submissionState, setSubmissionState] = useState<ReactNode | null>(
     null
   );
-
   const formik = useFormik<CreateValues>({
     initialValues: {
       phases: [],
@@ -77,7 +76,7 @@ export default function useCreateFormik() {
       website: "",
     },
     validationSchema: validationSchema,
-    onSubmit: async (values, { setFieldError }) => {
+    onSubmit: async (values, { setFieldError, validateForm }) => {
       if (wallet.publicKey) {
         try {
           const error = getPhasesError(values.phases);
@@ -85,6 +84,7 @@ export default function useCreateFormik() {
             for (let i = 0; i < values.phases.length; i++) {
               setFieldError(`phases.${i}.startDate`, error);
             }
+            return;
           }
 
           const nanoMachineKeypair = Keypair.generate();
@@ -118,8 +118,6 @@ export default function useCreateFormik() {
           transaction.sign([nanoMachineKeypair, collectionMintKeypair]);
           const signedTransaction = await wallet.signTransaction(transaction);
 
-          console.log(signedTransaction);
-
           const txId = await connection.sendRawTransaction(
             signedTransaction.serialize()
           );
@@ -136,7 +134,7 @@ export default function useCreateFormik() {
                 target="_blank"
                 rel="noopener noreferrer"
               >
-                View transaction on explorer
+                View transaction in explorer
               </Link>
             </Box>
           );
@@ -161,6 +159,7 @@ export default function useCreateFormik() {
           });
 
           toast.success("Successfully created POAP drop!");
+          window.location.href = `/${nanoMachineId}`;
         } catch (error) {
           toast.error(error.message);
         } finally {
