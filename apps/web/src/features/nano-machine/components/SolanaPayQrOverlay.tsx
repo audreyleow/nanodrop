@@ -24,7 +24,7 @@ export default React.memo(function SolanaPayQrOverlay({
   const checkHasMintStarted = useCallback(() => {
     if (
       nanoMachine?.currentPhase.startDate &&
-      nanoMachine.currentPhase.startDate.getTime() <= Date.now()
+      new Date(nanoMachine.currentPhase.startDate).getTime() <= Date.now()
     ) {
       setHasMintStarted(true);
     }
@@ -47,7 +47,7 @@ export default React.memo(function SolanaPayQrOverlay({
       !nanoMachine ||
       !hasMintStarted ||
       !publicKey ||
-      publicKey.toBase58() !== nanoMachine?.creator.toBase58() ||
+      publicKey.toBase58() !== nanoMachine?.creator ||
       !jwtSecret,
     [hasMintStarted, jwtSecret, nanoMachine, publicKey]
   );
@@ -75,10 +75,15 @@ export default React.memo(function SolanaPayQrOverlay({
       {!nanoMachine ? null : !hasMintStarted ? (
         <>
           <Typography>Mint starts in </Typography>
-          <MintCountDown startDate={nanoMachine?.currentPhase.startDate} />
+          <MintCountDown
+            startDate={
+              !nanoMachine?.currentPhase.startDate
+                ? undefined
+                : new Date(nanoMachine.currentPhase.startDate)
+            }
+          />
         </>
-      ) : !publicKey ||
-        publicKey.toBase58() !== nanoMachine?.creator.toBase58() ? (
+      ) : !publicKey || publicKey.toBase58() !== nanoMachine?.creator ? (
         <Box
           sx={{
             display: "flex",
@@ -95,8 +100,8 @@ export default React.memo(function SolanaPayQrOverlay({
                 fontWeight: 700,
               }}
             >
-              {nanoMachine?.creator.toBase58().slice(0, 4)}..
-              {nanoMachine?.creator.toBase58().slice(-4)}
+              {nanoMachine?.creator.slice(0, 4)}..
+              {nanoMachine?.creator.slice(-4)}
             </Box>{" "}
             to proceed
           </Typography>
@@ -141,7 +146,7 @@ export default React.memo(function SolanaPayQrOverlay({
                 const jwtSecret = await fetchJwtSecret(
                   signMessage,
                   publicKey,
-                  nanoMachine.id.toBase58()
+                  nanoMachine.id
                 );
 
                 setJwtSecret(jwtSecret);

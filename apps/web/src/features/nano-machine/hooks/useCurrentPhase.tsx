@@ -10,11 +10,14 @@ export default function useCurrentPhase(phases: FetchedPhase[] | undefined) {
   const getCurrentPhase = useCallback(() => {
     if (phases) {
       const sortedPhases = [...phases].sort(
-        (a, b) => b.startDate.getTime() - a.startDate.getTime()
+        (a, b) =>
+          new Date(b.startDate).getTime() - new Date(a.startDate).getTime()
       );
 
       const now = new Date();
-      const currentPhase = sortedPhases.find((phase) => now >= phase.startDate);
+      const currentPhase = sortedPhases.find(
+        (phase) => now >= new Date(phase.startDate)
+      );
 
       if (!currentPhase) {
         return setCurrentPhase(sortedPhases.at(-1));
@@ -48,6 +51,6 @@ export default function useCurrentPhase(phases: FetchedPhase[] | undefined) {
   return {
     ...currentPhase,
     phaseImageUrl: phaseImageUrl as string,
-    hasMintStarted: new Date() >= currentPhase.startDate,
+    hasMintStarted: new Date() >= new Date(currentPhase.startDate),
   };
 }

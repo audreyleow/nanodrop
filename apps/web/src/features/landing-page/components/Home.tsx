@@ -1,6 +1,6 @@
 "use client";
 
-import { Box, Typography } from "@mui/material";
+import { Box, Link as MuiLink, Typography } from "@mui/material";
 import { styled } from "@mui/material/styles";
 import dynamic from "next/dynamic";
 import Link from "next/link";
@@ -86,6 +86,17 @@ export const Home = () => {
           </Typography>
           <MorphingArrow />
         </CtaButton>
+        <Typography
+          sx={{
+            mt: 2,
+            zIndex: 1,
+            color: "#fff",
+          }}
+          component={Link}
+          href="/me"
+        >
+          View my drops
+        </Typography>
       </Box>
     </>
   );
