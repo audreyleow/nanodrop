@@ -21,6 +21,7 @@ router.get("/*", async (request: Request, env: Env) => {
       headers: {
         "Access-Control-Allow-Origin": "*",
         "Content-Type": file.headers.get("Content-Type") || "",
+        "Cache-Control": "public, max-age=14400",
       },
     })
   );
