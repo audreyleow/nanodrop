@@ -1,8 +1,7 @@
 "use client";
 
-import { Box, Link as MuiLink, Typography } from "@mui/material";
+import { Box, Link, Typography } from "@mui/material";
 import dynamic from "next/dynamic";
-import Link from "next/link";
 
 import NanodropLogo from "@/common/components/NanodropLogo";
 
