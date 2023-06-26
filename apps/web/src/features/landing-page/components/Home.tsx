@@ -91,7 +91,7 @@ export const Home = () => {
             zIndex: 1,
             color: "#fff",
           }}
-          component={Link}
+          component="a"
           href="/me"
         >
           View my drops
