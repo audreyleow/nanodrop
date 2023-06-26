@@ -4,6 +4,7 @@ import {
   Button,
   CircularProgress,
   Container,
+  Link,
   Typography,
 } from "@mui/material";
 import { useWallet } from "@solana/wallet-adapter-react";
@@ -95,6 +96,17 @@ export default function CreateForm() {
         fixed
         maxWidth="lg"
       >
+        <Link
+          href="https://twitter.com/sol_idity/status/1673073345703841794"
+          target="_blank"
+          rel="noopener noreferrer"
+          sx={{
+            mb: 4,
+            display: "inline-block",
+          }}
+        >
+          How does this work?
+        </Link>
         <CreatePhases createFormik={formik} />
         <CreateMetadata createFormik={formik} />
         <Box

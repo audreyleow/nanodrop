@@ -66,7 +66,7 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
             sx={{
               display: "flex",
               alignItems: "center",
-              gap: 2,
+              gap: 4,
             }}
           >
             <Typography
