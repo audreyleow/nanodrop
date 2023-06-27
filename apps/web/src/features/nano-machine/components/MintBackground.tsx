@@ -48,6 +48,9 @@ export default function MintBackground({ nanoMachine }: MintBackgroundProps) {
           pointerEvents: "none",
           backgroundColor: "rgba(0, 0, 0, 0.3)",
         }}
+        style={{
+          backdropFilter: shouldRenderPhaseImage ? "blur(1rem)" : "none",
+        }}
         open
       />
       <Background3d
