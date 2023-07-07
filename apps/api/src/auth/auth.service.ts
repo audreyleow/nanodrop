@@ -6,9 +6,8 @@ import { AuthRequest } from "./schemas/auth-request.schema";
 import * as bs58 from "bs58";
 import {
   PublicKey,
+  Transaction,
   TransactionInstruction,
-  TransactionMessage,
-  VersionedTransaction,
 } from "@solana/web3.js";
 import { SolanaService } from "src/solana/solana.service";
 import { VerifyAuthRequestDto } from "./dto/verify-auth-request";
@@ -52,17 +51,15 @@ export class AuthService {
     const blockhash = await this.solanaService.connection
       .getLatestBlockhash()
       .then((res) => res.blockhash);
-    const messageV0 = new TransactionMessage({
-      payerKey: this.solanaService.coSignerKeypair.publicKey,
-      instructions: [logIx],
-      recentBlockhash: blockhash,
-    }).compileToV0Message();
-
-    const transaction = new VersionedTransaction(messageV0);
-    transaction.sign([this.solanaService.coSignerKeypair]);
+    const transaction = new Transaction().add(logIx);
+    transaction.recentBlockhash = blockhash;
+    transaction.feePayer = this.solanaService.coSignerKeypair.publicKey;
+    transaction.partialSign(this.solanaService.coSignerKeypair);
 
     return {
-      transaction: Buffer.from(transaction.serialize()).toString("base64"),
+      transaction: Buffer.from(
+        transaction.serialize({ requireAllSignatures: false })
+      ).toString("base64"),
       message: "Unlock minting QR code",
     };
   }
@@ -81,9 +78,11 @@ export class AuthService {
   async verifyAuthRequest(verifyAuthRequestDto: VerifyAuthRequestDto) {
     const { message, nanoMachineId, txId } = verifyAuthRequestDto;
 
-    const authRequest = await this.authRequestModel.findOne({
-      message,
-    });
+    const authRequest = await this.authRequestModel
+      .findOne({
+        message,
+      })
+      .exec();
 
     if (!authRequest) {
       throw new UnauthorizedException("Invalid auth request");
@@ -93,8 +92,16 @@ export class AuthService {
       await this.solanaService.connection.getTransaction(txId);
 
     const creator = authRequest.publicKey;
-    if (transactionResponse?.transaction?.signatures?.[0] !== creator) {
-      throw new UnauthorizedException("Invalid creator");
+    const isSecondAccountCreator =
+      transactionResponse?.transaction?.message?.accountKeys?.[1]?.toBase58() ===
+      creator;
+    const didCreatorSign =
+      transactionResponse?.transaction?.message?.isAccountSigner(1);
+
+    if (!isSecondAccountCreator || !didCreatorSign) {
+      throw new UnauthorizedException(
+        "Invalid creator, you might have scanned the QR code with the wrong account."
+      );
     }
 
     const logData =
@@ -104,19 +111,17 @@ export class AuthService {
       throw new UnauthorizedException("Invalid txId or log data");
     }
 
-    const messageHash = JSON.parse(
-      Buffer.from(bs58.decode(logData)).toString("utf-8")
-    );
+    const messageHash = Buffer.from(bs58.decode(logData)).toString("utf-8");
 
     if (
       messageHash !==
       crypto.createHash("sha256").update(message).digest("base64")
     ) {
-      throw new UnauthorizedException("Invalid message hash");
+      throw new UnauthorizedException("QR code has expired. Please try again.");
     }
 
     await authRequest.deleteOne();
 
-    return this.nanoMachinesService.findJwtSecret(nanoMachineId, creator);
+    return this.nanoMachinesService.findJwtSecret(creator, nanoMachineId);
   }
 }

@@ -121,6 +121,7 @@ export default React.memo(function SolanaPayQr() {
       <UnlockDialog
         open={isUnlockDialogOpen}
         onClose={() => setIsUnlockDialogOpen(false)}
+        setJwtSecret={setJwtSecret}
       />
       <div>
         <AspectRatioBox
@@ -138,7 +139,6 @@ export default React.memo(function SolanaPayQr() {
               setIsUnlockDialogOpen(true);
             }}
             jwtSecret={jwtSecret}
-            setJwtSecret={setJwtSecret}
           />
           {jwt && (
             <LinearProgress
@@ -155,7 +155,7 @@ export default React.memo(function SolanaPayQr() {
               }}
             />
           )}
-          {QrCode}
+          {isUnlockDialogOpen ? null : QrCode}
         </AspectRatioBox>
         <WorksOnText />
       </div>

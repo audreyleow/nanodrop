@@ -11,13 +11,11 @@ import MintCountDown from "./MintCountDown";
 
 interface SolanaPayQrOverlayProps {
   jwtSecret: string | undefined;
-  setJwtSecret: (jwtSecret: string) => void;
   openUnlockDialog: () => void;
 }
 
 export default React.memo(function SolanaPayQrOverlay({
   jwtSecret,
-  setJwtSecret,
   openUnlockDialog,
 }: SolanaPayQrOverlayProps) {
   const { nanoMachine } = useNanoMachine();
@@ -45,8 +43,6 @@ export default React.memo(function SolanaPayQrOverlay({
     () => !nanoMachine || !hasMintStarted || !jwtSecret,
     [hasMintStarted, jwtSecret, nanoMachine]
   );
-
-  const [isFetchingJwtSecret, setIsFetchingJwtSecret] = useState(false);
 
   return (
     <Backdrop
