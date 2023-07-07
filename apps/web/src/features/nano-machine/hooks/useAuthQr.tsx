@@ -8,14 +8,19 @@ import useSWRImmutable from "swr/immutable";
 import useNanoMachine from "./useNanoMachine";
 import usePollTransactionSignature from "./usePollTransactionSignature";
 
-export default function useAuthQr(setJwtSecret: (jwtSecret: string) => void) {
+interface UseAuthQrParams {
+  setJwtSecret: (jwtSecret: string) => void;
+  onClose: () => void;
+}
+
+export default function useAuthQr({ onClose, setJwtSecret }: UseAuthQrParams) {
   const { nanoMachine } = useNanoMachine();
 
   const { data: authMessage } = useSWRImmutable(
     nanoMachine ? `/v1/auth/${nanoMachine.creator}` : null,
     (url) => axios.get<string>(url).then((res) => res.data),
     {
-      refreshInterval: 1000 * 15,
+      refreshInterval: 1000 * 30,
     }
   );
 
@@ -27,7 +32,11 @@ export default function useAuthQr(setJwtSecret: (jwtSecret: string) => void) {
     [authMessage]
   );
 
-  const solanaPayReference = usePollTransactionSignature(setJwtSecret);
+  const solanaPayReference = usePollTransactionSignature({
+    setJwtSecret,
+    authMessage,
+    onClose,
+  });
 
   const [qrRef, setQrRef] = useState<HTMLDivElement>();
   useEffect(
