@@ -1,9 +1,6 @@
 import { createQR, encodeURL } from "@solana/pay";
-import { SignJWT } from "jose";
 import qs from "qs";
 import { useCallback, useEffect, useState } from "react";
-
-import useNanoMachine from "./useNanoMachine";
 
 export const useSolanaPayQr = (token: string) => {
   const [qrRef, setQrRef] = useState<HTMLDivElement>();

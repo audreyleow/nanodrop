@@ -11,5 +11,6 @@ import { SolanaService } from "src/solana/solana.service";
   ],
   controllers: [NanoMachinesController],
   providers: [NanoMachinesService, SolanaService],
+  exports: [NanoMachinesService],
 })
 export class NanoMachinesModule {}
