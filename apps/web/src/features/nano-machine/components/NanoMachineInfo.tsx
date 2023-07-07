@@ -56,11 +56,6 @@ export default function NanoMachineInfo() {
           </Typography>
         )}
         {!nanoMachine ? (
-          <Skeleton variant="text" sx={{ height: "1.5rem" }} />
-        ) : (
-          <Typography>{nanoMachine.collectionName}</Typography>
-        )}
-        {!nanoMachine ? (
           <Skeleton variant="text" sx={{ height: "1.25rem" }} />
         ) : (
           <Typography variant="body2">

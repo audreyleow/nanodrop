@@ -5,17 +5,11 @@ import MintPage from "@/features/nano-machine/components/MintPage";
 import useNanoMachine from "@/features/nano-machine/hooks/useNanoMachine";
 
 export default function NanoMachine() {
-  const {
-    fetchNanoMachineError,
-    fetchBackgroundImageError,
-    fetchCollectionError,
-  } = useNanoMachine();
+  const { fetchNanoMachineError, fetchBackgroundImageError } = useNanoMachine();
 
   return (
     <>
-      {fetchCollectionError ||
-      fetchNanoMachineError ||
-      fetchBackgroundImageError ? (
+      {fetchNanoMachineError || fetchBackgroundImageError ? (
         <ErrorPage>
           {fetchNanoMachineError ? (
             <Typography variant="h6">Nano Machine not found.</Typography>
