@@ -9,16 +9,12 @@ export default async function upload({
   phases,
   description,
   website,
-  collectionName,
-  symbol,
 }: {
   backgroundImage: File | null;
   nanoMachineId: string;
   phases: Phase[];
   description: string;
   website: string;
-  collectionName: string;
-  symbol: string;
 }) {
   const backgroundImageUrlPromise: Promise<string | null> =
     backgroundImage !== null
@@ -51,26 +47,12 @@ export default async function upload({
     })
   );
 
-  const metadataUrlsPromise = Promise.all(
+  // update metadatas
+  await Promise.all(
     metadatas.map((metadata, index) =>
       uploadMetadata(metadata, `${nanoMachineId}/${index}.json`)
     )
   );
-  const collectionMetadataUrlPromise = uploadMetadata(
-    generateMetadata({
-      name: collectionName,
-      description,
-      image: metadataImages[0],
-      externalUrl: website,
-      imageMimeType: phases[0].image.type,
-    }),
-    `${nanoMachineId}/collection.json`
-  );
-
-  /*const [metadataUrls, collectionMetadataUrl] =*/ await Promise.all([
-    metadataUrlsPromise,
-    collectionMetadataUrlPromise,
-  ]);
 }
 
 async function uploadImage(file: File, fileName: string) {

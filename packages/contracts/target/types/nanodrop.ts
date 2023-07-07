@@ -62,31 +62,6 @@ export type Nanodrop = {
           "isSigner": true
         },
         {
-          "name": "collectionMint",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "collectionMetadata",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "collectionMasterEdition",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "collectionAuthorityRecord",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "nanoMachinePdaAuthority",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
           "name": "systemProgram",
           "isMut": false,
           "isSigner": false
@@ -252,20 +227,6 @@ export type Nanodrop = {
             "type": "publicKey"
           },
           {
-            "name": "symbol",
-            "docs": [
-              "Symbol for all the NFTs minted"
-            ],
-            "type": "string"
-          },
-          {
-            "name": "collectionMint",
-            "docs": [
-              "The collection mint for this nano machine"
-            ],
-            "type": "publicKey"
-          },
-          {
             "name": "itemsRedeemed",
             "docs": [
               "Number of NFTs minted"
@@ -307,13 +268,6 @@ export type Nanodrop = {
       "type": {
         "kind": "struct",
         "fields": [
-          {
-            "name": "symbol",
-            "docs": [
-              "Symbol for all the NFTs minted"
-            ],
-            "type": "string"
-          },
           {
             "name": "sellerFeeBasisPoints",
             "docs": [
@@ -523,31 +477,6 @@ export const IDL: Nanodrop = {
           "isSigner": true
         },
         {
-          "name": "collectionMint",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "collectionMetadata",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "collectionMasterEdition",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "collectionAuthorityRecord",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "nanoMachinePdaAuthority",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
           "name": "systemProgram",
           "isMut": false,
           "isSigner": false
@@ -713,20 +642,6 @@ export const IDL: Nanodrop = {
             "type": "publicKey"
           },
           {
-            "name": "symbol",
-            "docs": [
-              "Symbol for all the NFTs minted"
-            ],
-            "type": "string"
-          },
-          {
-            "name": "collectionMint",
-            "docs": [
-              "The collection mint for this nano machine"
-            ],
-            "type": "publicKey"
-          },
-          {
             "name": "itemsRedeemed",
             "docs": [
               "Number of NFTs minted"
@@ -768,13 +683,6 @@ export const IDL: Nanodrop = {
       "type": {
         "kind": "struct",
         "fields": [
-          {
-            "name": "symbol",
-            "docs": [
-              "Symbol for all the NFTs minted"
-            ],
-            "type": "string"
-          },
           {
             "name": "sellerFeeBasisPoints",
             "docs": [

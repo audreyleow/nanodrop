@@ -10,7 +10,7 @@ use mpl_bubblegum::{
 use spl_account_compression::{program::SplAccountCompression, Noop};
 
 use crate::{
-    constants::{AUTHORITY_SEED, CONFIG_SEED, SHARED_TREE},
+    constants::{AUTHORITY_SEED, CONFIG_SEED, SHARED_TREE, NANODROP_COLLECTION},
     errors::NanoError,
     state::{Config, NanoMachine},
     utils::{get_metadata_uri, NULL_STRING},
@@ -99,10 +99,7 @@ pub fn mint_v1(ctx: Context<Mint>) -> Result<()> {
                 .nft_name
                 .trim_matches(NULL_STRING.chars().next().unwrap())
                 .to_string(),
-            symbol: nano_machine
-                .symbol
-                .trim_matches(NULL_STRING.chars().next().unwrap())
-                .to_string(),
+            symbol: "SOAP".to_string(),
             uri: get_metadata_uri(phase.unwrap().index, nano_machine.key()),
             seller_fee_basis_points: nano_machine.seller_fee_basis_points,
             primary_sale_happened: false,
@@ -159,7 +156,7 @@ pub struct Mint<'info> {
 
     #[account(
         constraint =
-            collection_mint.key() == nano_machine.collection_mint.key()
+            collection_mint.key() == NANODROP_COLLECTION.key()
     )]
     pub collection_mint: Box<Account<'info, anchor_spl::token::Mint>>,
 

@@ -11,7 +11,6 @@ import * as yup from "yup";
 
 import { Phase } from "../types/phase";
 import createNanoMachine from "../utils/createNanoMachine";
-import getCreateAccountsTransaction from "../utils/getCreateAccountsTransaction";
 import upload from "../utils/upload";
 
 const DROPZONE_BASE_SETTINGS = {
@@ -37,8 +36,6 @@ const validationSchema = yup.object({
     )
     .required("At least one mint phase is required")
     .min(1, "At least one mint phase is required"),
-  collectionName: yup.string().trim().required("Drop name is required"),
-  symbol: yup.string().trim().required("Symbol is required"),
   description: yup
     .string()
     .trim()
@@ -52,8 +49,6 @@ const validationSchema = yup.object({
 
 interface CreateValues {
   phases: Phase[];
-  collectionName: string;
-  symbol: string;
   description: string;
   website: string;
 }
@@ -70,8 +65,6 @@ export default function useCreateFormik() {
   const formik = useFormik<CreateValues>({
     initialValues: {
       phases: [],
-      collectionName: "",
-      symbol: "",
       description: "",
       website: "",
     },
@@ -97,8 +90,6 @@ export default function useCreateFormik() {
             description: values.description,
             phases: values.phases,
             website: values.website,
-            collectionName: values.collectionName,
-            symbol: values.symbol,
           });
 
           const collectionMintKeypair = Keypair.generate();

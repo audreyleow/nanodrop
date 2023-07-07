@@ -5,16 +5,12 @@ import { Phase } from "../types/phase";
 
 export default async function createNanoMachine({
   nanoMachineId,
-  collectionMint,
   user,
   phases,
   backgroundImageUrl,
-  symbol,
 }: {
   nanoMachineId: PublicKey;
-  collectionMint: PublicKey;
   user: PublicKey;
-  symbol: string;
   phases: Phase[];
   backgroundImageUrl: string | null;
 }) {
@@ -22,9 +18,7 @@ export default async function createNanoMachine({
 
   const result = await axios.post("/v1/nano-machines", {
     nanoMachineId: nanoMachineId.toBase58(),
-    collectionMint: collectionMint.toBase58(),
     user: user.toBase58(),
-    symbol,
     phases: phases.map((phase, index) => ({
       startDate: phase.startDate,
       nftName: phase.name,
