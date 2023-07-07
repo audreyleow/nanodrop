@@ -1,7 +1,6 @@
 import { Request } from "itty-router";
 
 import { Env } from "../types";
-import { filterHeaders } from "../utils/filterHeaders";
 import { getAwsClient } from "../utils/getAwsClient";
 
 export const handleGetFile = async (request: Request, env: Env) => {
@@ -22,12 +21,9 @@ export const handleGetFile = async (request: Request, env: Env) => {
   url.protocol = "https:";
   url.port = "443";
 
-  const headers = filterHeaders((request as any).headers);
-
   const client = getAwsClient(env);
   const signedRequest = await client.sign(url.toString(), {
     method: request.method,
-    headers,
     body: (request as any).body,
   });
 
