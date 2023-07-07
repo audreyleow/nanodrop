@@ -1,4 +1,3 @@
-import { LoadingButton } from "@mui/lab";
 import { Backdrop, Box, Button, Typography } from "@mui/material";
 import { getAuthMessage } from "@nanodrop/contracts";
 import { useWallet } from "@solana/wallet-adapter-react";
@@ -40,16 +39,9 @@ export default React.memo(function SolanaPayQrOverlay({
     [checkHasMintStarted]
   );
 
-  const { publicKey, signMessage, disconnect } = useWallet();
-
   const showBackdrop = useMemo(
-    () =>
-      !nanoMachine ||
-      !hasMintStarted ||
-      !publicKey ||
-      publicKey.toBase58() !== nanoMachine?.creator ||
-      !jwtSecret,
-    [hasMintStarted, jwtSecret, nanoMachine, publicKey]
+    () => !nanoMachine || !hasMintStarted || !jwtSecret,
+    [hasMintStarted, jwtSecret, nanoMachine]
   );
 
   const [isFetchingJwtSecret, setIsFetchingJwtSecret] = useState(false);
@@ -83,48 +75,6 @@ export default React.memo(function SolanaPayQrOverlay({
             }
           />
         </>
-      ) : !publicKey || publicKey.toBase58() !== nanoMachine?.creator ? (
-        <Box
-          sx={{
-            display: "flex",
-            flexDirection: "column",
-            gap: 2,
-            alignItems: "center",
-          }}
-        >
-          <Typography>
-            Connect with wallet{" "}
-            <Box
-              component="span"
-              sx={{
-                fontWeight: 700,
-              }}
-            >
-              {nanoMachine?.creator.slice(0, 4)}..
-              {nanoMachine?.creator.slice(-4)}
-            </Box>{" "}
-            to proceed
-          </Typography>
-          <Button
-            variant="outlined"
-            color="inherit"
-            onClick={async () => {
-              if (publicKey) {
-                await disconnect();
-              } else {
-                const walletButton = document.getElementsByClassName(
-                  "wallet-adapter-button"
-                )[0];
-
-                if (walletButton) {
-                  (walletButton as any).click();
-                }
-              }
-            }}
-          >
-            {publicKey ? "Disconnect" : "Connect"}
-          </Button>
-        </Box>
       ) : !jwtSecret ? (
         <Box
           sx={{
@@ -134,32 +84,9 @@ export default React.memo(function SolanaPayQrOverlay({
             alignItems: "center",
           }}
         >
-          <Typography>Verify wallet to proceed</Typography>
-          <LoadingButton
-            loading={isFetchingJwtSecret}
-            variant="outlined"
-            color="inherit"
-            onClick={async () => {
-              try {
-                setIsFetchingJwtSecret(true);
-
-                const jwtSecret = await fetchJwtSecret(
-                  signMessage,
-                  publicKey,
-                  nanoMachine.id
-                );
-
-                setJwtSecret(jwtSecret);
-                toast.success("Wallet verified!");
-              } catch (error) {
-                toast.error(error.message);
-              } finally {
-                setIsFetchingJwtSecret(false);
-              }
-            }}
-          >
-            Verify
-          </LoadingButton>
+          <Button variant="outlined" color="inherit" onClick={async () => {}}>
+            Unlock QR Code
+          </Button>
         </Box>
       ) : null}
     </Backdrop>
