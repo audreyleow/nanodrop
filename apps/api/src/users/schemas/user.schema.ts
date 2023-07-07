@@ -14,9 +14,6 @@ export class User {
 
   @Prop({ type: [NanoMachineSchema], required: true, default: [] })
   nanoMachines: INanoMachine[];
-
-  @Prop()
-  nonce: string;
 }
 
 export const UserSchema = SchemaFactory.createForClass(User);
