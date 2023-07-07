@@ -12,11 +12,13 @@ import MintCountDown from "./MintCountDown";
 interface SolanaPayQrOverlayProps {
   jwtSecret: string | undefined;
   setJwtSecret: (jwtSecret: string) => void;
+  openUnlockDialog: () => void;
 }
 
 export default React.memo(function SolanaPayQrOverlay({
   jwtSecret,
   setJwtSecret,
+  openUnlockDialog,
 }: SolanaPayQrOverlayProps) {
   const { nanoMachine } = useNanoMachine();
   const [hasMintStarted, setHasMintStarted] = useState(false);
@@ -84,7 +86,7 @@ export default React.memo(function SolanaPayQrOverlay({
             alignItems: "center",
           }}
         >
-          <Button variant="outlined" color="inherit" onClick={async () => {}}>
+          <Button variant="outlined" color="inherit" onClick={openUnlockDialog}>
             Unlock QR Code
           </Button>
         </Box>

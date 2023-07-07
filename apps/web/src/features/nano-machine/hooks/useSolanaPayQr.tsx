@@ -1,7 +1,7 @@
 import { createQR, encodeURL } from "@solana/pay";
 import { SignJWT } from "jose";
 import qs from "qs";
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 
 import useNanoMachine from "./useNanoMachine";
 
