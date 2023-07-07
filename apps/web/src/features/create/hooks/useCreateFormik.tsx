@@ -1,7 +1,11 @@
 import { Box, Link, Typography } from "@mui/material";
 import { MAX_DESCRIPTION_LENGTH, MAX_NAME_LENGTH } from "@nanodrop/contracts";
 import { useConnection, useWallet } from "@solana/wallet-adapter-react";
-import { Keypair } from "@solana/web3.js";
+import {
+  Keypair,
+  TransactionMessage,
+  VersionedTransaction,
+} from "@solana/web3.js";
 import { useFormik } from "formik";
 import { nanoid } from "nanoid";
 import { ReactNode, useCallback, useState } from "react";
@@ -10,6 +14,7 @@ import { toast } from "sonner";
 import * as yup from "yup";
 
 import { Phase } from "../types/phase";
+import createCreateNanoMachineAccountIx from "../utils/createCreateNanoMachineAccountIx";
 import createNanoMachine from "../utils/createNanoMachine";
 import upload from "../utils/upload";
 
@@ -92,21 +97,25 @@ export default function useCreateFormik() {
             website: values.website,
           });
 
-          const collectionMintKeypair = Keypair.generate();
-          const transaction = await getCreateAccountsTransaction({
-            collectionName: values.collectionName,
-            connection,
-            metadataUrl: `https://files.nanodrop.it/${nanoMachineId}/collection.json`,
-            nanoMachineKeypair,
+          const instruction = await createCreateNanoMachineAccountIx({
             phasesCount: values.phases.length,
-            symbol: values.symbol,
             walletAdapter: wallet,
-            collectionMintKeypair,
+            connection,
+            nanoMachineKeypair,
           });
+          const blockhash = await connection
+            .getLatestBlockhash()
+            .then((res) => res.blockhash);
+          const messageV0 = new TransactionMessage({
+            payerKey: wallet.publicKey,
+            instructions: [instruction],
+            recentBlockhash: blockhash,
+          }).compileToV0Message();
+          const transaction = new VersionedTransaction(messageV0);
 
           setSubmissionState(<Typography>Sending transaction...</Typography>);
 
-          transaction.sign([nanoMachineKeypair, collectionMintKeypair]);
+          transaction.sign([nanoMachineKeypair]);
           const signedTransaction = await wallet.signTransaction(transaction);
 
           const txId = await connection.sendRawTransaction(
@@ -142,10 +151,8 @@ export default function useCreateFormik() {
                 : `https://files.nanodrop.it/${nanoMachineId}/background.${
                     backgroundImage.type.split("/")[1]
                   }`,
-            collectionMint: collectionMintKeypair.publicKey,
             nanoMachineId: nanoMachineKeypair.publicKey,
             phases: values.phases,
-            symbol: values.symbol,
             user: wallet.publicKey,
           });
 
