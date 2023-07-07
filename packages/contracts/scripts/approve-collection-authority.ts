@@ -20,8 +20,8 @@ export async function approveCollectionAuthority(connection: Connection, payer: 
     ],
     TOKEN_METADATA_PROGRAM_ID
   );
-  const [nanoMachinePdaAuthority] = PublicKey.findProgramAddressSync(
-    [Buffer.from("nano_machine"), NANODROP_PROGRAM_ID.toBuffer()],
+  const [config] = PublicKey.findProgramAddressSync(
+    [Buffer.from("config")],
     NANODROP_PROGRAM_ID
   );
   const [collectionAuthorityRecord] = PublicKey.findProgramAddressSync(
@@ -30,7 +30,7 @@ export async function approveCollectionAuthority(connection: Connection, payer: 
       TOKEN_METADATA_PROGRAM_ID.toBuffer(),
       COLLECTION_MINT.toBuffer(),
       Buffer.from("collection_authority"),
-      nanoMachinePdaAuthority.toBuffer(),
+      config.toBuffer(),
     ],
     TOKEN_METADATA_PROGRAM_ID
   );
@@ -39,7 +39,7 @@ export async function approveCollectionAuthority(connection: Connection, payer: 
       collectionAuthorityRecord,
       metadata,
       mint: COLLECTION_MINT,
-      newCollectionAuthority: nanoMachinePdaAuthority,
+      newCollectionAuthority: config,
       payer: payer.publicKey,
       updateAuthority: payer.publicKey,
       rent: SYSVAR_RENT_PUBKEY,
@@ -64,7 +64,7 @@ export async function approveCollectionAuthority(connection: Connection, payer: 
 
   console.log({
     collectionMint: COLLECTION_MINT.toBase58(),
-    collectionAuthority: nanoMachinePdaAuthority.toBase58(),
+    collectionAuthority: config.toBase58(),
     nanodropAddress: NANODROP_PROGRAM_ID.toBase58(),
   })
 }

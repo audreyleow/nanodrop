@@ -10,7 +10,7 @@ use mpl_bubblegum::{
 use spl_account_compression::{program::SplAccountCompression, Noop};
 
 use crate::{
-    constants::{AUTHORITY_SEED, CONFIG_SEED, SHARED_TREE, NANODROP_COLLECTION},
+    constants::{AUTHORITY_SEED, CONFIG_SEED, NANODROP_COLLECTION, SHARED_TREE},
     errors::NanoError,
     state::{Config, NanoMachine},
     utils::{get_metadata_uri, NULL_STRING},
@@ -63,7 +63,7 @@ pub fn mint_v1(ctx: Context<Mint>) -> Result<()> {
                 bubblegum_signer: ctx.accounts.bubblegum_signer.to_account_info(),
                 collection_mint: ctx.accounts.collection_mint.to_account_info(),
                 collection_metadata: ctx.accounts.collection_metadata.to_account_info(),
-                collection_authority: ctx.accounts.nano_machine_pda_authority.to_account_info(),
+                collection_authority: ctx.accounts.config.to_account_info(),
                 collection_authority_record_pda: ctx
                     .accounts
                     .collection_authority_record
@@ -86,13 +86,10 @@ pub fn mint_v1(ctx: Context<Mint>) -> Result<()> {
                     nano_machine.key().as_ref(),
                     &[*ctx.bumps.get("nano_machine_pda_authority").unwrap()],
                 ],
-                &[
-                    CONFIG_SEED,
-                    &[*ctx.bumps.get("config").unwrap()],
-                ],
+                &[CONFIG_SEED, &[*ctx.bumps.get("config").unwrap()]],
             ],
         )
-        .with_remaining_accounts(vec![nano_machine_pda_authority.clone()]),
+        .with_remaining_accounts(vec![nano_machine_pda_authority.clone(), config.clone()]),
         MetadataArgs {
             name: phase
                 .unwrap()
@@ -172,7 +169,7 @@ pub struct Mint<'info> {
             token_metadata_program.key.as_ref(),
             collection_mint.key().as_ref(),
             b"collection_authority",
-            nano_machine_pda_authority.key.as_ref()
+            config.key().as_ref()
         ],
         seeds::program = mpl_token_metadata::id(),
         bump
