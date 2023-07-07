@@ -6,7 +6,8 @@ import { handleFileUpload } from "./services/upload-file.service";
 import { Env } from "./types";
 
 const { preflight, corsify } = createCors({
-  origins: ["*"],
+  origins: ["https://nanodrop.it", "http://localhost:3000"],
+  methods: ["POST"],
 });
 
 const router = Router();
@@ -15,16 +16,19 @@ router.all("*", preflight);
 
 router.get("/*", async (request: Request, env: Env) => {
   const file = await handleGetFile(request, env);
-  return corsify(
-    new Response(file.body, {
-      status: file.status,
-      headers: {
-        "Access-Control-Allow-Origin": "*",
-        "Content-Type": file.headers.get("Content-Type") || "",
-        "Cache-Control": "public, max-age=14400",
-      },
-    })
-  );
+
+  const { body, headers, status } = file;
+
+  const existingHeaders = Object.fromEntries(headers);
+
+  return new Response(body, {
+    status,
+    headers: {
+      ...existingHeaders,
+      "Access-Control-Allow-Origin": request.headers.get("origin") || "",
+      "Access-Control-Allow-Methods": "GET",
+    },
+  });
 });
 
 router.post("/upload", async (request: Request, env: Env) => {
@@ -32,9 +36,6 @@ router.post("/upload", async (request: Request, env: Env) => {
   return corsify(
     new Response("OK", {
       status: 201,
-      headers: {
-        "Access-Control-Allow-Origin": "*",
-      },
     })
   );
 });
@@ -45,8 +46,7 @@ const fetchHandler = {
   fetch: (request: Request, ...extra: any) =>
     router
       .handle(request, ...extra)
-      .catch(() => new Response("Error", { status: 500 }))
-      .then(corsify),
+      .catch(() => new Response("Error", { status: 500 })),
 };
 
 export default fetchHandler;
