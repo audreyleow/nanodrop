@@ -49,7 +49,7 @@ export default function MintBackground({ nanoMachine }: MintBackgroundProps) {
           backgroundColor: "rgba(0, 0, 0, 0.3)",
         }}
         style={{
-          backdropFilter: shouldRenderPhaseImage ? "blur(1rem)" : "none",
+          backdropFilter: shouldRenderPhaseImage ? "blur(0.5rem)" : "none",
         }}
         open
       />

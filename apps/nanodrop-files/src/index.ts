@@ -25,7 +25,7 @@ router.get("/*", async (request: Request, env: Env) => {
     status,
     headers: {
       ...existingHeaders,
-      "Access-Control-Allow-Origin": request.headers.get("origin") || "",
+      "Access-Control-Allow-Origin": "*",
       "Access-Control-Allow-Methods": "GET",
     },
   });
