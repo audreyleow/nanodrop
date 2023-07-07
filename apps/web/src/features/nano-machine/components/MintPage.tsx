@@ -20,9 +20,9 @@ export default function MintPage() {
       <Box
         sx={(theme) => ({
           display: "flex",
-          justifyContent: "flex-end",
+          justifyContent: "center",
           px: 16,
-          pt: 4,
+          pt: 8,
           pb: 8,
           [theme.breakpoints.down("md")]: {
             justifyContent: "center",

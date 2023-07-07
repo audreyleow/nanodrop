@@ -155,7 +155,7 @@ export default React.memo(function SolanaPayQr() {
           display: "flex",
           alignItems: "center",
           justifyContent: "center",
-          mt: 1,
+          mt: 4,
           gap: 1,
           textAlign: "center",
         }}
