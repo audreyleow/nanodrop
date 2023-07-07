@@ -1550,7 +1550,7 @@
   resolved "https://registry.yarnpkg.com/@metaplex-foundation/cusper/-/cusper-0.0.2.tgz#dc2032a452d6c269e25f016aa4dd63600e2af975"
   integrity sha512-S9RulC2fFCFOQraz61bij+5YCHhSO9llJegK8c8Y6731fSi6snUSQJdCUqYS8AIgR0TKbQvdvgSyIIdbDFZbBA==
 
-"@metaplex-foundation/js@^0.19.3", "@metaplex-foundation/js@^0.19.4":
+"@metaplex-foundation/js@^0.19.3":
   version "0.19.4"
   resolved "https://registry.yarnpkg.com/@metaplex-foundation/js/-/js-0.19.4.tgz#992fe6b48e8dd0374d99028a07f75547cb6381d7"
   integrity sha512-fiAaMl4p7v1tcU7ZoEr1lCzE6JR2gEWGeHOBarLTpiCjMe8ni3E+cukJQC6p0Ik+Z6IIFtEVNNy5OnMS3LLS4A==
