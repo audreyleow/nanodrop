@@ -1,17 +1,5 @@
-import {
-  Avatar,
-  Box,
-  CircularProgress,
-  Link,
-  Skeleton,
-  Typography,
-} from "@mui/material";
-import { useConnection, useWallet } from "@solana/wallet-adapter-react";
-import { VersionedTransaction } from "@solana/web3.js";
+import { Box } from "@mui/material";
 
-import AspectRatioBox from "@/common/components/AspectRatioBox";
-
-import useNanoMachine from "../hooks/useNanoMachine";
 import SolanaPayQr from "./SolanaPayQr";
 
 const styles = {
