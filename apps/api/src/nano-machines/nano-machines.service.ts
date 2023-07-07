@@ -156,7 +156,6 @@ export class NanoMachinesService {
 
     const transaction = await this.getMintFromNanoMachineTransaction(
       nanoMachineId,
-      NANODROP_COLLECTION_ID.toBase58(),
       minterAddress
     );
 
@@ -225,15 +224,13 @@ export class NanoMachinesService {
 
   private async getMintFromNanoMachineTransaction(
     nanoMachineId: string,
-    collectionMintId: string,
     minterAddress: string
   ) {
-    const collectionMint = new PublicKey(collectionMintId);
     const [collectionMetadata] = PublicKey.findProgramAddressSync(
       [
         Buffer.from("metadata"),
         TOKEN_METADATA_PROGRAM_ID.toBuffer(),
-        collectionMint.toBuffer(),
+        NANODROP_COLLECTION_ID.toBuffer(),
       ],
       TOKEN_METADATA_PROGRAM_ID
     );
@@ -241,7 +238,7 @@ export class NanoMachinesService {
       [
         Buffer.from("metadata"),
         TOKEN_METADATA_PROGRAM_ID.toBuffer(),
-        collectionMint.toBuffer(),
+        NANODROP_COLLECTION_ID.toBuffer(),
         Buffer.from("edition"),
       ],
       TOKEN_METADATA_PROGRAM_ID
@@ -251,19 +248,19 @@ export class NanoMachinesService {
       [Buffer.from("nano_machine"), nanoMachine.toBuffer()],
       NANODROP_PROGRAM_ID
     );
+    const [config] = PublicKey.findProgramAddressSync(
+      [Buffer.from("config")],
+      NANODROP_PROGRAM_ID
+    );
     const [collectionAuthorityRecord] = PublicKey.findProgramAddressSync(
       [
         Buffer.from("metadata"),
         TOKEN_METADATA_PROGRAM_ID.toBuffer(),
-        collectionMint.toBuffer(),
+        NANODROP_COLLECTION_ID.toBuffer(),
         Buffer.from("collection_authority"),
-        nanoMachinePdaAuthority.toBuffer(),
+        config.toBuffer(),
       ],
       TOKEN_METADATA_PROGRAM_ID
-    );
-    const [config] = PublicKey.findProgramAddressSync(
-      [Buffer.from("config")],
-      NANODROP_PROGRAM_ID
     );
     const [bubblegumSigner] = PublicKey.findProgramAddressSync(
       [Buffer.from("collection_cpi")],
@@ -282,7 +279,7 @@ export class NanoMachinesService {
         bubblegumSigner,
         collectionMasterEdition,
         collectionMetadata,
-        collectionMint,
+        collectionMint: NANODROP_COLLECTION_ID,
         compressionProgram: SPL_ACCOUNT_COMPRESSION_PROGRAM_ID,
         config,
         coSigner: this.solanaService.coSignerKeypair.publicKey,
