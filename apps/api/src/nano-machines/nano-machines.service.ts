@@ -19,7 +19,11 @@ import {
   VersionedTransaction,
 } from "@solana/web3.js";
 import { PROGRAM_ID as TOKEN_METADATA_PROGRAM_ID } from "@metaplex-foundation/mpl-token-metadata";
-import { NANODROP_PROGRAM_ID, SHARED_TREE_ID } from "@nanodrop/contracts";
+import {
+  NANODROP_COLLECTION_ID,
+  NANODROP_PROGRAM_ID,
+  SHARED_TREE_ID,
+} from "@nanodrop/contracts";
 import * as crypto from "crypto";
 import { PROGRAM_ID as BUBBLEGUM_PROGRAM_ID } from "@metaplex-foundation/mpl-bubblegum";
 import {
@@ -36,30 +40,37 @@ export class NanoMachinesService {
   ) {}
 
   async create(createNanoMachineDto: CreateNanoMachineDto) {
+    const userQuery = {
+      publicKey: createNanoMachineDto.user,
+      "nanoMachines.nanoMachineId": {
+        $ne: createNanoMachineDto.nanoMachineId,
+      },
+    };
+
+    const userToUpdate = await this.userModel.findOne(userQuery).exec();
+
+    if (!userToUpdate) {
+      throw new InternalServerErrorException(
+        "Failed to create nano machine. Either user does not exist or nano machine already exists"
+      );
+    }
+
     await this.initializeNanoMachine(createNanoMachineDto);
 
     try {
-      const result = await this.userModel
-        .updateOne(
-          {
-            publicKey: createNanoMachineDto.user,
-            "nanoMachines.nanoMachineId": {
-              $ne: createNanoMachineDto.nanoMachineId,
+      const results = await this.userModel
+        .updateOne(userQuery, {
+          $push: {
+            nanoMachines: {
+              nanoMachineId: createNanoMachineDto.nanoMachineId,
+              backgroundImageUrl: createNanoMachineDto.backgroundImageUrl,
+              jwtSecret: crypto.randomBytes(32).toString("base64"),
             },
           },
-          {
-            $push: {
-              nanoMachines: {
-                nanoMachineId: createNanoMachineDto.nanoMachineId,
-                backgroundImageUrl: createNanoMachineDto.backgroundImageUrl,
-                jwtSecret: crypto.randomBytes(32).toString("base64"),
-              },
-            },
-          }
-        )
+        })
         .exec();
 
-      if (result.modifiedCount === 0) {
+      if (results.modifiedCount === 0) {
         throw new InternalServerErrorException(
           "Failed to create nano machine. Either user does not exist or nano machine already exists"
         );
@@ -131,8 +142,7 @@ export class NanoMachinesService {
   }
 
   async buildMintTransaction(token: string, minterAddress: string) {
-    const { collectionMint, nanoMachineId, creator } = jwt.decode(token) as {
-      collectionMint: string;
+    const { nanoMachineId, creator } = jwt.decode(token) as {
       nanoMachineId: string;
       creator: string;
     };
@@ -146,62 +156,30 @@ export class NanoMachinesService {
 
     const transaction = await this.getMintFromNanoMachineTransaction(
       nanoMachineId,
-      collectionMint,
+      NANODROP_COLLECTION_ID.toBase58(),
       minterAddress
     );
 
     return {
       transaction,
-      message: "Mint POAP",
+      message: "Mint SOAP",
     };
   }
 
   private async initializeNanoMachine(
     createNanoMachineDto: CreateNanoMachineDto
   ) {
-    const collectionMint = new PublicKey(createNanoMachineDto.collectionMint);
-    const [collectionMetadata] = PublicKey.findProgramAddressSync(
-      [
-        Buffer.from("metadata"),
-        TOKEN_METADATA_PROGRAM_ID.toBuffer(),
-        collectionMint.toBuffer(),
-      ],
-      TOKEN_METADATA_PROGRAM_ID
-    );
-    const [collectionMasterEdition] = PublicKey.findProgramAddressSync(
-      [
-        Buffer.from("metadata"),
-        TOKEN_METADATA_PROGRAM_ID.toBuffer(),
-        collectionMint.toBuffer(),
-        Buffer.from("edition"),
-      ],
-      TOKEN_METADATA_PROGRAM_ID
-    );
-    const nanoMachine = new PublicKey(createNanoMachineDto.nanoMachineId);
-    const [nanoMachinePdaAuthority] = PublicKey.findProgramAddressSync(
-      [Buffer.from("nano_machine"), nanoMachine.toBuffer()],
-      NANODROP_PROGRAM_ID
-    );
-    const [collectionAuthorityRecord] = PublicKey.findProgramAddressSync(
-      [
-        Buffer.from("metadata"),
-        TOKEN_METADATA_PROGRAM_ID.toBuffer(),
-        collectionMint.toBuffer(),
-        Buffer.from("collection_authority"),
-        nanoMachinePdaAuthority.toBuffer(),
-      ],
-      TOKEN_METADATA_PROGRAM_ID
-    );
     const [config] = PublicKey.findProgramAddressSync(
       [Buffer.from("config")],
       NANODROP_PROGRAM_ID
     );
+    const creator = new PublicKey(createNanoMachineDto.user);
+    const nanoMachine = new PublicKey(createNanoMachineDto.nanoMachineId);
 
     const instruction = await this.solanaService.nanodropProgram.methods
       .initialize({
         sellerFeeBasisPoints: 0,
         isPrivate: true,
-        symbol: createNanoMachineDto.symbol,
         phases: createNanoMachineDto.phases.map((phase) => ({
           index: phase.index,
           nftName: phase.nftName,
@@ -211,15 +189,10 @@ export class NanoMachinesService {
         })),
       })
       .accounts({
-        collectionAuthorityRecord,
-        collectionMasterEdition,
-        collectionMetadata,
-        collectionMint,
         config,
         coSigner: this.solanaService.coSignerKeypair.publicKey,
-        creator: new PublicKey(createNanoMachineDto.user),
+        creator,
         nanoMachine,
-        nanoMachinePdaAuthority,
         systemProgram: SystemProgram.programId,
         tokenMetadataProgram: TOKEN_METADATA_PROGRAM_ID,
       })
@@ -238,7 +211,8 @@ export class NanoMachinesService {
     transaction.sign([this.solanaService.coSignerKeypair]);
 
     const txId = await this.solanaService.connection.sendRawTransaction(
-      transaction.serialize()
+      transaction.serialize(),
+      { skipPreflight: false }
     );
 
     const result = await this.solanaService.connection.confirmTransaction(txId);

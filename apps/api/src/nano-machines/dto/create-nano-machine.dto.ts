@@ -17,9 +17,6 @@ export class CreateNanoMachineDto {
   readonly nanoMachineId: string;
 
   @IsBase58()
-  readonly collectionMint: string;
-
-  @IsBase58()
   readonly user: string;
 
   @IsArray()
@@ -28,9 +25,6 @@ export class CreateNanoMachineDto {
   @ArrayMaxSize(3)
   @Type(() => Phase)
   readonly phases: Phase[];
-
-  @IsString()
-  symbol: string;
 
   @IsUrl()
   @IsOptional()
