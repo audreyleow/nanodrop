@@ -1,0 +1,16 @@
+{
+  "name": "NanoDrop SOAPs",
+  "symbol": "SOAP",
+  "image": "https://files.nanodrop.it/assets/nanodrop-collection.png",
+  "description": "Solana Proof Of Attendance Protocol (SOAP) NFTs: Verifiable digital badges commemorating event participation on the fast and secure Solana blockchain. Powered by NanoDrop.",
+  "external_url": "https://nanodrop.it/",
+  "attributes": [],
+  "properties": {
+    "files": [
+      {
+        "uri": "https://files.nanodrop.it/assets/nanodrop-collection.png",
+        "type": "image/png"
+      }
+    ]
+  }
+}

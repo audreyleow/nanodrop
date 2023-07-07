@@ -11,20 +11,23 @@ export async function createCollection(connection: Connection, payer: Keypair) {
     .use(keypairIdentity(payer))
     .use(bundlrStorage());
 
+  const mint = Keypair.fromSecretKey(Uint8Array.from([]));
+
   const { nft } = await metaplex.nfts().create(
     {
       isCollection: true,
       isMutable: true,
-      name: "Metacamp POAP",
-      symbol: "CAMP",
-      uri: "https://files.nanodrop.it/metaMWNWwC39BVDkuhpLKCtt4nVfJfBkJucDpERFBid/collection.json",
+      name: "NanoDrop SOAP",
+      symbol: "SOAP",
+      uri: "https://files.nanodrop.it/assets/nanodrop-collection.json",
       sellerFeeBasisPoints: 0,
       creators: [
         {
-          address: new PublicKey("JonasQ6kwFknJKQpVXbAs2d3fdVLy2DnXd13ynwhgV4"),
+          address: new PublicKey("drop3XQiPXyj2XUCF94WeCJV6xRKyqBStUcc8nB2ZeN"),
           share: 100,
         },
       ],
+      useNewMint: mint,
     },
     {
       confirmOptions: {
