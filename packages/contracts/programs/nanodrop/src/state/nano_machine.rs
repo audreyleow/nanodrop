@@ -9,10 +9,6 @@ pub struct NanoMachine {
     pub version: AccountVersion,
     /// The creator of the nano machine
     pub creator: Pubkey,
-    /// Symbol for all the NFTs minted
-    pub symbol: String,
-    /// The collection mint for this nano machine
-    pub collection_mint: Pubkey,
     /// Number of NFTs minted
     pub items_redeemed: u64,
     /// Secondary sales royalty basis points (0-10000)

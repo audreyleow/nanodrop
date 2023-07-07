@@ -4,9 +4,6 @@ export const getSpaceForNanoMachine = (phasesCount: number) =>
   8 + //discriminator
   1 + // version
   32 + // creator
-  4 +
-  MAX_SYMBOL_LENGTH + // u32 + symbol
-  32 + // collection_mint
   8 + // items_redeemed
   2 + // seller_fee_basis_points
   1 + // is_private
