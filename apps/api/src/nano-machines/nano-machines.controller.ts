@@ -5,13 +5,10 @@ import {
   Body,
   Param,
   HttpCode,
-  UseGuards,
   Query,
 } from "@nestjs/common";
 import { NanoMachinesService } from "./nano-machines.service";
 import { CreateNanoMachineDto } from "./dto/create-nano-machine.dto";
-import { ValidateUserDto } from "src/auth/dto/validate-user.dto";
-import { WalletSignatureAuthGuard } from "src/auth/auth.guard";
 import { BuildMintTransactionDto } from "./dto/build-mint-transaction.dto";
 
 @Controller("nano-machines")
@@ -54,17 +51,5 @@ export class NanoMachinesController {
     @Param("nanoMachineId") nanoMachineId: string
   ) {
     return this.nanoMachinesService.findOne(userPublicKey, nanoMachineId);
-  }
-
-  @Post("secret/:nanoMachineId")
-  @UseGuards(WalletSignatureAuthGuard)
-  findJwtSecret(
-    @Body() validateUserDto: ValidateUserDto,
-    @Param("nanoMachineId") nanoMachineId: string
-  ) {
-    return this.nanoMachinesService.findJwtSecret(
-      validateUserDto.publicKey,
-      nanoMachineId
-    );
   }
 }
