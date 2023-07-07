@@ -82,15 +82,46 @@ export default function MyDrops() {
     <Container
       sx={{
         position: "relative",
-        pb: 8,
+        py: 8,
         zIndex: 2,
       }}
       fixed
       maxWidth="lg"
     >
-      <Typography variant="h4" fontWeight="500" sx={{ mb: 4 }}>
-        My drops
-      </Typography>
+      <Box
+        sx={{
+          display: "flex",
+          alignItems: "flex-end",
+          justifyContent: "space-between",
+          flexWrap: "wrap-reverse",
+          gap: 4,
+          mb: 6,
+        }}
+      >
+        <Typography variant="h4" fontWeight="500">
+          My drops
+        </Typography>
+        <CtaButton
+          as={Link}
+          href="/create"
+          sx={{
+            display: "inline-flex",
+            marginTop: 0,
+          }}
+        >
+          <Typography
+            variant="button"
+            sx={{
+              fontWeight: 700,
+              color: "#000000",
+              whiteSpace: "nowrap",
+            }}
+          >
+            Create a drop
+          </Typography>
+          <MorphingArrow />
+        </CtaButton>
+      </Box>
       <Grid container gap={4}>
         {data.map((nanoMachine) => (
           <Drop

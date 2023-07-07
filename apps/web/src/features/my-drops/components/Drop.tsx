@@ -9,11 +9,11 @@ import {
   Skeleton,
   Typography,
 } from "@mui/material";
+import axios from "axios";
+import { useMemo } from "react";
+import useSWR from "swr";
 
-import {
-  useNanoMachineCollection,
-  useNanoMachineData,
-} from "@/features/nano-machine/hooks/useNanoMachine";
+import { useNanoMachineData } from "@/features/nano-machine/hooks/useNanoMachine";
 
 export default function Drop({
   nanoMachineId,
@@ -23,35 +23,27 @@ export default function Drop({
   createdAt: string;
 }) {
   const { nanoMachineData } = useNanoMachineData(nanoMachineId);
-  const { collectionUriMetadata } = useNanoMachineCollection(
-    nanoMachineData?.collectionMint.toBase58()
+  const { data: firstPhaseMetadata } = useSWR(
+    `https://files.nanodrop.it/${nanoMachineId}/0.json`,
+    (metadata) =>
+      axios
+        .get<{ image: string; description: string }>(metadata)
+        .then((res) => res.data)
   );
 
   return (
     <Grid item xs={12} sm={5} lg={3}>
       <Link
-        href={!collectionUriMetadata ? undefined : `/${nanoMachineId}`}
+        href={`/${nanoMachineId}`}
         sx={{
           textDecoration: "none",
         }}
       >
         <Card>
           <CardHeader
-            title={
-              !collectionUriMetadata ? (
-                <Skeleton
-                  height={28}
-                  width="80%"
-                  sx={{
-                    marginBottom: 6,
-                  }}
-                />
-              ) : (
-                collectionUriMetadata.name
-              )
-            }
+            title={`${nanoMachineId.slice(0, 5)}..${nanoMachineId.slice(-5)}`}
           />
-          {!collectionUriMetadata ? (
+          {!firstPhaseMetadata ? (
             <Box
               sx={{
                 height: 0,
@@ -82,7 +74,7 @@ export default function Drop({
             >
               <CardMedia
                 component="img"
-                image={collectionUriMetadata.image}
+                image={firstPhaseMetadata.image}
                 alt="Collection image"
                 sx={{
                   objectFit: "cover",
@@ -96,7 +88,7 @@ export default function Drop({
             </Box>
           )}
           <CardContent>
-            {!collectionUriMetadata ? (
+            {!firstPhaseMetadata ? (
               <>
                 <Skeleton height={24} style={{ marginBottom: 6 }} />
                 <Skeleton height={24} style={{ marginBottom: 6 }} width="80%" />
@@ -104,8 +96,17 @@ export default function Drop({
               </>
             ) : (
               <>
-                <Typography component="p">
-                  {collectionUriMetadata.description}
+                <Typography
+                  component="p"
+                  sx={{
+                    display: "-webkit-box",
+                    WebkitLineClamp: "3",
+                    WebkitBoxOrient: "vertical",
+                    overflow: "hidden",
+                    mb: 4,
+                  }}
+                >
+                  {firstPhaseMetadata.description}
                 </Typography>
                 <Typography variant="caption">
                   Created at: {new Date(createdAt).toLocaleString()}
