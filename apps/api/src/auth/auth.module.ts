@@ -4,12 +4,14 @@ import { AuthController } from "./auth.controller";
 import { MongooseModule } from "@nestjs/mongoose";
 import { AuthRequest, AuthRequestSchema } from "./schemas/auth-request.schema";
 import { SolanaService } from "src/solana/solana.service";
+import { NanoMachinesModule } from "src/nano-machines/nano-machines.module";
 
 @Module({
   imports: [
     MongooseModule.forFeature([
       { name: AuthRequest.name, schema: AuthRequestSchema },
     ]),
+    NanoMachinesModule,
   ],
   controllers: [AuthController],
   providers: [AuthService, SolanaService],

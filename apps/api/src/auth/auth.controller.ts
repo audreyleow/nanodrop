@@ -8,7 +8,8 @@ import {
   Query,
 } from "@nestjs/common";
 import { AuthService } from "./auth.service";
-import { BuildLogTransactionDto } from "./dto/BuildLogTransaction.dto";
+import { BuildLogTransactionDto } from "./dto/build-log-transaction";
+import { VerifyAuthRequestDto } from "./dto/verify-auth-request";
 
 @Controller("auth")
 export class AuthController {
@@ -22,14 +23,21 @@ export class AuthController {
     };
   }
 
+  @Post("verify")
+  async verifyAuthRequest(@Body() verifyAuthRequestDto: VerifyAuthRequestDto) {
+    return this.authService.verifyAuthRequest(verifyAuthRequestDto);
+  }
+
   @Post()
   @HttpCode(200)
   async buildLogTransaction(
     @Query("messageHash") messageHash: string,
+    @Query("solanaPayReference") solanaPayReference: string,
     @Body() buildLogTransactionDto: BuildLogTransactionDto
   ) {
     return this.authService.buildLogTransaction(
       messageHash,
+      solanaPayReference,
       buildLogTransactionDto.account
     );
   }
