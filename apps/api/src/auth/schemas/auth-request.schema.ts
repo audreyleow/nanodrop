@@ -8,6 +8,7 @@ export interface IAuthRequest {
   publicKey: string;
   createdAt: Date;
   updatedAt: Date;
+  expiresAt: Date;
 }
 
 @Schema()
